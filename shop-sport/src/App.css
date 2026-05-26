@@ -1,0 +1,79 @@
+/* Nếu bạn dùng Tailwind v4 */
+@import "tailwindcss";
+
+/* Nếu bạn dùng Tailwind v3, hãy giữ các dòng @tailwind base... và xóa dòng @import trên */
+
+@layer base {
+  :root {
+    --primary-blue: #2563eb;
+    --dark-bg: #0a0a0a;
+  }
+
+  /* Reset mặc định để đảm bảo không có margin thừa gây co màn hình */
+  html, body {
+    @apply m-0 p-0 overflow-x-hidden w-full;
+  }
+
+  body {
+    @apply antialiased text-gray-900 bg-white;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer components {
+  /* Tùy chỉnh thanh cuộn */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-50;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full hover:bg-blue-600 transition-colors;
+  }
+
+  /* Lớp hỗ trợ Full Screen cho các trang */
+  .full-screen-wrapper {
+    @apply w-full min-h-screen flex flex-col;
+  }
+
+  .input-field {
+    @apply w-full p-4 bg-gray-100 rounded-2xl outline-none border-2 border-transparent 
+           focus:border-blue-600 focus:bg-white transition-all duration-300 font-medium;
+  }
+
+  .btn-primary {
+    @apply bg-blue-600 text-white font-black py-4 px-8 rounded-2xl shadow-lg 
+           hover:bg-blue-700 hover:shadow-blue-200 active:scale-95 
+           transition-all duration-300 uppercase tracking-widest text-sm inline-block text-center;
+  }
+
+  /* Sửa lại lỗi cú pháp bóng đổ của bạn ở đây */
+  .product-card-shadow {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+  }
+}
+
+/* Hiệu ứng chuyển trang */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+::selection {
+  @apply bg-blue-600 text-white;
+}
+
+img {
+  @apply max-w-full h-auto block;
+}
+
+/* Đảm bảo các thẻ bọc ngoài cùng của React luôn chiếm 100% */
+#root {
+  @apply w-full;
+}

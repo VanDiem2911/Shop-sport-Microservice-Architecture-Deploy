@@ -1,0 +1,2 @@
+USE order_db;
+ALTER TABLE orders ADD COLUMN status VARCHAR(50) DEFAULT 'PENDING';

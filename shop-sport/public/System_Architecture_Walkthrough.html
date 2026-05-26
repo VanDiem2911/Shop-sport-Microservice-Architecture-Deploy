@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SportShop - Hệ Thống Kiến Trúc Microservices & API Gateway</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0c10;
+            --bg-secondary: #131722;
+            --accent-blue: #00f2fe;
+            --accent-purple: #4facfe;
+            --accent-green: #39ff14;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-glow: rgba(0, 242, 254, 0.15);
+            --card-glass: rgba(19, 23, 34, 0.7);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(79, 172, 254, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 242, 254, 0.05) 0%, transparent 40%);
+        }
+
+        /* Header */
+        header {
+            padding: 2rem 5%;
+            background: linear-gradient(to bottom, rgba(10, 12, 16, 0.9), transparent);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-glow {
+            width: 15px;
+            height: 15px;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--accent-blue);
+            animation: pulse 2s infinite;
+        }
+
+        h1.title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            background: linear-gradient(45deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Navigation Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            color: var(--accent-blue);
+            background: rgba(0, 242, 254, 0.1);
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 5%;
+        }
+
+        .section-intro {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-intro h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #ffffff, #888888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-intro p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Full Width Diagram Layout */
+        .diagram-card {
+            width: 100%;
+            margin-bottom: 2.5rem;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        /* 3 Column Grid for Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        @media (max-width: 1024px) {
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+            .features-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-glass);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(0, 242, 254, 0.2);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(95deg, var(--accent-blue), var(--accent-purple));
+        }
+
+        /* Larger Mermaid Wrapper */
+        .diagram-container {
+            background: #11141e;
+            border-radius: 16px;
+            padding: 3rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+            margin-top: 1.5rem;
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .diagram-container .mermaid {
+            width: 100%;
+            text-align: center;
+        }
+
+        /* FORCE DIAGRAMS TO BE MASSIVE AND CLEAR */
+        .diagram-container .mermaid svg {
+            width: 100% !important;
+            max-width: 1200px !important; 
+            height: auto !important;
+            min-height: 550px !important; 
+        }
+
+        /* Details & Codes */
+        .info-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge {
+            background: rgba(0, 242, 254, 0.1);
+            color: var(--accent-blue);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+        }
+
+        .badge.green {
+            background: rgba(57, 255, 20, 0.1);
+            color: var(--accent-green);
+            border-color: rgba(57, 255, 20, 0.2);
+        }
+
+        .card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            color: var(--text-primary);
+        }
+
+        .flow-step {
+            margin-bottom: 2rem;
+            position: relative;
+            padding-left: 2.5rem;
+        }
+
+        .flow-step::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 5px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--accent-blue);
+            box-shadow: 0 0 10px var(--accent-blue);
+        }
+
+        .flow-step::after {
+            content: '';
+            position: absolute;
+            left: 13px;
+            top: 20px;
+            width: 2px;
+            height: calc(100% + 1rem);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .flow-step:last-child::after {
+            display: none;
+        }
+
+        .flow-step h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .flow-step p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* File Links Block */
+        .file-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 12px 18px;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .file-box:hover {
+            background: rgba(0, 242, 254, 0.03);
+            border-color: rgba(0, 242, 254, 0.2);
+            transform: translateX(5px);
+        }
+
+        .file-icon {
+            font-size: 1.5rem;
+        }
+
+        .file-info h5 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .file-info p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Code Block Mock */
+        pre {
+            background: #0d1117;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+        code {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.85rem;
+            color: #ff7b72;
+        }
+
+        .code-keyword { color: #ff7b72; }
+        .code-string { color: #a5d6ff; }
+        .code-comment { color: #8b949e; }
+        .code-value { color: #d2a8ff; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 15px var(--accent-blue); }
+            50% { transform: scale(1.1); box-shadow: 0 0 25px var(--accent-purple); }
+            100% { transform: scale(1); box-shadow: 0 0 15px var(--accent-blue); }
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <div class="logo-glow"></div>
+            <h1 class="title">SPORTSHOP ARCHITECTURE</h1>
+        </div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('arch')">Mô Hình Kiến Trúc</button>
+            <button class="tab-btn" onclick="switchTab('cart')">Giỏ Hàng Persistent</button>
+            <button class="tab-btn" onclick="switchTab('workflows')">Chức Năng & Workflow</button>
+            <button class="tab-btn" onclick="switchTab('checkout')">Luồng Đặt Hàng & Kho</button>
+            <button class="tab-btn" onclick="switchTab('admin')">Quản Trị Admin Portal</button>
+            <button class="tab-btn" onclick="switchTab('redis')">Redis Caching Tốc Độ Cao</button>
+            <button class="tab-btn" onclick="switchTab('rabbitmq')">RabbitMQ Event-Driven</button>
+            <button class="tab-btn" onclick="switchTab('chat')">Hỗ Trợ & WebSocket Chat</button>
+            <button class="tab-btn" onclick="switchTab('cors')">Cơ Chế CORS & Bảo Mật</button>
+        </div>
+    </header>
+
+    <main>
+        
+        <!-- SECTION 1: SYSTEM ARCHITECTURE -->
+        <div id="arch" class="tab-content active">
+            <div class="section-intro">
+                <h2>Kiến Trúc Microservices Hệ Thống</h2>
+                <p>Hệ thống bao gồm React SPA Frontend, Spring Cloud API Gateway đóng vai trò làm trung tâm định tuyến, và 5 microservices độc lập giao tiếp qua REST API cùng các Database MySQL riêng biệt.</p>
+            </div>
+
+            <!-- Large Diagram taking 100% width -->
+            <div class="card diagram-card">
+                <div class="info-header">
+                    <span class="badge">Visualized Topology</span>
+                    <h3>Bản Đồ Kiến Trúc Hệ Thống (Bản Lớn)</h3>
+                </div>
+                <p class="text-secondary">Toàn bộ request từ bên ngoài đều đi qua cổng Gateway 8080. Gateway sẽ tự động phân tách và định tuyến chính xác đến các microservices đích.</p>
+                
+                <div class="diagram-container">
+                    <div class="mermaid">
+graph TD
+    Client["React SPA Frontend<br/>Port 5173"]:::client -->|"API Request Port 8080"| Gateway["Spring Cloud API Gateway<br/>Port 8080"]:::gateway
+
+    Gateway -->|"/api/v1/auth/**"| AuthService["AuthService<br/>Port 8081"]:::service
+    Gateway -->|"/api/v1/products/**"| ProductService["ProductService<br/>Port 8082"]:::service
+    Gateway -->|"/api/v1/orders/**"| OrderService["OrderService<br/>Port 8083"]:::service
+    Gateway -->|"/api/v1/payments/**"| PaymentService["PaymentService<br/>Port 8084"]:::service
+    Gateway -->|"/api/v1/ai/**"| AIService["AIService<br/>Port 8085"]:::service
+    Gateway -->|"/api/v1/chats/**"| ChatService["ChatService<br/>Port 8086"]:::service
+
+    AuthService --> DB1[("auth_db MySQL")]:::db
+    ProductService --> DB2[("product_db MySQL")]:::db
+    OrderService --> DB3[("order_db MySQL")]:::db
+    PaymentService --> DB4[("payment_db MySQL")]:::db
+    ChatService --> DB5[("chat_db MySQL")]:::db
+    
+    OrderService -->|"Publish StockEvents"| RabbitMQ["RabbitMQ Broker<br/>Port 5672"]:::broker
+    RabbitMQ -->|"Deliver Asynchronously"| ProductService
+    
+    ProductService -->|"Read/Write Cache"| Redis["Redis Server<br/>Port 6379"]:::cache
+
+    classDef client fill:#00f2fe,stroke:#4facfe,stroke-width:2.5px,color:#000;
+    classDef gateway fill:#1e293b,stroke:#00f2fe,stroke-width:4px,color:#00f2fe;
+    classDef service fill:#151824,stroke:#4facfe,stroke-width:2.5px,color:#fff;
+    classDef db fill:#0f172a,stroke:#8b949e,stroke-width:1px,color:#8b949e;
+    classDef broker fill:#ff9800,stroke:#ff9800,stroke-width:3px,color:#fff;
+    classDef cache fill:#ff3366,stroke:#ff3366,stroke-width:3px,color:#fff;
+                    </div>
+                </div>
+            </div>
+
+            <!-- DATABASE PER SERVICE CARD -->
+            <div class="card diagram-card" style="margin-top: 2.5rem; border-color: rgba(0, 242, 254, 0.3);">
+                <div class="info-header">
+                    <span class="badge">Database Per Service</span>
+                    <h3>Kiến Trúc Cơ Sở Dữ Liệu Phân Tán (Decentralized Databases)</h3>
+                </div>
+                <p class="text-secondary" style="margin-bottom: 1.5rem;">Để đảm bảo tính độc lập hoàn toàn (Loose Coupling), mỗi microservice trong hệ thống SportShop quản lý một cơ sở dữ liệu MySQL riêng biệt. Dưới đây là cấu trúc chi tiết của từng database:</p>
+                
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; text-align: left; font-size: 0.95rem;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid rgba(255, 255, 255, 0.1); color: var(--accent-blue);">
+                                <th style="padding: 12px; font-weight: 600;">Tên Database</th>
+                                <th style="padding: 12px; font-weight: 600;">Microservice Sở Hữu</th>
+                                <th style="padding: 12px; font-weight: 600;">Các Bảng Thực Tế</th>
+                                <th style="padding: 12px; font-weight: 600;">Mô Tả & Vai Trò</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                                <td style="padding: 12px; font-weight: 600; color: #fff;">auth_db</td>
+                                <td style="padding: 12px; color: var(--text-secondary);">AuthService (Port 8081)</td>
+                                <td style="padding: 12px; color: var(--accent-purple); font-family: monospace;">users</td>
+                                <td style="padding: 12px; color: var(--text-secondary);">Lưu trữ tài khoản, mật khẩu đã mã hóa BCrypt, thông tin liên lạc và vai trò (ROLE_USER, ROLE_ADMIN).</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                                <td style="padding: 12px; font-weight: 600; color: #fff;">product_db</td>
+                                <td style="padding: 12px; color: var(--text-secondary);">ProductService (Port 8082)</td>
+                                <td style="padding: 12px; color: var(--accent-purple); font-family: monospace;">categories, products, reviews</td>
+                                <td style="padding: 12px; color: var(--text-secondary);">Quản lý danh mục, thông tin chi tiết sản phẩm, số lượng tồn kho (stock), số lượng đã bán (soldQuantity) và đánh giá khách hàng.</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                                <td style="padding: 12px; font-weight: 600; color: #fff;">order_db</td>
+                                <td style="padding: 12px; color: var(--text-secondary);">OrderService (Port 8083)</td>
+                                <td style="padding: 12px; color: var(--accent-purple); font-family: monospace;">orders, order_items, cart_items</td>
+                                <td style="padding: 12px; color: var(--text-secondary);">Lưu trữ đơn hàng, chi tiết sản phẩm trong đơn, và giỏ hàng vĩnh viễn (persistent cart) đồng bộ của từng khách hàng.</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                                <td style="padding: 12px; font-weight: 600; color: #fff;">payment_db</td>
+                                <td style="padding: 12px; color: var(--text-secondary);">PaymentService (Port 8084)</td>
+                                <td style="padding: 12px; color: var(--accent-purple); font-family: monospace;">payments</td>
+                                <td style="padding: 12px; color: var(--text-secondary);">Ghi nhận lịch sử giao dịch thanh toán, số tiền, phương thức giao dịch và trạng thái thanh toán.</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px; font-weight: 600; color: #fff;">chat_db</td>
+                                <td style="padding: 12px; color: var(--text-secondary);">ChatService (Port 8086)</td>
+                                <td style="padding: 12px; color: var(--accent-purple); font-family: monospace;">chat_messages</td>
+                                <td style="padding: 12px; color: var(--text-secondary);">Lưu trữ lịch sử tin nhắn trò chuyện của khách hàng, bao gồm người gửi, người nhận, thời gian và Order ID liên quan.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <a href="file:///d:/Nam4/KTTKPM/Project/full_system_database.sql" class="file-box" style="margin-top: 1.5rem;">
+                    <span class="file-icon">🗄️</span>
+                    <div class="file-info">
+                        <h5>full_system_database.sql (Script Khởi Tạo Toàn Cục)</h5>
+                        <p>d:\Nam4\KTTKPM\Project\full_system_database.sql</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Details below -->
+            <div class="details-grid" style="margin-top: 2.5rem;">
+                <div class="card">
+                    <div class="info-header">
+                        <span class="badge">Gateway Config</span>
+                        <h3>Định Tuyến Cấu Thiết Thực Tế</h3>
+                    </div>
+                    <p class="text-secondary">Cấu hình định tuyến trung tâm của hệ thống trong Gateway Service:</p>
+                    
+                    <pre><code><span class="code-keyword">spring:</span>
+  <span class="code-keyword">cloud:</span>
+    <span class="code-keyword">gateway:</span>
+      <span class="code-keyword">routes:</span>
+        - <span class="code-keyword">id:</span> <span class="code-string">auth-service</span>
+          <span class="code-keyword">uri:</span> <span class="code-string">http://localhost:8081</span>
+          <span class="code-keyword">predicates:</span>
+            - <span class="code-keyword">Path=</span><span class="code-string">/api/v1/auth/**</span>
+        - <span class="code-keyword">id:</span> <span class="code-string">product-service</span>
+          <span class="code-keyword">uri:</span> <span class="code-string">http://localhost:8082</span>
+          <span class="code-keyword">predicates:</span>
+            - <span class="code-keyword">Path=</span><span class="code-string">/api/v1/products/**, /api/v1/categories/**, /api/v1/reviews/**</span>
+        - <span class="code-keyword">id:</span> <span class="code-string">order-service</span>
+          <span class="code-keyword">uri:</span> <span class="code-string">http://localhost:8083</span>
+          <span class="code-keyword">predicates:</span>
+            - <span class="code-keyword">Path=</span><span class="code-string">/api/v1/orders/**</span>
+        - <span class="code-keyword">id:</span> <span class="code-string">payment-service</span>
+          <span class="code-keyword">uri:</span> <span class="code-string">http://localhost:8084</span>
+          <span class="code-keyword">predicates:</span>
+            - <span class="code-keyword">Path=</span><span class="code-string">/api/v1/payments/**</span>
+        - <span class="code-keyword">id:</span> <span class="code-string">ai-service</span>
+          <span class="code-keyword">uri:</span> <span class="code-string">http://localhost:8085</span>
+          <span class="code-keyword">predicates:</span>
+            - <span class="code-keyword">Path=</span><span class="code-string">/api/v1/ai/**</span>
+        - <span class="code-keyword">id:</span> <span class="code-string">chat-service</span>
+          <span class="code-keyword">uri:</span> <span class="code-string">http://localhost:8086</span>
+          <span class="code-keyword">predicates:</span>
+            - <span class="code-keyword">Path=</span><span class="code-string">/api/v1/chats/**</span></code></pre>
+                </div>
+
+                <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div class="info-header">
+                            <span class="badge">File Locations</span>
+                            <h3>Các File Nguồn Liên Quan</h3>
+                        </div>
+                        <p class="text-secondary" style="margin-bottom: 1.5rem;">Bấm trực tiếp vào liên kết bên dưới để mở file cấu hình Gateway trong workspace của bạn:</p>
+                        
+                        <a href="file:///d:/Nam4/KTTKPM/Project/GatewayService/src/main/resources/application.yml" class="file-box">
+                            <span class="file-icon">📄</span>
+                            <div class="file-info">
+                                <h5>application.yml (Gateway Cấu Hình)</h5>
+                                <p>d:\Nam4\KTTKPM\Project\GatewayService\src\main\resources\application.yml</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: PERSISTENT CART -->
+        <div id="cart" class="tab-content">
+            <div class="section-intro">
+                <h2>Cơ Chế Đồng Bộ & Lưu Trữ Giỏ Hàng Persistent (MySQL)</h2>
+                <p>Khám phá cách OrderService độc lập quản lý, lưu trữ và đồng bộ hóa giỏ hàng của từng khách hàng vĩnh viễn trên database MySQL thay vì dùng bộ nhớ đệm tạm thời.</p>
+            </div>
+
+            <!-- PERSISTENT CART ARCHITECTURE CARD -->
+            <div class="card diagram-card" style="border-color: rgba(57, 255, 20, 0.3);">
+                <div class="info-header">
+                    <span class="badge green">Completed Architecture</span>
+                    <h3>1. Thiết Kế Thực Tế: Lưu Trữ Giỏ Hàng Persistent Vào MySQL</h3>
+                </div>
+                <p class="text-secondary" style="margin-bottom: 1.5rem;">Hệ thống đã hoàn thiện cơ chế <b>Persistent Cart (Giỏ hàng vĩnh viễn)</b> tích hợp trong <b>OrderService (Port 8083)</b> sử dụng MySQL Database. Giải pháp này giúp giỏ hàng của người dùng được bảo toàn liền mạch khi đổi thiết bị hoặc đăng nhập lại:</p>
+                
+                <div class="diagram-container">
+                    <div class="mermaid">
+graph TD
+    Client["React Frontend"]:::client -->|"1. Request /api/v1/orders/cart"| Gateway["API Gateway 8080"]:::gateway
+    Gateway -->|"2. Định tuyến tự động"| OrderService["OrderService<br/>Port 8083"]:::service
+    OrderService -->|"3. Truy vấn JPA"| DB[("order_db MySQL<br/>Bảng: cart_items")]:::db
+    
+    classDef client fill:#4facfe,stroke:#00f2fe,stroke-width:2px,color:#fff;
+    classDef gateway fill:#1e293b,stroke:#00f2fe,stroke-width:3px,color:#00e676;
+    classDef service fill:#1e1e38,stroke:#4facfe,stroke-width:2px,color:#fff;
+    classDef db fill:#00e676,stroke:#00e676,stroke-width:2px,color:#fff;
+                    </div>
+                </div>
+                
+                <div class="details-grid" style="margin-top: 2rem; margin-bottom: 0;">
+                    <div style="background: rgba(255,255,255,0.01); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.03);">
+                        <h4 style="color: var(--accent-blue); margin-bottom: 0.5rem;">Cơ Chế Đồng Bộ Hybrid (LocalStorage + MySQL)</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">
+                            Khi là khách vãng lai, giỏ hàng lưu ở <b>LocalStorage</b>. Ngay khi đăng nhập thành công, Frontend tự động gửi toàn bộ sản phẩm local lên API <code>/sync</code>. 
+                            Backend sẽ gộp (merge) thông minh các sản phẩm này vào database MySQL của user đó và dọn dẹp LocalStorage để tránh trùng lặp.
+                        </p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.01); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.03);">
+                        <h4 style="color: var(--accent-purple); margin-bottom: 0.5rem;">Tự Động Tạo Bảng Qua Hibernate DDL</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">
+                            Nhờ cấu hình <code>ddl-auto: update</code> trong <code>OrderService</code>, bảng <code>cart_items</code> trong MySQL Database tự động được Hibernate sinh ra an toàn khi service khởi chạy mà không cần người dùng thao tác SQL thủ công.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 2: Cart Sync Flow -->
+            <div class="card diagram-card" style="margin-top: 2.5rem;">
+                <div class="info-header">
+                    <span class="badge">Sync Sequence</span>
+                    <h3>2. Luồng Đồng Bộ Giỏ Hàng Khi Đăng Nhập (Guest to Member Sync)</h3>
+                </div>
+                <p class="text-secondary" style="margin-bottom: 1.5rem;">Dưới đây là sơ đồ chi tiết các bước đồng bộ hóa giỏ hàng từ LocalStorage của Trình duyệt vào MySQL thông qua API Gateway:</p>
+                <div class="diagram-container">
+                    <div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor User as Khách hàng
+    participant React as React Frontend (5173)
+    participant Gateway as API Gateway (8080)
+    participant Order as OrderService (8083)
+    participant DB as order_db (MySQL)
+
+    Note over User, React: Trạng thái: Chưa Đăng Nhập (Guest)
+    User->>React: Thêm sản phẩm A (size L) vào giỏ hàng
+    React->>React: Lưu vào LocalStorage ['cart']
+    
+    Note over User, React: Tiến hành Đăng Nhập
+    User->>React: Đăng nhập thành công với Username 'anhnv'
+    React->>Gateway: POST /api/v1/orders/cart/sync?username=anhnv (Kèm localCart)
+    Gateway->>Order: Định tuyến đến CartController.syncCart
+    Order->>DB: Truy vấn giỏ hàng cũ của 'anhnv'
+    Order->>Order: Merge gộp các sản phẩm local vào database
+    Order->>DB: Lưu các bản ghi đã gộp vào bảng `cart_items`
+    Order-->>React: Trả về danh sách giỏ hàng sau khi gộp
+    React->>React: Gán danh sách mới vào State + Xóa LocalStorage ['cart']
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workspace cart files -->
+            <div class="features-grid" style="margin-top: 2.5rem;">
+                <div class="card">
+                    <div class="info-header">
+                        <span class="badge green">Cart Backend Files</span>
+                    </div>
+                    <p class="text-secondary" style="margin-bottom: 1rem;">Mã nguồn xử lý lưu trữ persistent giỏ hàng ở Backend:</p>
+                    
+                    <a href="file:///d:/Nam4/KTTKPM/Project/OrderService/src/main/java/iuh/fit/order/controller/CartController.java" class="file-box" style="margin-bottom: 10px;">
+                        <span class="file-icon">☕</span>
+                        <div class="file-info">
+                            <h5>CartController.java (REST API)</h5>
+                            <p>iuh.fit.order.controller.CartController</p>
+                        </div>
+                    </a>
+                    <a href="file:///d:/Nam4/KTTKPM/Project/OrderService/src/main/java/iuh/fit/order/service/CartService.java" class="file-box">
+                        <span class="file-icon">☕</span>
+                        <div class="file-info">
+                            <h5>CartService.java (Logic MySQL)</h5>
+                            <p>iuh.fit.order.service.CartService</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="card">
+                    <div class="info-header">
+                        <span class="badge green">Cart Frontend Files</span>
+                    </div>
+                    <p class="text-secondary" style="margin-bottom: 1rem;">Quản lý đồng bộ giỏ hàng và state ở React Frontend:</p>
+                    
+                    <a href="file:///d:/Nam4/KTTKPM/Project/shop-sport/src/features/Cart/CartContext.jsx" class="file-box" style="margin-bottom: 10px;">
+                        <span class="file-icon">⚛️</span>
+                        <div class="file-info">
+                            <h5>CartContext.jsx (Hybrid State)</h5>
+                            <p>shop-sport/src/features/Cart/CartContext.jsx</p>
+                        </div>
+                    </a>
+                    <a href="file:///d:/Nam4/KTTKPM/Project/shop-sport/src/api/cartApi.js" class="file-box">
+                        <span class="file-icon">⚛️</span>
+                        <div class="file-info">
+                            <h5>cartApi.js (Axios Cart API)</h5>
+                            <p>shop-sport/src/api/cartApi.js</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="card">
+                    <div class="info-header">
+                        <span class="badge green">Database Config</span>
+                    </div>
+                    <p class="text-secondary" style="margin-bottom: 1rem;">Cấu hình Database JPA tự động tạo bảng ở MySQL:</p>
+                    
+                    <a href="file:///d:/Nam4/KTTKPM/Project/OrderService/src/main/resources/application.yml" class="file-box">
+                        <span class="file-icon">📄</span>
+                        <div class="file-info">
+                            <h5>application.yml (Order DB update)</h5>
+                            <p>OrderService/src/main/resources/application.yml</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 3: WORKFLOWS & FEATURES -->
+        <div id="workflows" class="tab-content">
+            <div class="section-intro">
+                <h2>Toàn Bộ Chức Năng & Luồng Nghiệp Vụ Khách Hàng</h2>
+                <p>Khám phá các quy trình xử lý nghiệp vụ cụ thể của hệ thống SportShop bao gồm Security/Authentication, Đánh giá sản phẩm và Trợ lý AI.</p>
+            </div>
+
+            <!-- Feature 1: JWT & Auth -->
+            <div class="card diagram-card">
+                <div class="info-header">
+                    <span class="badge">Auth Flow</span>
+                    <h3>1. Luồng Xác Thực Đăng Nhập & Bảo Mật JWT (Mã Hóa BCrypt)</h3>
+                </div>
+                <div class="diagram-container">
+                    <div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor User as Khách hàng
+    participant React as React Frontend (5173)
+    participant Gateway as API Gateway (8080)
+    participant Auth as AuthService (8081)
+    participant DB as auth_db (MySQL)
+
+    User->>React: Nhập username, password -> Bấm Đăng Nhập
+    React->>Gateway: POST /api/v1/auth/login (Payload)
+    Gateway->>Auth: Định tuyến đến Login Controller
+    Auth->>DB: Truy vấn thông tin User bằng Username
+    DB-->>Auth: Trả về bản ghi User (Mật khẩu đã băm BCrypt)
+    Auth->>Auth: Kiểm tra mật khẩu (passwordEncoder.matches)
+    alt Khớp thông tin
+        Auth->>Auth: Tạo JWT Token (HS256, Expiry: 24h)
+        Auth-->>React: Trả về JSON { token, username, role }
+        React->>React: Lưu token vào localStorage (accessToken)
+    else Sai thông tin
+        Auth-->>React: Trả về HTTP 401 Unauthorized
+    end
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 3: Reviews -->
+            <div class="card diagram-card" style="margin-top: 2.5rem;">
+                <div class="info-header">
+                    <span class="badge">Reviews Flow</span>
+                    <h3>2. Luồng Đánh Giá Sản Phẩm 1-5 Sao (Sau Khi Đặt Hàng)</h3>
+                </div>
+                <div class="diagram-container">
+                    <div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor User as Khách hàng
+    participant React as React Frontend (5173)
+    participant Gateway as API Gateway (8080)
+    participant Product as ProductService (8082)
+    participant DB as product_db (MySQL)
+
+    User->>React: Vào Lịch Sử Đơn Hàng -> Chọn Viết Đánh Giá
+    User->>React: Chọn số sao (1-5★) & Nhập nội dung
+    React->>Gateway: POST /api/v1/reviews/{productId} (Kèm JWT & ReviewData)
+    Gateway->>Product: Xác thực và định tuyến đến Review Controller
+    Product->>DB: Insert bản ghi mới vào bảng `reviews`
+    DB-->>Product: OK
+    Product-->>React: Trả về HTTP 201 Created
+    React->>React: Tải lại danh sách đánh giá tại trang Chi tiết sản phẩm
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 4: Chat AI -->
+            <div class="card diagram-card" style="margin-top: 2.5rem;">
+                <div class="info-header">
+                    <span class="badge">AI Flow</span>
+                    <h3>3. Luồng Trò Chuyện Trợ Lý Ảo SportyAI Agent</h3>
+                </div>
+                <div class="diagram-container">
+                    <div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor User as Khách hàng
+    participant React as ChatWidget (Frontend)
+    participant Gateway as API Gateway (8080)
+    participant AI as AIService (8085)
+    participant Gemini as Gemini AI API (Google Cloud)
+
+    User->>React: Nhập câu hỏi và gửi ("Chọn cho tôi giày chạy bộ tốt")
+    React->>Gateway: POST /api/v1/ai/chat (Kèm message)
+    Gateway->>AI: Chuyển tiếp Request Chat AI
+    AI->>AI: Tạo Prompt với Spring AI Gemini ChatClient
+    AI->>Gemini: Gọi API Gemini (Bằng API Key cấu hình ở application.yml)
+    Gemini-->>AI: Trả về văn bản gợi ý sản phẩm
+    AI-->>Gateway: Trả về { response: "Chuỗi gợi ý..." }
+    Gateway-->>React: Trả về JSON kết quả
+    React-->>User: Hiển thị bong bóng chat sinh động
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 4: CHECKOUT & STOCK FLOW -->
+        <div id="checkout" class="tab-content">
+            <div class="section-intro">
+                <h2>Luồng Đặt Hàng & Trừ Kho Tự Động</h2>
+                <p>Một chu trình hoàn chỉnh từ lúc khách hàng ấn nút "Thanh toán", hệ thống sẽ tự động trừ hàng tồn kho, cập nhật số lượng đã bán, lưu trữ thông tin địa chỉ/SĐT và lịch sử giao dịch.</p>
+            </div>
+
+            <!-- Large Diagram taking 100% width -->
+            <div class="card diagram-card">
+                <div class="info-header">
+                    <span class="badge">Sequence Flow</span>
+                    <h3>Sơ Đồ Chu Trình Thanh Toán (Bản Lớn)</h3>
+                </div>
+                
+                <div class="diagram-container">
+                    <div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor User as Khách hàng
+    participant React as React Frontend (5173)
+    participant Gateway as API Gateway (8080)
+    participant Order as OrderService (8083)
+    participant Product as ProductService (8082)
+    participant Payment as PaymentService (8084)
+    participant Auth as AuthService (8081)
+
+    User->>React: 1. Nhập thông tin & bấm Đặt Hàng
+    React->>Gateway: 2. POST /api/v1/orders (Kèm OrderData)
+    Gateway->>Order: 3. Chuyển tiếp Request tạo Order
+    
+    rect rgb(20, 24, 38)
+        note right of Order: Trừ kho & tăng lượng bán
+        Order->>Gateway: 4. PUT /api/v1/products/{id}/increment-sold
+        Gateway->>Product: 5. Giảm Stock & Tăng SoldQuantity
+    end
+    
+    rect rgb(20, 24, 38)
+        note right of Order: Tạo giao dịch thanh toán
+        Order->>Gateway: 6. POST /api/v1/payments
+        Gateway->>Payment: 7. Lưu trạng thái giao dịch
+    end
+    
+    rect rgb(20, 24, 38)
+        note right of React: Tự động lưu Profile
+        React->>Gateway: 8. PUT /api/v1/auth/user/info (Địa chỉ & SĐT mới)
+        Gateway->>Auth: 9. Đồng bộ & lưu vào Database
+    end
+
+    Order-->>React: 10. Trả về Đơn hàng hoàn tất
+    React-->>User: 11. Hiển thị UI thành công!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details below -->
+            <div class="details-grid">
+                <div class="card">
+                    <div class="info-header">
+                        <span class="badge">Business Logic</span>
+                        <h3>Logic Trừ Kho & Tăng Lượt Mua</h3>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <h4>1. Giảm hàng tồn kho & tăng số lượng đã bán</h4>
+                        <p>Logic được xử lý an toàn tại backend của <code>ProductService</code> thông qua phương thức <code>incrementSoldCount</code>, đảm bảo hàng tồn kho (stock) không bao giờ bị âm:</p>
+                        <pre><code>product.setSoldQuantity(product.getSoldQuantity() + quantity);
+int newStock = product.getStock() - quantity;
+product.setStock(Math.max(newStock, 0));</code></pre>
+                    </div>
+
+                    <div class="flow-step">
+                        <h4>2. Lưu địa chỉ và số điện thoại tự động</h4>
+                        <p>Khi khách hàng thanh toán thành công, hệ thống tự động gọi API cập nhật lại thông tin cá nhân của User dựa vào địa chỉ và SĐT mới nhất vừa điền.</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <h4>3. Gợi ý sản phẩm bán chạy (Recommendation Sorting)</h4>
+                        <p>Tại trang danh sách sản phẩm (<code>ProductList.jsx</code>), sản phẩm được tự động sắp xếp theo lượt mua giảm dần (<code>soldQuantity DESC</code>), giúp đưa các sản phẩm phổ biến nhất lên đầu trang để kích thích mua sắm.</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <h4>4. Xóa cache Redis tức thời để cập nhật kho</h4>
+                        <p>Khi lượt bán tăng và hàng tồn kho thay đổi, Product Service kích hoạt <code>@CacheEvict</code> để giải phóng bộ đệm Redis ngay lập tức, đảm bảo khách hàng sau vào xem sẽ nhận thông tin hàng tồn chính xác 100%.</p>
+                    </div>
+                </div>
+
+                <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div class="info-header">
+                            <span class="badge">Workspace Files</span>
+                            <h3>Các File Mã Nguồn Xử Lý</h3>
+                        </div>
+                        <p class="text-secondary" style="margin-bottom: 1.5rem;">Xem trực tiếp code xử lý kho và đồng bộ profile người dùng:</p>
+                        
+                        <a href="file:///d:/Nam4/KTTKPM/Project/ProjectService/src/main/java/iuh/fit/product/Service/ProductService.java" class="file-box" style="margin-bottom: 1rem;">
+                            <span class="file-icon">☕</span>
+                            <div class="file-info">
+                                <h5>ProductService.java (Logic Kho)</h5>
+                                <p>d:\Nam4\KTTKPM\Project\ProjectService\src\main\java\iuh\fit\product\Service\ProductService.java</p>
+                            </div>
+                        </a>
+                        
+                        <a href="file:///d:/Nam4/KTTKPM/Project/shop-sport/src/features/Checkout/CheckoutPage.jsx" class="file-box" style="margin-bottom: 1rem;">
+                            <span class="file-icon">⚛️</span>
+                            <div class="file-info">
+                                <h5>CheckoutPage.jsx (Lưu Profile)</h5>
+                                <p>d:\Nam4\KTTKPM\Project\shop-sport\src\features\Checkout\CheckoutPage.jsx</p>
+                            </div>
+                        </a>
+
+                        <a href="file:///d:/Nam4/KTTKPM/Project/shop-sport/src/features/Catalog/ProductList.jsx" class="file-box">
+                            <span class="file-icon">⚛️</span>
+                            <div class="file-info">
+                                <h5>ProductList.jsx (Sorting logic)</h5>
+                                <p>d:\Nam4\KTTKPM\Project\shop-sport\src\features\Catalog\ProductList.jsx</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 5: ADMIN PORTAL -->
+        <div id="admin" class="tab-content">
+            <div class="section-intro">
+                <h2>Cơ Chế Bảo Mật & Hoạt Động Của Admin Portal</h2>
+                <p>Khám phá cách Route Guards kiểm soát quyền truy cập của Admin và các cơ chế CRUD sản phẩm, cập nhật trạng thái đơn hàng thời gian thực.</p>
+            </div>
+
+            <!-- Card 1: Route Guard -->
+            <div class="card diagram-card">
+                <div class="info-header">
+                    <span class="badge">Authorization Guard</span>
+                    <h3>1. Cơ Chế Route Guard Bảo Vệ Đường Dẫn Quản Trị</h3>
+                </div>
+                <p class="text-secondary" style="margin-bottom: 1.5rem;">Khi người dùng cố tình truy cập vào các URL dạng <code>/admin/**</code>, Route Guard phía Client (React) sẽ chặn đứng nếu không thỏa mãn quyền quản trị:</p>
+                
+                <div class="diagram-container">
+                    <div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor User as Khách hàng / Admin
+    participant React as React Router Dom (5173)
+    participant Guard as AdminRoute.jsx (Route Guard)
+    participant Page as Admin Dashboard Page
+
+    User->>React: Gõ URL trực tiếp hoặc bấm link /admin/products
+    React->>Guard: Kiểm tra Token & Role trong localStorage
+    
+    alt Chưa đăng nhập (accessToken trống)
+        Guard-->>React: Chặn lại! Redirect về trang /login
+    else Đã đăng nhập nhưng Role != ROLE_ADMIN (Ví dụ: ROLE_USER)
+        Guard-->>React: Chặn lại! Redirect về trang chủ /
+    else Đã đăng nhập và Role == ROLE_ADMIN
+        Guard->>Page: Cho phép render trang Quản trị!
+    end
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: CRUD products & order status -->
+            <div class="details-grid">
+                <div class="card">
+                    <div class="info-header">
+                        <span class="badge">CRUD Products</span>
+                        <h3>Quản Trị Danh Sách Sản Phẩm</h3>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <h4>Xem và Xóa Sản Phẩm</h4>
+                        <p>Danh sách sản phẩm được tải từ API Gateway <code>GET /api/v1/products</code>. Admin xóa sản phẩm thông qua lệnh <code>DELETE /api/v1/products/{id}</code> giúp gỡ sản phẩm khỏi hệ thống.</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <h4>Thêm và Sửa (Form Validate)</h4>
+                        <p>Form thêm mới hoặc cập nhật gửi request <code>POST</code> / <code>PUT</code> qua Gateway đến <code>ProductService</code>. Có kiểm tra định dạng dữ liệu (Tên, Ảnh, Giá, Tồn kho) chặt chẽ trước khi lưu vào DB.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="info-header">
+                        <span class="badge">Order State Sync</span>
+                        <h3>Quản Lý & Đồng Bộ Trạng Thái Đơn Hàng</h3>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <h4>Cập nhật trạng thái đơn hàng</h4>
+                        <p>Admin có thể thay đổi trạng thái đơn của tất cả khách hàng (ví dụ: duyệt đơn, đang chuẩn bị hàng, đang giao, đã giao, hủy đơn) qua dropdown <code>&lt;select&gt;</code>.</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <h4>Đồng bộ thời gian thực</h4>
+                        <p>Mỗi khi admin đổi trạng thái, React gọi API <code>PUT /api/v1/orders/{id}/status?status=...</code>. Dữ liệu trạng thái mới sẽ được lưu vào bảng <code>orders</code> của <code>order_db</code>, người mua truy cập <b>Lịch Sử Mua Hàng</b> sẽ thấy cập nhật ngay lập tức.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workspace admin files -->
+            <div class="features-grid" style="margin-top: 2rem;">
+                <div class="card">
+                    <div class="info-header">
+                        <span class="badge green">Route Guard File</span>
+                    </div>
+                    <p class="text-secondary" style="margin-bottom: 1rem;">Lớp bảo vệ quyền Admin phía Frontend:</p>
+                    
+                    <a href="file:///d:/Nam4/KTTKPM/Project/shop-sport/src/features/Admin/AdminRoute.jsx" class="file-box">
+                        <span class="file-icon">⚛️</span>
+                        <div class="file-info">
+                            <h5>AdminRoute.jsx (Auth Guard)</h5>
+                            <p>shop-sport/src/features/Admin/AdminRoute.jsx</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="card">
+                    <div class="info-header">
+                        <span class="badge green">Product Manager File</span>
+                    </div>
+                    <p class="text-secondary" style="margin-bottom: 1rem;">Trang CRUD quản lý sản phẩm của Admin:</p>
+                    
+                    <a href="file:///d:/Nam4/KTTKPM/Project/shop-sport/src/features/Admin/ProductManager.jsx" class="file-box">
+                        <span class="file-icon">⚛️</span>
+                        <div class="file-info">
+                            <h5>ProductManager.jsx (CRUD UI)</h5>
+                            <p>shop-sport/src/features/Admin/ProductManager.jsx</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="card">
+                    <div class="info-header">
+                        <span class="badge green">Order Manager File</span>
+                    </div>
+                    <p class="text-secondary" style="margin-bottom: 1rem;">Trang quản lý đơn hàng của Admin:</p>
+                    
+                    <a href="file:///d:/Nam4/KTTKPM/Project/shop-sport/src/features/Admin/OrderManager.jsx" class="file-box">
+                        <span class="file-icon">⚛️</span>
+                        <div class="file-info">
+                            <h5>OrderManager.jsx (Order Status)</h5>
+                            <p>shop-sport/src/features/Admin/OrderManager.jsx</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 6: REDIS CACHING -->
+        <div id="redis" class="tab-content">
+            <div class="section-intro">
+                <h2>Cơ Chế Caching Hiệu Năng Cao Với Redis</h2>
+                <p>Khám phá cách Redis lưu đệm (Caching) dữ liệu sản phẩm để giảm tải cho MySQL và tăng tốc phản hồi dưới 2ms, cùng cơ chế dọn dẹp cache tự động.</p>
+            </div>
+
+            <!-- Card 1: Read Flow -->
+            <div class="card diagram-card">
+                <div class="info-header">
+                    <span class="badge">Read Cache Flow</span>
+                    <h3>1. Quy Trình Đọc Dữ Liệu & Kiểm Tra Cache (Cache Read Flow)</h3>
+                </div>
+                <p class="text-secondary" style="margin-bottom: 1.5rem;">Khi có yêu cầu lấy danh sách sản phẩm hoặc chi tiết sản phẩm, hệ thống sẽ ưu tiên tìm trong RAM của Redis. Nếu tìm thấy (Cache Hit), trả về ngay lập tức. Nếu không thấy (Cache Miss), truy vấn MySQL rồi ghi vào Redis để phục vụ lần sau:</p>
+                
+                <div class="diagram-container">
+                    <div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor Browser as Trình duyệt (Client)
+    participant Gateway as API Gateway (8080)
+    participant Product as ProductService (8082)
+    participant Redis as Redis Cache (6379)
+    participant DB as product_db (MySQL)
+
+    Browser->>Gateway: GET /api/v1/products
+    Gateway->>Product: Định tuyến đến getAllProducts()
+    Product->>Redis: Kiểm tra Key "products::all"
+    
+    alt Cache HIT (Tìm thấy trong Redis)
+        Redis-->>Product: Trả về dữ liệu JSON của các Sản phẩm
+        Product-->>Browser: Trả về Client (Thời gian phản hồi &lt; 2ms)
+    else Cache MISS (Không tìm thấy trong Redis)
+        Redis-->>Product: Trả về null
+        Product->>DB: Query SELECT * FROM products
+        DB-->>Product: Trả về List&lt;Product&gt; từ đĩa cứng
+        Product->>Redis: SET Key "products::all" = List&lt;Product&gt; (Thời hạn: 1 tiếng)
+        Product-->>Browser: Trả về Client (Thời gian phản hồi ~ 100ms - 200ms)
+    end
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Eviction Flow -->
+            <div class="card diagram-card" style="border-color: rgba(57, 255, 20, 0.3);">
+                <div class="info-header">
+                    <span class="badge green">Cache Eviction Flow</span>
+                    <h3>2. Quy Trình Đồng Bộ & Dọn Dẹp Cache Tự Động (Cache Eviction)</h3>
+                </div>
+                <p class="text-secondary" style="margin-bottom: 1.5rem;">Để tránh tình trạng lệch dữ liệu giữa MySQL (DB thật) và Redis (RAM Cache), khi Admin thêm/sửa/xóa sản phẩm hoặc khi Khách đặt hàng làm thay đổi kho hàng, hệ thống tự động xóa bỏ (Evict) các cache cũ để buộc lần tải tiếp theo phải nạp lại dữ liệu mới nhất:</p>
+                
+                <div class="diagram-container">
+                    <div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor Admin as Admin / Khách đặt hàng
+    participant React as Frontend / OrderService
+    participant Gateway as API Gateway (8080)
+    participant Product as ProductService (8082)
+    participant DB as product_db (MySQL)
+    participant Redis as Redis Cache (6379)
+
+    Admin->>React: Thêm, sửa sản phẩm HOẶC thanh toán thành công trừ kho
+    React->>Gateway: Gửi request thay đổi sản phẩm (POST/PUT/DELETE)
+    Gateway->>Product: Định tuyến đến hàm saveProduct() / incrementSoldCount()
+    
+    Product->>DB: Cập nhật hoặc lưu thực thể mới xuống MySQL
+    DB-->>Product: OK (Lưu thành công)
+    
+    rect rgb(20, 24, 38)
+        note right of Product: Kích hoạt @CacheEvict toàn cục
+        Product->>Redis: Xóa các key cache ("products", "products_by_category", "product_details")
+        Redis-->>Product: OK (Hủy cache thành công)
+    end
+    
+    Product-->>React: Trả về phản hồi thành công
+    Note over Admin, Redis: Khách hàng tiếp theo tải trang -> Xảy ra Cache MISS -> MySQL nạp mới dữ liệu cực chuẩn xác!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Optimization details -->
+            <div class="details-grid">
+                <div class="card">
+                    <div class="info-header">
+                        <span class="badge">JPA Collection Fix</span>
+                        <h3>Khắc Phục Lỗi Tuần Tự Hóa JPA</h3>
+                    </div>
+                    <div class="flow-step">
+                        <h4>Thách thức từ Hibernate PersistentBag</h4>
+                        <p>Trong thực thể <code>Product</code>, danh sách bình luận (<code>reviews</code>) được nạp chậm (Lazy Loading). Khi Jackson lưu danh sách này vào Redis, nó ghi nhận kiểu dữ liệu là <code>PersistentBag</code> (lớp con của List do Hibernate quản lý).</p>
+                    </div>
+                    <div class="flow-step">
+                        <h4>Giải pháp loại bỏ bằng @JsonIgnore</h4>
+                        <p>Nhận thấy Frontend lấy đánh giá qua một API riêng của Review Service chứ không lấy trực tiếp từ Product API, ta đính kèm <b><code>@JsonIgnore</code></b> lên trường <code>reviews</code> của class <code>Product</code>. Jackson sẽ bỏ qua hoàn toàn trường này, triệt tiêu 100% lỗi crash do deserialization ở lần F5 thứ 2!</p>
+                    </div>
+                </div>
+
+                <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div class="info-header">
+                            <span class="badge green">Real Config Files</span>
+                            <h3>Liên Kết File Cấu Hình & Code Thực Tế</h3>
+                        </div>
+                        <p class="text-secondary" style="margin-bottom: 1rem;">Bấm trực tiếp vào các liên kết để kiểm chứng mã nguồn Caching trên dự án:</p>
+                        
+                        <a href="file:///d:/Nam4/KTTKPM/Project/ProjectService/src/main/java/iuh/fit/product/config/RedisConfig.java" class="file-box" style="margin-bottom: 10px;">
+                            <span class="file-icon">☕</span>
+                            <div class="file-info">
+                                <h5>RedisConfig.java (JSON Serializer)</h5>
+                                <p>Cấu hình ép Redis lưu dạng JSON & giải quyết Java Time</p>
+                            </div>
+                        </a>
+                        
+                        <a href="file:///d:/Nam4/KTTKPM/Project/ProjectService/src/main/java/iuh/fit/product/Service/ProductService.java" class="file-box" style="margin-bottom: 10px;">
+                            <span class="file-icon">☕</span>
+                            <div class="file-info">
+                                <h5>ProductService.java (@Cacheable)</h5>
+                                <p>Các annotation đánh dấu cache và tự động evict dọn dẹp</p>
+                            </div>
+                        </a>
+                        
+                        <a href="file:///d:/Nam4/KTTKPM/Project/ProjectService/src/main/java/iuh/fit/product/entity/Product.java" class="file-box">
+                            <span class="file-icon">☕</span>
+                            <div class="file-info">
+                                <h5>Product.java (Serializable & Ignore)</h5>
+                                <p>Thực thể triển khai Serializable và gắn @JsonIgnore cho reviews</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 7: RABBITMQ EVENT-DRIVEN -->
+        <div id="rabbitmq" class="tab-content">
+            <div class="section-intro">
+                <h2>Kiến Trúc Event-Driven Bất Đồng Bộ Với RabbitMQ</h2>
+                <p>Khám phá cách RabbitMQ Broker tách biệt hoàn toàn OrderService và ProductService, giúp xử lý trừ hàng tồn kho bất đồng bộ cực kỳ chịu tải và kháng đổ vỡ.</p>
+            </div>
+
+            <!-- RabbitMQ Architecture Diagram -->
+            <div class="card diagram-card">
+                <div class="info-header">
+                    <span class="badge">RabbitMQ Topic Routing</span>
+                    <h3>1. Bản Đồ Truyền Tin Bất Đồng Bộ (Event Routing Map)</h3>
+                </div>
+                <p class="text-secondary" style="margin-bottom: 1.5rem;">Khi có đơn hàng mới, thay vì gọi HTTP REST đồng bộ, Order Service bắn một tin nhắn sự kiện lên Topic Exchange. RabbitMQ tự động phân phối tin nhắn đến hàng đợi đã được đăng ký trước để Product Service tiêu thụ âm thầm dưới nền:</p>
+                
+                <div class="diagram-container">
+                    <div class="mermaid">
+graph LR
+    Order["OrderService<br/>Publisher"]:::pub -->|"1. Publish StockUpdateEvent"| Ex["x.product.exchange<br/>Topic Exchange"]:::exchange
+    Ex -->|"2. Route by 'product.stock-update'"| Q["q.product.stock-update<br/>Durable Queue"]:::queue
+    Q -->|"3. Deliver Asynchronously"| Product["ProductService<br/>Consumer"]:::sub
+    Product -->|"4. Update stock & Evict Cache"| DB[("product_db MySQL")]:::db
+    
+    classDef pub fill:#1e1e38,stroke:#4facfe,stroke-width:2.5px,color:#fff;
+    classDef sub fill:#1e1e38,stroke:#39ff14,stroke-width:2.5px,color:#fff;
+    classDef exchange fill:#ff9800,stroke:#ff9800,stroke-width:3px,color:#fff;
+    classDef queue fill:#e91e63,stroke:#e91e63,stroke-width:3px,color:#fff;
+    classDef db fill:#0f172a,stroke:#8b949e,stroke-width:1px,color:#8b949e;
+                    </div>
+                </div>
+            </div>
+
+            <!-- Asynchronous Sequence Diagram -->
+            <div class="card diagram-card" style="border-color: rgba(57, 255, 20, 0.3);">
+                <div class="info-header">
+                    <span class="badge green">High Speed & Fault Tolerance</span>
+                    <h3>2. Luồng Xử Lý Bất Đồng Bộ Kháng Lỗi (Asynchronous Sequence)</h3>
+                </div>
+                <div class="diagram-container">
+                    <div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor User as Khách hàng
+    participant React as React Frontend (5173)
+    participant Gateway as API Gateway (8080)
+    participant Order as OrderService (8083)
+    participant Rabbit as RabbitMQ Broker (5672)
+    participant Product as ProductService (8082)
+
+    User->>React: Nhập thông tin & bấm Thanh Toán
+    React->>Gateway: POST /api/v1/orders
+    Gateway->>Order: Định tuyến tạo đơn hàng
+    Order->>Order: Lưu đơn vào order_db (MySQL)
+    
+    rect rgb(20, 24, 38)
+        note right of Order: Tách rời giao tiếp, đẩy lên Message Broker
+        Order->>Rabbit: Send StockUpdateEvent (JSON) to 'x.product.exchange'
+    end
+    
+    Order-->>React: Trả về HTTP 201 Created (Tốc độ phản hồi cực nhanh dưới 10ms!)
+    React-->>User: Hiển thị giao diện "Đặt hàng thành công!"
+    
+    Note over Rabbit, Product: TIÊU THỤ BẤT ĐỒNG BỘ (ASYNCHRONOUS CONSUMPTION)
+    Rabbit->>Product: Đẩy StockUpdateEvent tới ProductStockListener
+    alt ProductService đang hoạt động bình thường
+        Product->>Product: Giảm stock, tăng soldQuantity và Evict Cache Redis
+        Product-->>Rabbit: Ack (Xác nhận tiêu thụ thành công)
+    else ProductService gặp sự cố (Sập nguồn, bảo trì)
+        Note over Rabbit, Product: Tin nhắn vẫn được lưu an toàn trong Queue (Durable). Khi ProductService sống lại, nó sẽ tự động tiêu thụ tiếp mà không lo mất đơn!
+    end
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details below -->
+            <div class="details-grid">
+                <div class="card">
+                    <div class="info-header">
+                        <span class="badge">Architecture Benefits</span>
+                        <h3>Ưu Điểm Vượt Trội Của Kiến Trúc Event-Driven</h3>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <h4>1. Loose Coupling (Tách biệt dịch vụ tuyệt đối)</h4>
+                        <p><code>OrderService</code> hoàn toàn không cần biết địa chỉ IP, Port hay trạng thái hoạt động của <code>ProductService</code>. Giao tiếp qua Broker triệt tiêu mọi liên kết cứng (Tight Coupling).</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <h4>2. Fault Tolerance (Khả năng chịu lỗi kháng sập)</h4>
+                        <p>Nếu server sản phẩm bị sập, người dùng vẫn mua hàng bình thường. RabbitMQ bảo lưu 100% sự kiện trong đĩa cứng của hàng đợi. Hệ thống hoàn toàn kháng lỗi đổ vỡ domino.</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <h4>3. Performance & Thao tác tức thì</h4>
+                        <p>Giảm thiểu thời gian chờ đợi mạng qua REST API đồng bộ. Người dùng nhận thông báo mua hàng hoàn tất tức thì dưới 10ms.</p>
+                    </div>
+                </div>
+
+                <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div class="info-header">
+                            <span class="badge green">Real Source Files</span>
+                            <h3>Liên Kết File Nguồn Cấu Hình RabbitMQ</h3>
+                        </div>
+                        <p class="text-secondary" style="margin-bottom: 1rem;">Bấm trực tiếp vào các liên kết để xem cách RabbitMQ được cấu hình và lắng nghe bất đồng bộ:</p>
+                        
+                        <a href="file:///d:/Nam4/KTTKPM/Project/OrderService/src/main/java/iuh/fit/order/config/RabbitMQConfig.java" class="file-box" style="margin-bottom: 10px;">
+                            <span class="file-icon">☕</span>
+                            <div class="file-info">
+                                <h5>RabbitMQConfig.java (Order Service)</h5>
+                                <p>Định nghĩa Queue, Exchange và Binding ở phía gửi</p>
+                            </div>
+                        </a>
+                        
+                        <a href="file:///d:/Nam4/KTTKPM/Project/OrderService/src/main/java/iuh/fit/order/service/OrderService.java" class="file-box" style="margin-bottom: 10px;">
+                            <span class="file-icon">☕</span>
+                            <div class="file-info">
+                                <h5>OrderService.java (Publisher)</h5>
+                                <p>Đoạn code đẩy event JSON lên RabbitMQ khi tạo đơn</p>
+                            </div>
+                        </a>
+                        
+                        <a href="file:///d:/Nam4/KTTKPM/Project/ProjectService/src/main/java/iuh/fit/product/config/RabbitMQConfig.java" class="file-box" style="margin-bottom: 10px;">
+                            <span class="file-icon">☕</span>
+                            <div class="file-info">
+                                <h5>RabbitMQConfig.java (Product Service)</h5>
+                                <p>Cấu hình Jackson Converter nhận JSON của phía nhận</p>
+                            </div>
+                        </a>
+
+                        <a href="file:///d:/Nam4/KTTKPM/Project/ProjectService/src/main/java/iuh/fit/product/listener/ProductStockListener.java" class="file-box">
+                            <span class="file-icon">☕</span>
+                            <div class="file-info">
+                                <h5>ProductStockListener.java (Consumer)</h5>
+                                <p>Lớp lắng nghe hàng đợi và tự động trừ kho, hủy cache</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 8: CORS & SECURITY -->
+        <div id="cors" class="tab-content">
+            <div class="section-intro">
+                <h2>Cơ Chế CORS & Bảo Mật Toàn Cục</h2>
+                <p>Cách Gateway đóng vai trò lá chắn giải quyết triệt để vấn đề CORS Preflight OPTIONS và cơ chế bảo mật xác thực người dùng bằng JWT.</p>
+            </div>
+
+            <!-- Large Diagram taking 100% width -->
+            <div class="card diagram-card">
+                <div class="info-header">
+                    <span class="badge">CORS Deduplication</span>
+                    <h3>Sơ Đồ Gộp Header CORS Bằng DedupeResponseHeader (Bản Lớn)</h3>
+                </div>
+                <p class="text-secondary" style="margin-bottom: 1.5rem;">Khi cả Gateway và Service con đều khai báo CORS, trình duyệt sẽ nhận được 2 Header CORS trùng nhau gây lỗi. Gateway sử dụng bộ lọc <code>DedupeResponseHeader</code> để gộp chúng lại thành 1 duy nhất:</p>
+                
+                <div class="diagram-container">
+                    <div class="mermaid">
+sequenceDiagram
+    autonumber
+    participant Browser as Trình duyệt (5173)
+    participant Gateway as API Gateway (8080)
+    participant Micro as Service Con (8082)
+
+    Note over Browser, Gateway: BƯỚC 1: XỬ LÝ PREFLIGHT (OPTIONS)
+    Browser->>Gateway: OPTIONS /api/v1/products (Kiểm tra CORS)
+    Gateway-->>Browser: Trả về HTTP 200 + Access-Control-Allow-Origin: * (Xử lý trực tiếp bởi globalcors)
+    
+    Note over Browser, Gateway: BƯỚC 2: GỌI API THỰC TẾ (GET)
+    Browser->>Gateway: GET /api/v1/products (Kèm Bearer JWT)
+    Gateway->>Micro: Chuyển tiếp Request GET
+    Micro-->>Gateway: Trả về dữ liệu + Header: Access-Control-Allow-Origin: * (Từ @CrossOrigin)
+    
+    rect rgb(20, 24, 38)
+        note right of Gateway: Gộp trùng lặp bằng DedupeResponseHeader
+        Gateway->>Gateway: Xóa Header dư thừa, chỉ giữ lại RETAIN_LAST (*)
+    end
+    
+    Gateway-->>Browser: Trả về dữ liệu + CHỈ CÓ 1 Header Access-Control-Allow-Origin: *
+    Note over Browser: CORS Đạt chuẩn! Cho phép render dữ liệu lên màn hình.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details below -->
+            <div class="details-grid">
+                <div class="card">
+                    <div class="info-header">
+                        <span class="badge">Security Detail</span>
+                        <h3>JWT & Mã Hóa Mật Khẩu</h3>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <h4>Mã Hóa Mật Khẩu (BCrypt)</h4>
+                        <p>Mật khẩu người dùng được băm 1 chiều bằng thuật toán BCrypt kèm <b>Salt</b> ngẫu nhiên trước khi lưu vào DB. Không thể dịch ngược ngay cả khi bị rò rỉ dữ liệu.</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <h4>Xác thực Stateless bằng JWT</h4>
+                        <p>Sau khi đăng nhập thành công, người dùng nhận được 1 Token có thời hạn 24 tiếng. Axios Interceptors tự động đính kèm Token này vào header <code>Authorization: Bearer &lt;Token&gt;</code> cho mọi request gọi tới Gateway.</p>
+                    </div>
+                </div>
+
+                <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div class="info-header">
+                            <span class="badge">Axios Security</span>
+                            <h3>Cấu Hình Interceptors Đính Kèm JWT</h3>
+                        </div>
+                        <p class="text-secondary" style="margin-bottom: 1.5rem;">Bấm để xem cách Frontend đính kèm JWT Token vào Header tự động gửi lên Gateway:</p>
+                        
+                        <a href="file:///d:/Nam4/KTTKPM/Project/shop-sport/src/api/axiosClient.js" class="file-box">
+                            <span class="file-icon">⚛️</span>
+                            <div class="file-info">
+                                <h5>axiosClient.js (Axios Security)</h5>
+                                <p>d:\Nam4\KTTKPM\Project\shop-sport\src\api\axiosClient.js</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 9: REALTIME CHAT WEBSOCKET -->
+        <div id="chat" class="tab-content">
+            <div class="section-intro">
+                <h2>Hỗ Trợ Trực Tuyến & Realtime WebSocket Chat</h2>
+                <p>Khám phá cách hệ thống tích hợp dịch vụ Chat thời gian thực (ChatService) chạy trên giao thức WebSocket, truyền tải qua API Gateway và lưu trữ tin nhắn persistent vào MySQL Database.</p>
+            </div>
+
+            <!-- Card 1: Chat Flow -->
+            <div class="card diagram-card">
+                <div class="info-header">
+                    <span class="badge purple">Realtime Communication</span>
+                    <h3>1. Luồng Chat WebSocket Thời Gian Thực & Lưu Trữ Persistent (MySQL)</h3>
+                </div>
+                <p class="text-secondary" style="margin-bottom: 1.5rem;">Sơ đồ minh họa kết nối hai chiều WebSocket qua API Gateway. Tin nhắn được lưu trữ trực tiếp vào MySQL <code>chat_db</code> qua <code>ChatMessageRepository</code>, đồng thời tự động bắt được <code>orderId</code> khi người dùng nhấn hỗ trợ từ một đơn hàng cụ thể:</p>
+                
+                <div class="diagram-container">
+                    <div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor User as Khách hàng
+    participant React as LiveChatWidget (Client)
+    participant Gateway as API Gateway (8080)
+    participant Chat as ChatService (8086)
+    participant DB as chat_db (MySQL)
+    actor Admin as Admin (Dashboard)
+
+    Note over User, React: Người dùng click 'Liên hệ người bán' từ đơn hàng #12
+    React->>React: Đặt currentOrderId = 12 & Gán tin nhắn mẫu
+    
+    Note over React, Chat: Thiết lập kết nối WebSocket
+    React->>Gateway: WS Handshake /ws-chat?username=user1&role=ROLE_USER
+    Gateway->>Chat: Chuyển tiếp kết nối tới ChatWebSocketHandler
+    Chat->>Chat: Đăng ký Session vào Map (userSessions)
+    
+    User->>React: Nhập tin nhắn và bấm gửi
+    React->>Chat: Gửi JSON { sender: 'user1', receiver: 'admin', content: '...', orderId: 12 }
+    Chat->>DB: Lưu tin nhắn qua ChatMessageRepository.save()
+    Chat->>Chat: Xác định Admin trong sessionRoles Map
+    Chat->>Admin: Đẩy tin nhắn realtime qua Session của Admin
+    Chat->>React: Echo ngược lại tin nhắn kèm ID database vừa tạo
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details below -->
+            <div class="details-grid">
+                <div class="card">
+                    <div class="info-header">
+                        <span class="badge">Chat & State Logic</span>
+                        <h3>Xử Lý Order ID & Đồng Bộ Realtime</h3>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <h4>1. Bắt Sự Kiện "Liên Hệ Người Bán"</h4>
+                        <p>Khi khách hàng nhấn nút liên hệ từ một đơn hàng trong trang lịch sử đơn hàng, Frontend kích hoạt một Custom Event <code>open-seller-chat</code> chứa thông tin <code>orderId</code>. Component <code>LiveChatWidget</code> lắng nghe sự kiện này để cập nhật state <code>currentOrderId</code> và tự động gửi tin nhắn mồi chào.</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <h4>2. Lưu Trữ Persistent Vào MySQL Database</h4>
+                        <p>Trước đây tin nhắn chỉ được lưu trong bộ nhớ tạm (in-memory). Hiện tại, <code>ChatWebSocketHandler</code> đã được tích hợp <code>ChatMessageRepository</code> để lưu mọi cuộc đối thoại vào bảng <code>chat_messages</code> trong MySQL <code>chat_db</code>, đảm bảo tin nhắn không bị mất khi khởi động lại server.</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <h4>3. WebSocket Handshake & Session Management</h4>
+                        <p>Kết nối được thiết lập trực tiếp tới <code>ws://localhost:8086/ws-chat</code>. `ChatService` tự động lưu trữ và phân loại các session của người dùng thông thường (ROLE_USER) và quản trị viên (ROLE_ADMIN) để định tuyến chính xác tin nhắn realtime.</p>
+                    </div>
+                </div>
+
+                <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div class="info-header">
+                            <span class="badge green">Real Source Files</span>
+                            <h3>Các Tệp Nguồn Xử Lý WebSocket Chat</h3>
+                        </div>
+                        <p class="text-secondary" style="margin-bottom: 1.5rem;">Bấm trực tiếp vào các liên kết để xem code cấu hình WebSocket, lưu trữ database và giao diện chat:</p>
+                        
+                        <a href="file:///d:/Nam4/KTTKPM/Project/ChatService/src/main/java/iuh/fit/chat/controller/ChatWebSocketHandler.java" class="file-box" style="margin-bottom: 10px;">
+                            <span class="file-icon">☕</span>
+                            <div class="file-info">
+                                <h5>ChatWebSocketHandler.java (WebSocket Server)</h5>
+                                <p>Cấu hình lắng nghe kết nối, định tuyến tin nhắn & lưu MySQL</p>
+                            </div>
+                        </a>
+                        
+                        <a href="file:///d:/Nam4/KTTKPM/Project/ChatService/src/main/java/iuh/fit/chat/dto/ChatMessage.java" class="file-box" style="margin-bottom: 10px;">
+                            <span class="file-icon">☕</span>
+                            <div class="file-info">
+                                <h5>ChatMessage.java (JPA Entity)</h5>
+                                <p>Thực thể ChatMessage ánh xạ bảng chat_messages trong MySQL</p>
+                            </div>
+                        </a>
+
+                        <a href="file:///d:/Nam4/KTTKPM/Project/ChatService/src/main/java/iuh/fit/chat/repository/ChatMessageRepository.java" class="file-box" style="margin-bottom: 10px;">
+                            <span class="file-icon">☕</span>
+                            <div class="file-info">
+                                <h5>ChatMessageRepository.java (JPA Repo)</h5>
+                                <p>Repository cung cấp CRUD ghi/đọc lịch sử chat MySQL</p>
+                            </div>
+                        </a>
+                        
+                        <a href="file:///d:/Nam4/KTTKPM/Project/shop-sport/src/components/Chat/LiveChatWidget.jsx" class="file-box">
+                            <span class="file-icon">⚛️</span>
+                            <div class="file-info">
+                                <h5>LiveChatWidget.jsx (WebSocket Client)</h5>
+                                <p>Component React kết nối WebSocket, bắt sự kiện và xử lý Order ID</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Initialize Mermaid with larger scaling
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'dark',
+            securityLevel: 'loose',
+            themeVariables: {
+                background: '#11141e',
+                primaryColor: '#1e293b',
+                primaryTextColor: '#fff',
+                lineColor: '#00f2fe',
+                actorBkg: '#1e1e38',
+                actorBorder: '#4facfe',
+                actorTextColor: '#fff',
+                noteBkgColor: '#2d3748',
+                noteBorderColor: '#4a5568'
+            }
+        });
+
+        // Tab Switcher
+        function switchTab(tabId) {
+            // Hide all tabs
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            // Deactivate all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show active tab
+            document.getElementById(tabId).classList.add('active');
+
+            // Find clicked button and activate it
+            event.currentTarget.classList.add('active');
+            
+            // Re-render mermaid diagrams inside the tab if needed
+            mermaid.contentLoaded();
+        }
+    </script>
+</body>
+</html>

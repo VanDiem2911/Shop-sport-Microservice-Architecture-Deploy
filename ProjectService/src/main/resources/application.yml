@@ -1,0 +1,32 @@
+server:
+  address: 0.0.0.0
+  port: 8082
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  cache:
+    type: redis
+  datasource:
+    # Thêm các tham số để driver kết nối mượt hơn
+    url: jdbc:mysql://localhost:3306/product_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: sapassword
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    # Ép Hibernate sử dụng đúng Dialect cho MySQL
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        # Cấu hình bổ sung để tránh lỗi metadata
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
