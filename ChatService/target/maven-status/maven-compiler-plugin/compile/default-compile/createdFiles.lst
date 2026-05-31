@@ -1,0 +1,6 @@
+iuh\fit\chat\config\WebSocketConfig.class
+iuh\fit\chat\controller\ChatWebSocketHandler.class
+iuh\fit\chat\ChatApplication.class
+iuh\fit\chat\controller\ChatController.class
+iuh\fit\chat\repository\ChatMessageRepository.class
+iuh\fit\chat\dto\ChatMessage.class

@@ -26,6 +26,12 @@ public class OrderController {
         List<Order> orders = orderService.getMyOrders(username);
         return ResponseEntity.ok(orders);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Order> getOrderById(@PathVariable Long id) {
+        Order order = orderService.getOrderById(id);
+        return ResponseEntity.ok(order);
+    }
     
     @PutMapping("/{id}/status")
     public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id, @RequestParam String status) {

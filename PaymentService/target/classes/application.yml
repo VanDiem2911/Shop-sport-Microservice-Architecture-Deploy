@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: payment-service
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
   datasource:
     url: jdbc:mysql://localhost:3306/payment_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: root
@@ -21,3 +26,15 @@ spring:
 
 order-service:
   url: http://localhost:8080/api/v1/orders
+
+momo:
+  partner-code: MOMO
+  access-key: F8BBA842ECF85
+  secret-key: K951B6PE1waDMi640xX08PD3vg6EkVlz
+  api-url: https://test-payment.momo.vn/v2/gateway/api/create
+  redirect-url: http://localhost:5173/payment/momo-callback
+  ipn-url: http://localhost:8080/api/v1/payments/momo-ipn
+  mock-mode: false
+
+
+

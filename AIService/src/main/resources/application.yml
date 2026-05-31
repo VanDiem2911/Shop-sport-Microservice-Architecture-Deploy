@@ -7,7 +7,7 @@ spring:
     name: ai-service
   ai:
     openai:
-      api-key: AIzaSyAsoGTo5LB4AX8cS4e8BIGJ88dh9x_8B3I
+      api-key: ${GEMINI_API_KEY:AIzaSyAsoGTo5LB4AX8cS4e8BIGJ88dh9x_8B3I}
       base-url: https://generativelanguage.googleapis.com/v1beta/openai/
       chat:
         options:

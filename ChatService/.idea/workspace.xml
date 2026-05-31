@@ -5,51 +5,71 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ccf5a72e-9ce6-4a35-9a5f-85dd60a44900" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Demo_State_Strategy_Decorator_b/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Demo_State_Strategy_Decorator_b/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/api-gateway/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/api-gateway/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/api-gateway/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/api-gateway/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/api-gateway/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/booking-service/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/booking-service/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/booking-service/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/booking-service/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/booking-service/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/booking-service/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/movie-service/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/movie-service/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/movie-service/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/movie-service/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/movie-service/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/movie-service/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/payment-notification-service/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/payment-notification-service/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/payment-notification-service/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/payment-notification-service/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/payment-notification-service/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/payment-notification-service/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/user-service/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/user-service/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/user-service/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/user-service/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/user-service/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Event-Driven/user-service/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../OrderService/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../OrderService/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PaymentService/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../PaymentService/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../minifood/PaymentService/src/main/java/com/minifood/paymentservice/dto/OrderItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../minifood/PaymentService/src/main/java/com/minifood/paymentservice/dto/OrderItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../minifood/PaymentService/src/main/java/com/minifood/paymentservice/dto/PaymentRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../minifood/PaymentService/src/main/java/com/minifood/paymentservice/dto/PaymentRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../minifood/order-service/src/main/java/com/minifood/orderservice/dto/OrderItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../minifood/order-service/src/main/java/com/minifood/orderservice/dto/OrderItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../minifood/order-service/src/main/java/com/minifood/orderservice/dto/OrderRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../minifood/order-service/src/main/java/com/minifood/orderservice/dto/OrderRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../minifood/order-service/src/main/java/com/minifood/orderservice/model/Food.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../minifood/order-service/src/main/java/com/minifood/orderservice/model/Food.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../minifood/order-service/src/main/java/com/minifood/orderservice/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../minifood/order-service/src/main/java/com/minifood/orderservice/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../~$nhChungBuoi2.docx" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ChatService.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../NotificationService/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../NotificationService/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../NotificationService/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../NotificationService/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../NotificationService/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../NotificationService/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../AuthService/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthService/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GatewayService/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../GatewayService/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GatewayService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../GatewayService/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GatewayService/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../GatewayService/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GatewayService/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../GatewayService/target/classes/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GatewayService/target/classes/iuh/fit/gateway/GatewayApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/../GatewayService/target/classes/iuh/fit/gateway/GatewayApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrderService/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../OrderService/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrderService/src/main/java/iuh/fit/order/controller/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../OrderService/src/main/java/iuh/fit/order/controller/OrderController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrderService/src/main/java/iuh/fit/order/service/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../OrderService/src/main/java/iuh/fit/order/service/OrderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/OrderApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/OrderApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/config/RabbitMQConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/config/RabbitMQConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/controller/CartController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/controller/CartController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/controller/OrderController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/controller/OrderController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/dto/StockUpdateEvent.class" beforeDir="false" afterPath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/dto/StockUpdateEvent.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/entity/CartItem$CartItemBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/entity/CartItem$CartItemBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/entity/CartItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/entity/CartItem.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/entity/Order$OrderBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/entity/Order$OrderBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/entity/Order.class" beforeDir="false" afterPath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/entity/Order.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/entity/OrderItem$OrderItemBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/entity/OrderItem$OrderItemBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/entity/OrderItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/entity/OrderItem.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/repository/CartItemRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/repository/CartItemRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/repository/OrderRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/repository/OrderRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/service/CartService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/service/CartService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/service/OrderService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../OrderService/target/classes/iuh/fit/order/service/OrderService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PaymentService/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../PaymentService/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PaymentService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../PaymentService/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PaymentService/src/main/java/iuh/fit/payment/controller/PaymentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../PaymentService/src/main/java/iuh/fit/payment/controller/PaymentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PaymentService/src/main/java/iuh/fit/payment/repository/PaymentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../PaymentService/src/main/java/iuh/fit/payment/repository/PaymentRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PaymentService/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../PaymentService/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PaymentService/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../PaymentService/target/classes/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PaymentService/target/classes/iuh/fit/payment/PaymentApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/../PaymentService/target/classes/iuh/fit/payment/PaymentApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PaymentService/target/classes/iuh/fit/payment/controller/PaymentController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../PaymentService/target/classes/iuh/fit/payment/controller/PaymentController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PaymentService/target/classes/iuh/fit/payment/dto/PaymentRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/../PaymentService/target/classes/iuh/fit/payment/dto/PaymentRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PaymentService/target/classes/iuh/fit/payment/entity/Payment$PaymentBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/../PaymentService/target/classes/iuh/fit/payment/entity/Payment$PaymentBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PaymentService/target/classes/iuh/fit/payment/entity/Payment.class" beforeDir="false" afterPath="$PROJECT_DIR$/../PaymentService/target/classes/iuh/fit/payment/entity/Payment.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PaymentService/target/classes/iuh/fit/payment/repository/PaymentRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../PaymentService/target/classes/iuh/fit/payment/repository/PaymentRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ProjectService/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ProjectService/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Project_Run_Guide.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../System_Architecture_Walkthrough.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shop-sport/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../shop-sport/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shop-sport/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../shop-sport/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shop-sport/src/api/axiosClient.js" beforeDir="false" afterPath="$PROJECT_DIR$/../shop-sport/src/api/axiosClient.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shop-sport/src/api/paymentApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/../shop-sport/src/api/paymentApi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shop-sport/src/components/Chat/LiveChatWidget.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../shop-sport/src/components/Chat/LiveChatWidget.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shop-sport/src/features/Checkout/Payment.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../shop-sport/src/features/Checkout/Payment.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shop-sport/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/../shop-sport/vite.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,7 +77,19 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="jdkForImporter" value="17" />
+      </MavenImportingSettings>
+    </option>
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -69,32 +101,64 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Application.ChatApplication.executor&quot;: &quot;Run&quot;,
     &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
     &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
     &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
     &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;Spring Boot.ChatApplication.executor&quot;: &quot;Run&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Nam4/KTTKPM/Project/AuthService&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Nam4/KTTKPM/Project/OrderService&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.ignored.files&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Spring Boot.ChatApplication">
+    <configuration name="ChatApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="iuh.fit.chat.ChatApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="iuh.fit.chat.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
     <configuration name="ChatApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="17 (2)" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <module name="chat-service" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="iuh.fit.chat.ChatApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.ChatApplication" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -115,6 +179,12 @@
       <workItem from="1779355932559" duration="5310000" />
       <workItem from="1779605702981" duration="656000" />
       <workItem from="1779708975713" duration="357000" />
+      <workItem from="1779882056493" duration="46000" />
+      <workItem from="1779882109778" duration="24000" />
+      <workItem from="1779882146349" duration="38000" />
+      <workItem from="1779882193210" duration="2535000" />
+      <workItem from="1779959643450" duration="610000" />
+      <workItem from="1780089231107" duration="1494000" />
     </task>
     <servers />
   </component>

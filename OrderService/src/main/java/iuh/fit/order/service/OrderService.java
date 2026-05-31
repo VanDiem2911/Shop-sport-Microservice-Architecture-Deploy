@@ -2,11 +2,11 @@ package iuh.fit.order.service;
 
 import iuh.fit.order.entity.Order;
 import iuh.fit.order.repository.OrderRepository;
+import iuh.fit.order.dto.OrderStatusEvent;
+import iuh.fit.order.config.RabbitMQPaymentConfig;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import iuh.fit.order.dto.StockUpdateEvent;
@@ -19,13 +19,6 @@ import java.util.List;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final RabbitTemplate rabbitTemplate;
-    private final RestTemplate restTemplate = new RestTemplate();
-
-    @Value("${payment-service.url:http://localhost:8080/api/v1/payments}")
-    private String paymentServiceUrl;
-
-    @Value("${product-service.url:http://localhost:8080/api/v1/products}")
-    private String productServiceUrl;
 
     @Transactional
     public Order createOrder(Order order) {
@@ -52,20 +45,28 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
+    public Order getOrderById(Long id) {
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
+    }
+
     @Transactional
     public Order updateOrderStatus(Long orderId, String status) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
         order.setStatus(status);
         
-        // Logic mới: Nếu đơn hàng được giao thành công, cập nhật trạng thái thanh toán thành SUCCESS
+        // Logic mới: Nếu đơn hàng được giao thành công, publish sự kiện cập nhật thanh toán thành SUCCESS qua RabbitMQ
         if ("DELIVERED".equals(status)) {
             try {
-                String updatePaymentUrl = paymentServiceUrl + "/" + orderId + "/status?status=SUCCESS";
-                restTemplate.put(updatePaymentUrl, null);
-                System.out.println("Payment for order " + orderId + " updated to SUCCESS via OrderService");
+                OrderStatusEvent event = OrderStatusEvent.builder()
+                        .orderId(orderId)
+                        .status("DELIVERED")
+                        .build();
+                rabbitTemplate.convertAndSend(RabbitMQPaymentConfig.ORDER_EXCHANGE, RabbitMQPaymentConfig.ORDER_ROUTING_KEY, event);
+                System.out.println("Published order status event to RabbitMQ exchange " + RabbitMQPaymentConfig.ORDER_EXCHANGE + ": " + event);
             } catch (Exception e) {
-                System.err.println("Failed to update payment status for order " + orderId + ": " + e.getMessage());
+                System.err.println("Failed to publish order status event for order " + orderId + ": " + e.getMessage());
             }
         }
         

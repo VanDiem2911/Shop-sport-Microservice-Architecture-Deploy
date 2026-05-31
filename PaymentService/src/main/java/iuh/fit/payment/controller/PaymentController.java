@@ -1,14 +1,17 @@
 package iuh.fit.payment.controller;
 
+import iuh.fit.payment.config.RabbitMQConfig;
 import iuh.fit.payment.dto.PaymentRequest;
+import iuh.fit.payment.dto.PaymentStatusEvent;
 import iuh.fit.payment.entity.Payment;
 import iuh.fit.payment.repository.PaymentRepository;
+import iuh.fit.payment.service.MoMoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/payments")
@@ -17,17 +20,39 @@ import java.time.LocalDateTime;
 public class PaymentController {
 
     private final PaymentRepository paymentRepository;
-
-    @Value("${order-service.url}")
-    private String orderServiceUrl;
-
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final MoMoService momoService;
+    private final RabbitTemplate rabbitTemplate;
 
     @PostMapping
     public ResponseEntity<?> processPayment(@RequestBody PaymentRequest request) {
-        System.out.println("Processing payment for Order: " + request.getOrderId());
+        System.out.println("Processing payment for Order: " + request.getOrderId() + ", Method: " + request.getMethod());
         
-        // Luu lich su vao DB trang thai PENDING
+        // Neu phuong thuc la MOMO, thuc hien ket noi momo sandbox
+        if ("MOMO".equals(request.getMethod())) {
+            // Luu lich su vao DB trang thai PENDING
+            Payment payment = Payment.builder()
+                    .orderId(request.getOrderId())
+                    .amount(request.getAmount())
+                    .paymentMethod(request.getMethod())
+                    .username(request.getUsername())
+                    .status("PENDING")
+                    .transactionDate(LocalDateTime.now())
+                    .build();
+            paymentRepository.save(payment);
+
+            Map<String, Object> momoResponse = momoService.createPaymentUrl(request.getOrderId(), request.getAmount());
+            if (momoResponse != null && momoResponse.containsKey("payUrl")) {
+                String payUrl = (String) momoResponse.get("payUrl");
+                return ResponseEntity.ok().body(Map.of("status", "REDIRECT", "payUrl", payUrl));
+            } else {
+                payment.setStatus("FAILED");
+                paymentRepository.save(payment);
+                String msg = momoResponse != null ? String.valueOf(momoResponse.get("message")) : "Không thể tạo liên kết MoMo";
+                return ResponseEntity.status(500).body(Map.of("status", "ERROR", "message", msg));
+            }
+        }
+
+        // Luu lich su vao DB trang thai PENDING cho COD hoac SUCCESS cho cac phuong thuc khac
         Payment payment = Payment.builder()
                 .orderId(request.getOrderId())
                 .amount(request.getAmount())
@@ -42,27 +67,22 @@ public class PaymentController {
         boolean paymentSuccess = true;
         
         if (paymentSuccess) {
-            // Sửa lỗi tại đây: Nếu là COD thì trạng thái thanh toán ban đầu phải là PENDING
+            String targetStatus = "SUCCESS";
             if ("CASH_ON_DELIVERY".equals(request.getMethod())) {
-                payment.setStatus("PENDING");
-            } else {
-                payment.setStatus("SUCCESS");
+                targetStatus = "PENDING";
             }
+            payment.setStatus(targetStatus);
             paymentRepository.save(payment);
             
-            // Theo yêu cầu mới: Tất cả đơn hàng sau khi xác nhận thanh toán đều chuyển sang Đang chuẩn bị hàng
-            String targetStatus = "PREPARING";
-
-            try {
-                String updateStatusUrl = orderServiceUrl + "/" + request.getOrderId() + "/status?status=" + targetStatus;
-                restTemplate.put(updateStatusUrl, null);
-                
-                System.out.println("Order " + request.getOrderId() + " status updated to " + targetStatus);
-                return ResponseEntity.ok().body("{\"status\": \"SUCCESS\", \"transactionId\": \"MOCK-" + System.currentTimeMillis() + "\"}");
-            } catch (Exception e) {
-                System.err.println("Failed to update order status: " + e.getMessage());
-                return ResponseEntity.status(500).body("{\"status\": \"ERROR\", \"message\": \"Payment processed but failed to update order.\"}");
+            // Neu thanh toan thanh cong (khong phai COD), publish su kien sang OrderService
+            if ("SUCCESS".equals(targetStatus)) {
+                publishPaymentStatus(request.getOrderId(), "SUCCESS");
+            } else if ("PENDING".equals(targetStatus) && "CASH_ON_DELIVERY".equals(request.getMethod())) {
+                publishPaymentStatus(request.getOrderId(), "PENDING");
             }
+            
+            System.out.println("Order " + request.getOrderId() + " payment processed successfully");
+            return ResponseEntity.ok().body("{\"status\": \"SUCCESS\", \"transactionId\": \"MOCK-" + System.currentTimeMillis() + "\"}");
         }
         
         payment.setStatus("FAILED");
@@ -70,16 +90,119 @@ public class PaymentController {
         return ResponseEntity.badRequest().body("{\"status\": \"FAILED\"}");
     }
 
-    // Endpoint mới để OrderService gọi sang khi đơn hàng được giao thành công
-    @PutMapping("/{orderId}/status")
-    public ResponseEntity<?> updateStatusByOrderId(@PathVariable Long orderId, @RequestParam String status) {
-        return paymentRepository.findByOrderId(orderId)
-                .map(payment -> {
-                    payment.setStatus(status);
-                    paymentRepository.save(payment);
-                    System.out.println("Payment for Order " + orderId + " updated to " + status);
-                    return ResponseEntity.ok().body("{\"message\": \"Payment status updated\"}");
-                })
-                .orElse(ResponseEntity.notFound().build());
+    @PostMapping("/momo-callback")
+    public ResponseEntity<?> verifyMomoCallback(@RequestBody Map<String, Object> params) {
+        System.out.println("Received MoMo Callback parameters: " + params);
+        boolean isValid = momoService.verifySignature(params);
+        if (!isValid) {
+            System.err.println("MoMo callback signature verification failed!");
+            return ResponseEntity.badRequest().body(Map.of("status", "ERROR", "message", "Invalid signature"));
+        }
+
+        String momoOrderId = (String) params.get("orderId");
+        if (momoOrderId == null) {
+            return ResponseEntity.badRequest().body(Map.of("status", "ERROR", "message", "Missing orderId"));
+        }
+
+        Long orderId;
+        try {
+            orderId = Long.parseLong(momoOrderId.split("-")[0]);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("status", "ERROR", "message", "Invalid orderId format"));
+        }
+
+        String resultCodeStr = String.valueOf(params.get("resultCode"));
+        boolean paymentSuccess = "0".equals(resultCodeStr) || "0.0".equals(resultCodeStr);
+
+        Payment payment = paymentRepository.findTopByOrderIdOrderByIdDesc(orderId)
+                .orElseGet(() -> Payment.builder()
+                        .orderId(orderId)
+                        .amount(Double.valueOf(String.valueOf(params.get("amount"))))
+                        .paymentMethod("MOMO")
+                        .username("MoMo Callback User")
+                        .transactionDate(LocalDateTime.now())
+                        .build());
+
+        if (paymentSuccess) {
+            payment.setStatus("SUCCESS");
+            paymentRepository.save(payment);
+
+            // Publish status event asynchronously
+            publishPaymentStatus(orderId, "SUCCESS");
+
+            return ResponseEntity.ok().body(Map.of("status", "SUCCESS", "message", "Payment processed successfully"));
+        } else {
+            payment.setStatus("FAILED");
+            paymentRepository.save(payment);
+
+            // Publish status event asynchronously
+            publishPaymentStatus(orderId, "FAILED");
+
+            String message = (String) params.getOrDefault("message", "Payment failed");
+            return ResponseEntity.ok().body(Map.of("status", "FAILED", "message", message));
+        }
+    }
+
+    @PostMapping("/momo-ipn")
+    public ResponseEntity<?> handleMomoIpn(@RequestBody Map<String, Object> params) {
+        System.out.println("Received MoMo IPN: " + params);
+        boolean isValid = momoService.verifySignature(params);
+        if (!isValid) {
+            System.err.println("MoMo IPN signature verification failed!");
+            return ResponseEntity.badRequest().body(Map.of("status", "ERROR", "message", "Invalid signature"));
+        }
+
+        String momoOrderId = (String) params.get("orderId");
+        if (momoOrderId == null) {
+            return ResponseEntity.badRequest().body(Map.of("status", "ERROR", "message", "Missing orderId"));
+        }
+
+        Long orderId;
+        try {
+            orderId = Long.parseLong(momoOrderId.split("-")[0]);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("status", "ERROR", "message", "Invalid orderId format"));
+        }
+
+        String resultCodeStr = String.valueOf(params.get("resultCode"));
+        boolean paymentSuccess = "0".equals(resultCodeStr) || "0.0".equals(resultCodeStr);
+
+        Payment payment = paymentRepository.findTopByOrderIdOrderByIdDesc(orderId)
+                .orElseGet(() -> Payment.builder()
+                        .orderId(orderId)
+                        .amount(Double.valueOf(String.valueOf(params.get("amount"))))
+                        .paymentMethod("MOMO")
+                        .username("MoMo IPN User")
+                        .transactionDate(LocalDateTime.now())
+                        .build());
+
+        if (paymentSuccess) {
+            payment.setStatus("SUCCESS");
+            paymentRepository.save(payment);
+
+            // Publish status event asynchronously
+            publishPaymentStatus(orderId, "SUCCESS");
+        } else {
+            payment.setStatus("FAILED");
+            paymentRepository.save(payment);
+
+            // Publish status event asynchronously
+            publishPaymentStatus(orderId, "FAILED");
+        }
+
+        return ResponseEntity.noContent().build();
+    }
+
+    private void publishPaymentStatus(Long orderId, String status) {
+        try {
+            PaymentStatusEvent event = PaymentStatusEvent.builder()
+                    .orderId(orderId)
+                    .status(status)
+                    .build();
+            rabbitTemplate.convertAndSend(RabbitMQConfig.PAYMENT_EXCHANGE, RabbitMQConfig.PAYMENT_ROUTING_KEY, event);
+            System.out.println("Published payment status event to RabbitMQ exchange " + RabbitMQConfig.PAYMENT_EXCHANGE + ": " + event);
+        } catch (Exception e) {
+            System.err.println("Failed to publish payment status event: " + e.getMessage());
+        }
     }
 }

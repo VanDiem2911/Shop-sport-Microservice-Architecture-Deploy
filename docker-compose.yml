@@ -1,0 +1,278 @@
+version: '3.8'
+
+services:
+  # ==========================================
+  # 1. DATABASES & INFRASTRUCTURE
+  # ==========================================
+  
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-sapassword}
+    volumes:
+      - mysql-data:/var/lib/mysql
+      # Tự động import database cấu trúc và dữ liệu mẫu khi start lần đầu
+      - ./data_system.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - sportshop-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-sapassword}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis-cache:
+    image: redis:alpine
+    container_name: redis-cache
+    ports:
+      - "6379:6379"
+    networks:
+      - sportshop-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  rabbitmq-broker:
+    image: rabbitmq:3-management
+    container_name: rabbitmq-broker
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - sportshop-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ==========================================
+  # 2. BACKEND MICROSERVICES
+  # ==========================================
+
+  auth-service:
+    build:
+      context: ./AuthService
+      dockerfile: Dockerfile
+    container_name: auth-service
+    ports:
+      - "8081:8081"
+    environment:
+      - DB_HOST=mysql-db
+      - DB_PORT=3306
+      - DB_USERNAME=root
+      - DB_PASSWORD=${DB_PASSWORD:-sapassword}
+      - JWT_SECRET=${JWT_SECRET:-404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-847709824515-a1tpt0rf1tdefba38ombptfvf0o4b1sf.apps.googleusercontent.com}
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    networks:
+      - sportshop-network
+
+  product-service:
+    build:
+      context: ./ProjectService
+      dockerfile: Dockerfile
+    container_name: product-service
+    ports:
+      - "8082:8082"
+    environment:
+      - DB_HOST=mysql-db
+      - DB_PORT=3306
+      - DB_USERNAME=root
+      - DB_PASSWORD=${DB_PASSWORD:-sapassword}
+      - REDIS_HOST=redis-cache
+      - REDIS_PORT=6379
+      - RABBITMQ_HOST=rabbitmq-broker
+      - RABBITMQ_PORT=5672
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+      redis-cache:
+        condition: service_healthy
+      rabbitmq-broker:
+        condition: service_healthy
+    networks:
+      - sportshop-network
+
+  order-service:
+    build:
+      context: ./OrderService
+      dockerfile: Dockerfile
+    container_name: order-service
+    ports:
+      - "8083:8083"
+    environment:
+      - DB_HOST=mysql-db
+      - DB_PORT=3306
+      - DB_USERNAME=root
+      - DB_PASSWORD=${DB_PASSWORD:-sapassword}
+      - RABBITMQ_HOST=rabbitmq-broker
+      - RABBITMQ_PORT=5672
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+      rabbitmq-broker:
+        condition: service_healthy
+    networks:
+      - sportshop-network
+
+  payment-service:
+    build:
+      context: ./PaymentService
+      dockerfile: Dockerfile
+    container_name: payment-service
+    ports:
+      - "8084:8084"
+    environment:
+      - DB_HOST=mysql-db
+      - DB_PORT=3306
+      - DB_USERNAME=root
+      - DB_PASSWORD=${DB_PASSWORD:-sapassword}
+      - RABBITMQ_HOST=rabbitmq-broker
+      - RABBITMQ_PORT=5672
+      - ORDER_SERVICE_URL=http://order-service:8083/api/v1/orders
+      - MOMO_PARTNER_CODE=${MOMO_PARTNER_CODE:-MOMO}
+      - MOMO_ACCESS_KEY=${MOMO_ACCESS_KEY:-F8BBA842ECF85}
+      - MOMO_SECRET_KEY=${MOMO_SECRET_KEY:-K951B6PE1waDMi640xX08PD3vg6EkVlz}
+      - MOMO_API_URL=${MOMO_API_URL:-https://test-payment.momo.vn/v2/gateway/api/create}
+      - MOMO_REDIRECT_URL=${MOMO_REDIRECT_URL:-http://localhost/payment/momo-callback}
+      - MOMO_IPN_URL=${MOMO_IPN_URL:-http://gateway-service:8080/api/v1/payments/momo-ipn}
+      - MOMO_MOCK_MODE=${MOMO_MOCK_MODE:-false}
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+      rabbitmq-broker:
+        condition: service_healthy
+    networks:
+      - sportshop-network
+
+  ai-service:
+    build:
+      context: ./AIService
+      dockerfile: Dockerfile
+    container_name: ai-service
+    ports:
+      - "8085:8085"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-AIzaSyAsoGTo5LB4AX8cS4e8BIGJ88dh9x_8B3I}
+    networks:
+      - sportshop-network
+
+  chat-service:
+    build:
+      context: ./ChatService
+      dockerfile: Dockerfile
+    container_name: chat-service
+    ports:
+      - "8086:8086"
+    environment:
+      - DB_HOST=mysql-db
+      - DB_PORT=3306
+      - DB_USERNAME=root
+      - DB_PASSWORD=${DB_PASSWORD:-sapassword}
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    networks:
+      - sportshop-network
+
+  notification-service:
+    build:
+      context: ./NotificationService
+      dockerfile: Dockerfile
+    container_name: notification-service
+    ports:
+      - "8087:8087"
+    environment:
+      - RABBITMQ_HOST=rabbitmq-broker
+      - RABBITMQ_PORT=5672
+      - SMTP_HOST=${SMTP_HOST:-smtp.gmail.com}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USERNAME=${SMTP_USERNAME:-vandiem2004@gmail.com}
+      - SMTP_PASSWORD=${SMTP_PASSWORD:-scwr fssj gbhx uixp}
+      - ORDER_SERVICE_URL=http://order-service:8083/api/v1/orders
+      - AUTH_SERVICE_URL=http://auth-service:8081/api/v1/auth
+    depends_on:
+      rabbitmq-broker:
+        condition: service_healthy
+    networks:
+      - sportshop-network
+
+  gateway-service:
+    build:
+      context: ./GatewayService
+      dockerfile: Dockerfile
+    container_name: gateway-service
+    ports:
+      - "8080:8080"
+    environment:
+      - REDIS_HOST=redis-cache
+      - REDIS_PORT=6379
+      - AUTH_SERVICE_URI=http://auth-service:8081
+      - PRODUCT_SERVICE_URI=http://product-service:8082
+      - ORDER_SERVICE_URI=http://order-service:8083
+      - PAYMENT_SERVICE_URI=http://payment-service:8084
+      - AI_SERVICE_URI=http://ai-service:8085
+      - CHAT_SERVICE_URI=http://chat-service:8086
+      # Cấu hình Rate Limiter cho 3000 người dùng thực tế (có thể tinh chỉnh qua .env)
+      - AUTH_RATE_REPLENISH=${AUTH_RATE_REPLENISH:-20}
+      - AUTH_RATE_BURST=${AUTH_RATE_BURST:-40}
+      - PRODUCT_RATE_REPLENISH=${PRODUCT_RATE_REPLENISH:-150}
+      - PRODUCT_RATE_BURST=${PRODUCT_RATE_BURST:-300}
+      - ORDER_RATE_REPLENISH=${ORDER_RATE_REPLENISH:-50}
+      - ORDER_RATE_BURST=${ORDER_RATE_BURST:-100}
+      - PAYMENT_RATE_REPLENISH=${PAYMENT_RATE_REPLENISH:-50}
+      - PAYMENT_RATE_BURST=${PAYMENT_RATE_BURST:-100}
+      - AI_RATE_REPLENISH=${AI_RATE_REPLENISH:-10}
+      - AI_RATE_BURST=${AI_RATE_BURST:-20}
+      - CHAT_RATE_REPLENISH=${CHAT_RATE_REPLENISH:-30}
+      - CHAT_RATE_BURST=${CHAT_RATE_BURST:-60}
+    depends_on:
+      redis-cache:
+        condition: service_healthy
+      auth-service:
+        # Đợi auth service chạy để routing mượt mà
+        condition: service_started
+    networks:
+      - sportshop-network
+
+  # ==========================================
+  # 3. REACT FRONTEND
+  # ==========================================
+  
+  frontend:
+    build:
+      context: ./shop-sport
+      dockerfile: Dockerfile
+      args:
+        # VITE_API_URL chỉ đến Gateway Service (cổng 8080)
+        # Khi deploy lên VPS, thay thế http://localhost:8080 bằng IP/tên miền của VPS
+        - VITE_API_URL=${VITE_API_URL:-http://localhost:8080/api/v1}
+        - VITE_GOOGLE_CLIENT_ID=${VITE_GOOGLE_CLIENT_ID:-847709824515-a1tpt0rf1tdefba38ombptfvf0o4b1sf.apps.googleusercontent.com}
+    container_name: sportshop-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - gateway-service
+    networks:
+      - sportshop-network
+
+# ==========================================
+# VOLUMES & NETWORKS DEFINITIONS
+# ==========================================
+
+volumes:
+  mysql-data:
+    driver: local
+
+networks:
+  sportshop-network:
+    driver: bridge

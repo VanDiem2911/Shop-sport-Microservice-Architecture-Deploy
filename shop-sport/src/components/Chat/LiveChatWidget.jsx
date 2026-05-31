@@ -122,7 +122,7 @@ const LiveChatWidget = () => {
 
     const connect = () => {
       console.log(`Connecting chat WebSocket for username: ${username}`);
-      const wsUrl = `ws://localhost:8086/ws-chat?username=${username}&role=${role}`;
+      const wsUrl = `ws://${window.location.hostname}:8086/ws-chat?username=${username}&role=${role}`;
       const socket = new WebSocket(wsUrl);
       socketRef.current = socket;
 

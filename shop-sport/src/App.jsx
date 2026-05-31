@@ -15,6 +15,7 @@ import { CartProvider } from './features/Cart/CartContext'; // ĐẢM BẢO ĐƯ
 import CheckoutPage from './features/Checkout/CheckoutPage';
 import OrderHistory from './features/Checkout/OrderHistory';
 import Payment from './features/Checkout/Payment';
+import MomoCallback from './features/Checkout/MomoCallback';
 import ChatWidget from './components/AI/ChatWidget';
 import LiveChatWidget from './components/Chat/LiveChatWidget';
 import AdminRoute from './features/Admin/AdminRoute';
@@ -55,6 +56,7 @@ function App() {
               {/* Thêm Route cho Order Service */}
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/payment" element={<Payment />} />
+              <Route path="/payment/momo-callback" element={<MomoCallback />} />
               <Route path="/orders" element={<OrderHistory />} />
 
               {/* Admin Routes */}

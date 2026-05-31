@@ -1,13 +1,14 @@
 server:
+  address: 0.0.0.0
   port: 8086
 
 spring:
   application:
     name: chat-service
   datasource:
-    url: jdbc:mysql://localhost:3306/chat_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
-    username: root
-    password: sapassword
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/chat_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:sapassword}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
