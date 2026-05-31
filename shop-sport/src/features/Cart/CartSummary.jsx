@@ -1,15 +1,18 @@
 import React from 'react';
 import { useCart } from '../Cart/CartContext'; // Import cái này để dùng context giỏ hàng
-
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const CartSummary = () => {
     const { cartItems } = useCart();
     const navigate = useNavigate();
 
+    // Chỉ lọc các sản phẩm được chọn
+    const selectedItems = cartItems.filter(item => item.selected);
+
     // Tính tổng tiền
-    const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-    const shipping = subtotal > 500000 ? 0 : 30000; // Free ship cho đơn trên 500k
+    const subtotal = selectedItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    const shipping = selectedItems.length > 0 && subtotal > 500000 ? 0 : (selectedItems.length > 0 ? 30000 : 0); // Free ship cho đơn trên 500k
     const total = subtotal + shipping;
 
     return (
@@ -32,8 +35,15 @@ const CartSummary = () => {
             </div>
 
             <button 
-                onClick={() => navigate('/checkout')}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-black uppercase tracking-widest transition duration-300 shadow-lg active:scale-95 transform">
+                onClick={() => {
+                    if (selectedItems.length === 0) {
+                        toast.error("Vui lòng chọn ít nhất 1 sản phẩm để thanh toán!");
+                        return;
+                    }
+                    navigate('/checkout');
+                }}
+                disabled={selectedItems.length === 0}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-black uppercase tracking-widest transition duration-300 shadow-lg active:scale-95 transform disabled:opacity-50 disabled:cursor-not-allowed">
                 Thanh toán ngay
             </button>
             

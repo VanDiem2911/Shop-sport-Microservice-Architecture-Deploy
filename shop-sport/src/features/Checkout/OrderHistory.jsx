@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import orderApi from '../../api/orderApi';
+import paymentApi from '../../api/paymentApi';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import reviewApi from '../../api/reviewApi';
@@ -20,7 +21,6 @@ const OrderHistory = () => {
 
     const tabs = [
         { id: 'ALL', label: 'Tất cả' },
-        { id: 'PENDING', label: 'Chờ thanh toán' },
         { id: 'PREPARING', label: 'Vận chuyển' },
         { id: 'SHIPPING', label: 'Đang giao' },
         { id: 'DELIVERED', label: 'Hoàn thành' },
@@ -32,8 +32,22 @@ const OrderHistory = () => {
             try {
                 const response = await orderApi.getMyOrders();
                 const data = response.data || [];
-                setOrders(data);
-                setFilteredOrders(data);
+                
+                // Lọc bỏ các đơn hàng PENDING (chưa chọn xong phương thức thanh toán)
+                const completedOrFailedOrders = data.filter(order => order.status !== 'PENDING');
+                
+                // Fetch payment details for each order in parallel
+                const ordersWithPayment = await Promise.all(completedOrFailedOrders.map(async (order) => {
+                    try {
+                        const payRes = await paymentApi.getPaymentByOrderId(order.id);
+                        return { ...order, paymentInfo: payRes.data };
+                    } catch (e) {
+                        return { ...order, paymentInfo: null };
+                    }
+                }));
+
+                setOrders(ordersWithPayment);
+                setFilteredOrders(ordersWithPayment);
             } catch (error) {
                 console.error("Lỗi khi lấy lịch sử đơn hàng:", error);
             } finally {
@@ -211,17 +225,33 @@ const OrderHistory = () => {
                                         <div className="bg-blue-600 text-white text-[10px] font-black px-2 py-0.5 rounded">SHOP-SPORT</div>
                                         <h3 className="font-bold text-gray-800">Đơn hàng #{order.id}</h3>
                                     </div>
-                                    <div className="text-right flex flex-col items-end gap-2">
-                                        {(() => {
-                                            switch(order.status) {
-                                                case 'PENDING': return <span className="text-yellow-600 text-xs font-bold uppercase tracking-wider">● Chờ thanh toán</span>;
-                                                case 'PREPARING': return <span className="text-blue-600 text-xs font-bold uppercase tracking-wider">● Đang chuẩn bị hàng</span>;
-                                                case 'SHIPPING': return <span className="text-purple-600 text-xs font-bold uppercase tracking-wider">● Đang giao hàng</span>;
-                                                case 'DELIVERED': return <span className="text-green-600 text-xs font-bold uppercase tracking-wider">● Giao hàng thành công</span>;
-                                                case 'CANCELLED': return <span className="text-red-500 text-xs font-bold uppercase tracking-wider">● Đã hủy</span>;
-                                                default: return <span className="text-gray-500 text-xs font-bold uppercase tracking-wider">● {order.status}</span>;
-                                            }
-                                        })()}
+                                    <div className="text-right flex flex-col items-end gap-2 text-sm font-semibold">
+                                        <div className="flex items-center gap-3">
+                                            {(() => {
+                                                switch(order.status) {
+                                                    case 'PENDING': return <span className="text-yellow-600 text-xs font-bold uppercase tracking-wider">● Chờ thanh toán</span>;
+                                                    case 'PREPARING': return <span className="text-blue-600 text-xs font-bold uppercase tracking-wider">● Đang chuẩn bị hàng</span>;
+                                                    case 'SHIPPING': return <span className="text-purple-600 text-xs font-bold uppercase tracking-wider">● Đang giao hàng</span>;
+                                                    case 'DELIVERED': return <span className="text-green-600 text-xs font-bold uppercase tracking-wider">● Giao hàng thành công</span>;
+                                                    case 'CANCELLED': return <span className="text-red-500 text-xs font-bold uppercase tracking-wider">● Đã hủy</span>;
+                                                    default: return <span className="text-gray-500 text-xs font-bold uppercase tracking-wider">● {order.status}</span>;
+                                                }
+                                            })()}
+                                            <span className="text-gray-300">|</span>
+                                            {order.paymentInfo ? (
+                                                <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
+                                                    order.paymentInfo.status === 'SUCCESS'
+                                                        ? 'bg-green-100 text-green-800'
+                                                        : 'bg-red-100 text-red-800'
+                                                }`}>
+                                                    {order.paymentInfo.status === 'SUCCESS' ? 'Đã thanh toán' : 'Chưa thanh toán'}
+                                                </span>
+                                            ) : (
+                                                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-red-100 text-red-800">
+                                                    Chưa thanh toán
+                                                </span>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
 

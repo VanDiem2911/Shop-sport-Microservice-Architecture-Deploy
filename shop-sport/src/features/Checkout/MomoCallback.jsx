@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 const MomoCallback = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { clearCart } = useCart();
+    const { clearSelectedItems } = useCart();
     const [status, setStatus] = useState('verifying'); // verifying | success | failed
     const [orderInfo, setOrderInfo] = useState({ orderId: '', amount: '', transId: '', message: '' });
     const [countdown, setCountdown] = useState(5);
@@ -18,6 +18,7 @@ const MomoCallback = () => {
         hasCalledVerify.current = true;
 
         const verifyPayment = async () => {
+            const startTime = Date.now();
             try {
                 // Parse query parameters
                 const queryParams = new URLSearchParams(location.search);
@@ -48,9 +49,14 @@ const MomoCallback = () => {
                 console.log('Sending parameters to backend for verification:', params);
                 const response = await paymentApi.verifyMomo(params);
 
+                // Calculate elapsed time and wait up to 10 seconds total
+                const elapsedTime = Date.now() - startTime;
+                const remainingTime = Math.max(0, 2000- elapsedTime);
+                await new Promise(resolve => setTimeout(resolve, remainingTime));
+
                 if (response.data?.status === 'SUCCESS') {
                     setStatus('success');
-                    clearCart();
+                    clearSelectedItems();
                     toast.success('Thanh toán đơn hàng qua MoMo thành công!');
                 } else {
                     setStatus('failed');
@@ -62,6 +68,11 @@ const MomoCallback = () => {
                 }
             } catch (error) {
                 console.error('Error verifying MoMo payment:', error);
+                
+                const elapsedTime = Date.now() - startTime;
+                const remainingTime = Math.max(0,2000 - elapsedTime);
+                await new Promise(resolve => setTimeout(resolve, remainingTime));
+
                 setStatus('failed');
                 const errMsg = error.response?.data?.message || 'Có lỗi hệ thống xảy ra khi xác thực giao dịch';
                 setOrderInfo(prev => ({ ...prev, message: errMsg }));
@@ -70,7 +81,7 @@ const MomoCallback = () => {
         };
 
         verifyPayment();
-    }, [location, clearCart]);
+    }, [location, clearSelectedItems]);
 
     // Countdown timer for automatic redirect
     useEffect(() => {
@@ -163,24 +174,25 @@ const MomoCallback = () => {
                             </svg>
                         </div>
 
-                        <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-pink-300 tracking-tight mb-2">Thanh toán thất bại</h2>
-                        <p className="text-gray-300 text-sm mb-8">Giao dịch MoMo bị hủy hoặc gặp sự cố đối soát.</p>
+                        <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-pink-300 tracking-tight mb-2">Thanh toán không thành công</h2>
+                        <p className="text-gray-300 text-sm mb-2">Giao dịch MoMo bị hủy hoặc gặp sự cố thanh toán.</p>
+                        <p className="text-rose-400 text-xs font-bold uppercase tracking-wider mb-8">Vui lòng thực hiện thanh toán lại để hoàn tất đơn hàng.</p>
 
                         <div className="w-full bg-white/5 border border-white/10 rounded-2xl p-5 mb-8 text-left">
-                            <p className="text-xs text-gray-400 mb-1">Lý do thất bại:</p>
-                            <p className="text-sm font-semibold text-rose-300 leading-relaxed">{orderInfo.message || 'Người dùng hủy thanh toán hoặc hết hạn phiên làm việc.'}</p>
+                            <p className="text-xs text-gray-400 mb-1">Chi tiết lỗi:</p>
+                            <p className="text-sm font-semibold text-rose-300 leading-relaxed">{orderInfo.message || 'Người dùng đã hủy giao dịch hoặc phiên thanh toán hết hạn.'}</p>
                         </div>
 
                         <div className="w-full flex flex-col space-y-3">
                             <button 
                                 onClick={() => navigate('/cart')}
                                 className="w-full py-4 bg-[#A50064] hover:bg-[#850050] text-white rounded-2xl font-bold tracking-wide transition duration-300 shadow-lg shadow-[#A50064]/20 active:scale-[0.98]">
-                                QUAY LẠI GIỎ HÀNG
+                                THỰC HIỆN THANH TOÁN LẠI
                             </button>
                             <button 
                                 onClick={() => navigate('/')}
                                 className="w-full py-4 bg-white/10 hover:bg-white/15 text-white rounded-2xl font-bold tracking-wide transition duration-300 active:scale-[0.98]">
-                                VỀ TRANG CHỦ
+                                TRỞ VỀ TRANG CHỦ
                             </button>
                         </div>
                     </div>

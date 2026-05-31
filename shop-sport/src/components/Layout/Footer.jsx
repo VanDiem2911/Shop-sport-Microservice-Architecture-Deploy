@@ -15,10 +15,42 @@ const Footer = () => {
             <p className="text-gray-400 text-sm leading-relaxed">
               Nâng tầm trải nghiệm thể thao của bạn với những trang bị hàng đầu từ các thương hiệu danh tiếng thế giới.
             </p>
-            <div className="flex space-x-4 pt-2">
-              <span className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-600 cursor-pointer transition">FB</span>
-              <span className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-600 cursor-pointer transition">IG</span>
-              <span className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-600 cursor-pointer transition">YT</span>
+            <div className="flex space-x-3 pt-2">
+              <a 
+                href="https://facebook.com" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="w-9 h-9 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#1877f2] hover:border-[#1877f2] hover:shadow-[0_0_15px_rgba(24,119,242,0.4)] active:scale-95 transition-all duration-300 cursor-pointer"
+                aria-label="Facebook"
+              >
+                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c4.56-.93 8-4.96 8-9.75z"/>
+                </svg>
+              </a>
+              <a 
+                href="https://instagram.com" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="w-9 h-9 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-gradient-to-tr hover:from-[#f9ce34] hover:via-[#ee2a7b] hover:to-[#6228d7] hover:border-transparent hover:shadow-[0_0_15px_rgba(238,42,123,0.4)] active:scale-95 transition-all duration-300 cursor-pointer"
+                aria-label="Instagram"
+              >
+                <svg className="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                </svg>
+              </a>
+              <a 
+                href="https://youtube.com" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="w-9 h-9 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#ff0000] hover:border-[#ff0000] hover:shadow-[0_0_15px_rgba(255,0,0,0.4)] active:scale-95 transition-all duration-300 cursor-pointer"
+                aria-label="YouTube"
+              >
+                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.517 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.508 9.388.508 9.388.508s7.517 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+              </a>
             </div>
           </div>
 
@@ -26,10 +58,10 @@ const Footer = () => {
           <div>
             <h4 className="text-sm font-black uppercase tracking-widest mb-6">Sản phẩm</h4>
             <ul className="space-y-4 text-gray-400 text-sm font-medium">
-              <li><Link to="/soccer" className="hover:text-white transition">Bóng đá</Link></li>
-              <li><Link to="/basketball" className="hover:text-white transition">Bóng rổ</Link></li>
-              <li><Link to="/badminton" className="hover:text-white transition">Cầu lông</Link></li>
-              <li><Link to="/volleyball" className="hover:text-white transition">Bóng chuyền</Link></li>
+              <li><Link to="/?sport=Bóng đá" className="hover:text-blue-500 transition">Bóng đá</Link></li>
+              <li><Link to="/?sport=Bóng rổ" className="hover:text-blue-500 transition">Bóng rổ</Link></li>
+              <li><Link to="/?sport=Cầu lông" className="hover:text-blue-500 transition">Cầu lông</Link></li>
+              <li><Link to="/?sport=Bóng chuyền" className="hover:text-blue-500 transition">Bóng chuyền</Link></li>
             </ul>
           </div>
 
@@ -37,10 +69,10 @@ const Footer = () => {
           <div>
             <h4 className="text-sm font-black uppercase tracking-widest mb-6">Hỗ trợ</h4>
             <ul className="space-y-4 text-gray-400 text-sm font-medium">
-              <li><Link href="#" className="hover:text-white transition">Chính sách đổi trả</Link></li>
-              <li><Link href="#" className="hover:text-white transition">Hướng dẫn chọn size</Link></li>
-              <li><Link href="#" className="hover:text-white transition">Hệ thống cửa hàng</Link></li>
-              <li><Link href="#" className="hover:text-white transition">Liên hệ</Link></li>
+              <li className="hover:text-blue-500 cursor-default transition">Chính sách đổi trả</li>
+              <li className="hover:text-blue-500 cursor-default transition">Hướng dẫn chọn size</li>
+              <li className="hover:text-blue-500 cursor-default transition">Hệ thống cửa hàng</li>
+              <li className="hover:text-blue-500 cursor-default transition">Liên hệ</li>
             </ul>
           </div>
 

@@ -7,6 +7,7 @@ import Header from './components/Layout/Header';
 import Footer from './components/Layout/Footer';
 import ProductList from './features/Catalog/ProductList';
 import ProductDetail from './features/Catalog/ProductDetail';
+import SearchResults from './features/Catalog/SearchResults';
 import Login from './features/Auth/Login';
 import Register from './features/Auth/Register';
 import Profile from './features/Auth/Profile';
@@ -16,6 +17,7 @@ import CheckoutPage from './features/Checkout/CheckoutPage';
 import OrderHistory from './features/Checkout/OrderHistory';
 import Payment from './features/Checkout/Payment';
 import MomoCallback from './features/Checkout/MomoCallback';
+import MockMomoQr from './features/Checkout/MockMomoQr';
 import ChatWidget from './components/AI/ChatWidget';
 import LiveChatWidget from './components/Chat/LiveChatWidget';
 import AdminRoute from './features/Admin/AdminRoute';
@@ -39,13 +41,14 @@ function App() {
         <Toaster position="top-center" reverseOrder={false} />
         <ScrollToTop />
         
-        <div className="flex flex-col min-h-screen font-sans antialiased text-gray-900">
+        <div className="flex flex-col min-h-screen font-sans antialiased text-zinc-100 bg-transparent">
           <Header />
           
-          <main className="flex-grow bg-white">
+          <main className="flex-grow bg-transparent">
             <Routes>
               <Route path="/" element={<ProductList />} />
               <Route path="/product/:id" element={<ProductDetail />} />
+              <Route path="/search" element={<SearchResults />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/profile" element={<Profile />} />
@@ -56,6 +59,7 @@ function App() {
               {/* Thêm Route cho Order Service */}
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/payment" element={<Payment />} />
+              <Route path="/payment/mock-qr" element={<MockMomoQr />} />
               <Route path="/payment/momo-callback" element={<MomoCallback />} />
               <Route path="/orders" element={<OrderHistory />} />
 

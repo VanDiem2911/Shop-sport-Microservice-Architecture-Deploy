@@ -90,6 +90,14 @@ public class PaymentController {
         return ResponseEntity.badRequest().body("{\"status\": \"FAILED\"}");
     }
 
+    @GetMapping("/order/{orderId}")
+    public ResponseEntity<?> getPaymentByOrderId(@PathVariable Long orderId) {
+        System.out.println("Fetching payment details for Order ID: " + orderId);
+        return paymentRepository.findTopByOrderIdOrderByIdDesc(orderId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping("/momo-callback")
     public ResponseEntity<?> verifyMomoCallback(@RequestBody Map<String, Object> params) {
         System.out.println("Received MoMo Callback parameters: " + params);

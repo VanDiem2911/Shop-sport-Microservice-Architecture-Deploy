@@ -5,7 +5,7 @@ import CartSummary from './CartSummary';
 import { Link } from 'react-router-dom';
 
 const CartPage = () => {
-    const { cartItems } = useCart();
+    const { cartItems, toggleSelectAll, clearSelectedItems } = useCart();
 
     return (
         <div className="bg-white min-h-screen">
@@ -39,6 +39,27 @@ const CartPage = () => {
                         
                         {/* 1. Danh sách các CartItem (Bên trái) */}
                         <div className="w-full lg:w-2/3 space-y-6">
+                            {/* Thanh Chọn Tất Cả */}
+                            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100 mb-2">
+                                <label className="flex items-center space-x-3 cursor-pointer select-none">
+                                    <input
+                                        type="checkbox"
+                                        checked={cartItems.length > 0 && cartItems.every(item => item.selected)}
+                                        onChange={(e) => toggleSelectAll(e.target.checked)}
+                                        className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
+                                    />
+                                    <span className="text-sm font-bold text-gray-700">Chọn tất cả ({cartItems.length} sản phẩm)</span>
+                                </label>
+                                {cartItems.some(item => item.selected) && (
+                                    <button 
+                                        onClick={clearSelectedItems}
+                                        className="text-xs font-bold text-red-500 hover:text-red-700 transition"
+                                    >
+                                        Xóa mục đã chọn
+                                    </button>
+                                )}
+                            </div>
+
                             {cartItems.map((item) => (
                                 <CartItem key={`${item.id}-${item.size}`} item={item} />
                             ))}

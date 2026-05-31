@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import paymentApi from '../../api/paymentApi';
+import orderApi from '../../api/orderApi';
 import { useCart } from '../Cart/CartContext';
 import toast from 'react-hot-toast';
 
 const Payment = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { clearCart } = useCart();
+    const { clearSelectedItems } = useCart();
     
     const [loading, setLoading] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState("CASH_ON_DELIVERY");
@@ -47,11 +48,16 @@ const Payment = () => {
             }
             
             if (paymentMethod === "CASH_ON_DELIVERY") {
+                try {
+                    await orderApi.updateOrderStatus(orderId, 'PREPARING');
+                } catch (err) {
+                    console.error("Lỗi khi cập nhật trạng thái đơn hàng COD:", err);
+                }
                 toast.success("Đã ghi nhận đơn hàng COD. Vui lòng chuẩn bị tiền khi nhận hàng!");
             } else {
                 toast.success("Thanh toán thành công! Shop đang chuẩn bị hàng cho bạn.");
             }
-            clearCart();
+            clearSelectedItems();
             navigate('/orders');
         } catch (error) {
             console.error("Lỗi khi thanh toán:", error);

@@ -5,17 +5,22 @@
 
 @layer base {
   :root {
-    --primary-blue: #2563eb;
-    --dark-bg: #0a0a0a;
+    --primary-blue: #3b82f6;
+    --dark-bg: #09090b;
   }
 
   /* Reset mặc định để đảm bảo không có margin thừa gây co màn hình */
   html, body {
-    @apply m-0 p-0 overflow-x-hidden w-full;
+    @apply m-0 p-0 overflow-x-clip w-full bg-transparent text-zinc-100;
   }
 
   body {
-    @apply antialiased text-gray-900 bg-white;
+    @apply antialiased;
+    background: radial-gradient(circle at 50% -10%, rgba(124, 58, 237, 0.2) 0%, rgba(9, 9, 11, 0) 65%),
+                radial-gradient(circle at 5% 30%, rgba(76, 29, 149, 0.12) 0%, rgba(9, 9, 11, 0) 50%),
+                #09090b !important;
+    background-attachment: fixed !important;
+    color: #f4f4f5 !important;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 }
@@ -26,31 +31,35 @@
     width: 6px;
   }
   ::-webkit-scrollbar-track {
-    @apply bg-gray-50;
+    background-color: #09090b !important;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-gray-300 rounded-full hover:bg-blue-600 transition-colors;
+    background-color: #27272a !important;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #3b82f6 !important;
   }
 
   /* Lớp hỗ trợ Full Screen cho các trang */
   .full-screen-wrapper {
-    @apply w-full min-h-screen flex flex-col;
+    @apply w-full min-h-screen flex flex-col bg-transparent;
   }
 
   .input-field {
-    @apply w-full p-4 bg-gray-100 rounded-2xl outline-none border-2 border-transparent 
-           focus:border-blue-600 focus:bg-white transition-all duration-300 font-medium;
+    @apply w-full p-4 bg-zinc-900 text-white rounded-2xl outline-none border-2 border-zinc-800 
+           focus:border-blue-500 focus:bg-zinc-950 transition-all duration-300 font-medium;
   }
 
   .btn-primary {
     @apply bg-blue-600 text-white font-black py-4 px-8 rounded-2xl shadow-lg 
-           hover:bg-blue-700 hover:shadow-blue-200 active:scale-95 
+           hover:bg-blue-500 hover:shadow-blue-900/30 active:scale-95 
            transition-all duration-300 uppercase tracking-widest text-sm inline-block text-center;
   }
 
   /* Sửa lại lỗi cú pháp bóng đổ của bạn ở đây */
   .product-card-shadow {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -75,5 +84,112 @@ img {
 
 /* Đảm bảo các thẻ bọc ngoài cùng của React luôn chiếm 100% */
 #root {
-  @apply w-full;
+  @apply w-full bg-transparent;
+}
+
+/* GLOBAL DARK MODE OVERRIDES FOR TAILWIND LIGHT CLASSES */
+main .bg-white,
+main div.bg-white,
+main section.bg-white,
+main form.bg-white {
+  background-color: #18181b !important; /* zinc-900 for cards and main containers */
+  color: #f4f4f5 !important;
+}
+
+main {
+  background-color: transparent !important;
+}
+
+/* Background overrides */
+main .bg-gray-50, 
+main .bg-gray-100,
+main .bg-gray-50\/50,
+main .bg-gray-50\/30 {
+  background-color: #27272a !important; /* zinc-800 for sub-containers/inputs */
+  color: #f4f4f5 !important;
+}
+
+/* Global text color adaptation */
+main .text-gray-900, 
+main .text-gray-800, 
+main .text-gray-700,
+main .text-gray-600,
+main .text-zinc-800 {
+  color: #e4e4e7 !important;
+}
+
+main .text-gray-500, 
+main .text-gray-400 {
+  color: #a1a1aa !important;
+}
+
+/* Border overrides */
+main .border-gray-100,
+main .border-gray-200,
+main .border-gray-300,
+main .border-transparent {
+  border-color: #27272a !important;
+}
+
+/* Hover background adaptations */
+main .hover\:bg-gray-50:hover, 
+main .hover\:bg-gray-100:hover,
+main .hover\:bg-blue-50:hover {
+  background-color: #27272a !important;
+}
+
+/* Keep primary buttons and badges legible */
+.bg-blue-600, 
+.bg-red-600,
+.bg-emerald-600,
+.bg-green-600,
+.text-white {
+  color: #ffffff !important;
+}
+
+/* Button overrides for black and dark gray buttons to make them vibrant blue CTA */
+main .bg-black:not([class*="/"]),
+main .bg-gray-900:not([class*="/"]),
+main .btn-primary {
+  background-color: #2563eb !important; /* Premium vibrant blue */
+  color: #ffffff !important;
+  border-color: #2563eb !important;
+}
+
+main .bg-black:not([class*="/"]):hover,
+main .bg-gray-900:not([class*="/"]):hover,
+main .hover\:bg-black:hover,
+main .hover\:bg-gray-900:hover {
+  background-color: #1d4ed8 !important; /* Darker blue on hover */
+  color: #ffffff !important;
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4) !important;
+}
+
+/* Force Category (pill badge) text on top of images to be black/dark charcoal */
+main span.bg-white\/90,
+main span.bg-white\/90 *,
+main div.bg-white\/90,
+main div.bg-white\/90 *,
+span.bg-white\/90,
+span.bg-white\/90 * {
+  color: #111111 !important;
+}
+
+/* Inputs, textareas, selects */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea,
+select {
+  background-color: #27272a !important;
+  color: #ffffff !important;
+  border-color: #3f3f46 !important;
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="password"]::placeholder,
+textarea::placeholder {
+  color: #71717a !important;
 }

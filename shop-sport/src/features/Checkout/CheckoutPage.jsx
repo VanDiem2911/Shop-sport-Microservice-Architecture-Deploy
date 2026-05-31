@@ -6,9 +6,12 @@ import authApi from '../../api/authApi';
 import toast from 'react-hot-toast';
 
 const CheckoutPage = () => {
-    const { cartItems, clearCart } = useCart();
+    const { cartItems } = useCart();
     const navigate = useNavigate();
     
+    // Chỉ lấy các sản phẩm được tích chọn để thanh toán
+    const selectedItems = cartItems.filter(item => item.selected);
+
     const [formData, setFormData] = useState({
         fullName: localStorage.getItem('username') || '',
         phone: '',
@@ -44,7 +47,7 @@ const CheckoutPage = () => {
         }
     }, [navigate]);
     
-    const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    const subtotal = selectedItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
     const shipping = subtotal > 500000 ? 0 : 30000;
     const total = subtotal + shipping;
 
@@ -55,8 +58,8 @@ const CheckoutPage = () => {
     const handleCheckout = async (e) => {
         e.preventDefault();
         
-        if (cartItems.length === 0) {
-            toast.error("Giỏ hàng của bạn đang trống!");
+        if (selectedItems.length === 0) {
+            toast.error("Vui lòng chọn ít nhất 1 sản phẩm để thanh toán!");
             return;
         }
 
@@ -81,7 +84,7 @@ const CheckoutPage = () => {
                 phone: formData.phone,
                 address: formData.address,
                 totalAmount: total,
-                items: cartItems.map(item => ({
+                items: selectedItems.map(item => ({
                     productId: item.id,
                     name: item.name,
                     price: item.price,
@@ -95,8 +98,7 @@ const CheckoutPage = () => {
             const orderResponse = await orderApi.createOrder(orderPayload);
             const orderId = orderResponse.data?.id || Math.floor(Math.random() * 10000);
 
-            // Xóa giỏ hàng sau khi đặt thành công
-            clearCart();
+            // KHÔNG xóa giỏ hàng ở đây nữa (chỉ xóa sau khi thanh toán thành công thành công)
             toast.success("Đặt hàng thành công!");
 
             // Chuyển tiếp tới trang thanh toán
@@ -104,7 +106,7 @@ const CheckoutPage = () => {
                 state: { 
                     orderId: orderId, 
                     totalAmount: total,
-                    items: cartItems
+                    items: selectedItems
                 } 
             });
         } catch (error) {

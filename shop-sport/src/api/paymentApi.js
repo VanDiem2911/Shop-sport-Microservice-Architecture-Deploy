@@ -6,6 +6,9 @@ const paymentApi = {
   },
   verifyMomo: (callbackParams) => {
     return axiosClient.post('/payments/momo-callback', callbackParams);
+  },
+  getPaymentByOrderId: (orderId) => {
+    return axiosClient.get(`/payments/order/${orderId}`);
   }
 };
 

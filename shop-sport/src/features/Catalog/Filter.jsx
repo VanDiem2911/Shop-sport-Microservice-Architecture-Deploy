@@ -1,14 +1,6 @@
 import React from 'react';
 
-const Filter = ({ selectedSport, setSelectedSport, selectedCategory, setSelectedCategory, selectedBrand, setSelectedBrand, selectedPrice, setSelectedPrice }) => {
-  const sports = [
-    { label: 'Bóng đá', value: 'Bóng đá' },
-    { label: 'Bóng rổ', value: 'Bóng rổ' },
-    { label: 'Cầu lông', value: 'Cầu lông' },
-    { label: 'Chạy bộ', value: 'Chạy bộ' },
-    { label: 'Tennis', value: 'Tennis' },
-  ];
-
+const Filter = ({ selectedCategory, setSelectedCategory, selectedBrand, setSelectedBrand, selectedPrice, setSelectedPrice }) => {
   const categories = [
     { label: 'Giày', value: 'Giày' },
     { label: 'Áo', value: 'Áo' },
@@ -28,40 +20,27 @@ const Filter = ({ selectedSport, setSelectedSport, selectedCategory, setSelected
 
   return (
     <div className="space-y-10 pr-4">
-      {/* 1. Môn thể thao */}
-      <div>
-        <h3 className="text-sm font-black uppercase mb-5 flex items-center italic">
-          <span className="w-2 h-2 bg-blue-600 rounded-full mr-2"></span> Môn thể thao
-        </h3>
-        <div className="space-y-3">
-          <label className="flex items-center cursor-pointer group">
-            <input type="radio" name="sport" className="hidden" checked={!selectedSport} onChange={() => setSelectedSport(null)} />
-            <span className={`text-sm transition ${!selectedSport ? 'text-blue-600 font-bold' : 'text-gray-500 hover:text-black'}`}>Tất cả môn</span>
-          </label>
-          {sports.map((sport) => (
-            <label key={sport.value} className="flex items-center cursor-pointer group">
-              <input type="radio" name="sport" className="hidden" checked={selectedSport === sport.value} onChange={() => setSelectedSport(sport.value)} />
-              <span className={`text-sm transition ${selectedSport === sport.value ? 'text-blue-600 font-bold' : 'text-gray-500 hover:text-black'}`}>{sport.label}</span>
-            </label>
-          ))}
-        </div>
-      </div>
 
       {/* 1b. Loại sản phẩm */}
       <div>
         <h3 className="text-sm font-black uppercase mb-5 flex items-center italic">
           <span className="w-2 h-2 bg-blue-600 rounded-full mr-2"></span> Loại sản phẩm
         </h3>
-        <div className="space-y-3">
-          <label className="flex items-center cursor-pointer group">
-            <input type="radio" name="cat" className="hidden" checked={!selectedCategory} onChange={() => setSelectedCategory(null)} />
-            <span className={`text-sm transition ${!selectedCategory ? 'text-blue-600 font-bold' : 'text-gray-500 hover:text-black'}`}>Tất cả loại</span>
-          </label>
+        <div className="grid grid-cols-2 gap-2">
+          <button 
+            onClick={() => setSelectedCategory(null)}
+            className={`px-3 py-2 rounded-xl text-xs font-bold border transition ${!selectedCategory ? 'bg-black text-white border-black' : 'border-gray-100 text-gray-500 hover:border-blue-600'}`}
+          >
+            Tất cả loại
+          </button>
           {categories.map((cat) => (
-            <label key={cat.value} className="flex items-center cursor-pointer group">
-              <input type="radio" name="cat" className="hidden" checked={selectedCategory === cat.value} onChange={() => setSelectedCategory(cat.value)} />
-              <span className={`text-sm transition ${selectedCategory === cat.value ? 'text-blue-600 font-bold' : 'text-gray-500 hover:text-black'}`}>{cat.label}</span>
-            </label>
+            <button 
+              key={cat.value}
+              onClick={() => setSelectedCategory(selectedCategory === cat.value ? null : cat.value)}
+              className={`px-3 py-2 rounded-xl text-xs font-bold border transition ${selectedCategory === cat.value ? 'bg-black text-white border-black' : 'border-gray-100 text-gray-500 hover:border-blue-600'}`}
+            >
+              {cat.label}
+            </button>
           ))}
         </div>
       </div>
@@ -99,7 +78,7 @@ const Filter = ({ selectedSport, setSelectedSport, selectedCategory, setSelected
         </div>
       </div>
 
-      <button onClick={() => { setSelectedSport(null); setSelectedCategory(null); setSelectedBrand(null); setSelectedPrice(null); }} className="w-full py-3 border-2 border-gray-100 rounded-2xl text-[10px] font-black uppercase tracking-widest text-gray-400 hover:border-red-500 hover:text-red-500 transition">
+      <button onClick={() => { setSelectedCategory(null); setSelectedBrand(null); setSelectedPrice(null); }} className="w-full py-3 border-2 border-gray-100 rounded-2xl text-[10px] font-black uppercase tracking-widest text-gray-400 hover:border-red-500 hover:text-red-500 transition">
         Xóa bộ lọc
       </button>
     </div>
