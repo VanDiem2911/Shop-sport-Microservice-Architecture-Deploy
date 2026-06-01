@@ -1,7 +1,5 @@
 package iuh.fit.ai.controller;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,38 +10,16 @@ import java.util.Map;
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class AIController {
 
-    private final ChatClient chatClient;
-
-    public AIController(ChatClient.Builder builder) {
-        this.chatClient = builder
-                .defaultSystem("Bạn là một Trợ lý mua sắm thông minh (SportyAI) của cửa hàng Shop-Sport. " +
-                        "Nhiệm vụ của bạn là tư vấn sản phẩm, gợi ý size và giải đáp thắc mắc về thể thao. " +
-                        "Các danh mục sản phẩm của shop bao gồm: Bóng đá (Soccer), Bóng rổ (Basketball), Cầu lông (Badminton). " +
-                        "Hãy trả lời một cách thân thiện, nhiệt tình và chuyên nghiệp bằng tiếng Việt.")
-                .build();
-    }
-
-       @PostMapping("/chat")
+    @PostMapping("/chat")
     public ResponseEntity<?> chat(@RequestBody Map<String, String> request) {
         String message = request.get("message");
         if (message == null || message.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("error", "Message is empty"));
         }
 
-        try {
-            // Thử gọi OpenAI thật
-            String response = chatClient.prompt()
-                    .user(message)
-                    .call()
-                    .content();
-            
-            return ResponseEntity.ok(Map.of("response", response));
-        } catch (Exception e) {
-            // NẾU LỖI (Hết tiền/Mạng yếu), TỰ ĐỘNG CHUYỂN SANG AI DỰ PHÒNG
-            System.err.println("OpenAI Error, Switching to Fallback Mode...");
-            String fallbackResponse = getSmartFallbackResponse(message);
-            return ResponseEntity.ok(Map.of("response", fallbackResponse));
-        }
+        // Bỏ kết nối Gemini/OpenAI, dùng thuần if-else rules
+        String response = getSmartFallbackResponse(message);
+        return ResponseEntity.ok(Map.of("response", response));
     }
 
     private String getSmartFallbackResponse(String msg) {
@@ -97,7 +73,6 @@ public class AIController {
             return "Rất sẵn lòng giúp đỡ bạn! Nếu cần thêm thông tin gì, đừng ngần ngại hỏi tôi nhé. Chúc bạn có những giây phút thể thao tuyệt vời!";
 
         // Mặc định
-        return "Chào bạn! Tôi là SportyAI. Hiện tại hệ thống OpenAI đang bận, nhưng với kinh nghiệm làm việc tại Shop-Sport, tôi có thể tư vấn cho bạn về Size, Sản phẩm (Bóng đá, Cầu lông, Bóng rổ) và các dịch vụ giao hàng. Bạn cần tôi hỗ trợ gì ạ?";
+        return "Chào bạn! Tôi là SportyAI. Tôi có thể tư vấn cho bạn về Size, Sản phẩm (Bóng đá, Cầu lông, Bóng rổ), thời gian giao hàng và chính sách thanh toán. Bạn cần tôi hỗ trợ gì ạ?";
     }
-
 }

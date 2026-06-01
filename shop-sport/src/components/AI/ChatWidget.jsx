@@ -43,7 +43,7 @@ const ChatWidget = () => {
         <div className="ai-chat-widget">
             {/* Nút FAB */}
             <button 
-                className={`chat-toggle-btn ${isOpen ? 'active' : ''}`} 
+                className={`ai-chat-toggle-btn ${isOpen ? 'active' : ''}`} 
                 onClick={() => setIsOpen(!isOpen)}
             >
                 {isOpen ? (
@@ -57,8 +57,8 @@ const ChatWidget = () => {
 
             {/* Cửa sổ Chat */}
             {isOpen && (
-                <div className="chat-window">
-                    <div className="chat-header">
+                <div className="ai-chat-window">
+                    <div className="ai-chat-header">
                         <div className="flex items-center space-x-3">
                             <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-blue-600 shadow-sm">
                                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
@@ -70,17 +70,17 @@ const ChatWidget = () => {
                         </div>
                     </div>
 
-                    <div className="chat-messages">
+                    <div className="ai-chat-messages">
                         {messages.map((msg, idx) => (
-                            <div key={idx} className={`message ${msg.isBot ? 'bot' : 'user'}`}>
-                                <div className="message-content">
+                            <div key={idx} className={`ai-message ${msg.isBot ? 'bot' : 'user'}`}>
+                                <div className="ai-message-content">
                                     {msg.text}
                                 </div>
                             </div>
                         ))}
                         {loading && (
-                            <div className="message bot">
-                                <div className="message-content typing">
+                            <div className="ai-message bot">
+                                <div className="ai-message-content ai-typing">
                                     <span></span><span></span><span></span>
                                 </div>
                             </div>
@@ -88,7 +88,7 @@ const ChatWidget = () => {
                         <div ref={messagesEndRef} />
                     </div>
 
-                    <div className="chat-input-area">
+                    <div className="ai-chat-input-area">
                         <input 
                             type="text" 
                             placeholder="Hỏi tôi bất cứ điều gì..." 

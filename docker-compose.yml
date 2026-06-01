@@ -146,10 +146,14 @@ services:
       - MOMO_REDIRECT_URL=${MOMO_REDIRECT_URL:-http://localhost/payment/momo-callback}
       - MOMO_IPN_URL=${MOMO_IPN_URL:-http://gateway-service:8080/api/v1/payments/momo-ipn}
       - MOMO_MOCK_MODE=${MOMO_MOCK_MODE:-false}
+      - REDIS_HOST=redis-cache
+      - REDIS_PORT=6379
     depends_on:
       mysql-db:
         condition: service_healthy
       rabbitmq-broker:
+        condition: service_healthy
+      redis-cache:
         condition: service_healthy
     networks:
       - sportshop-network

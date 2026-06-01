@@ -8,9 +8,12 @@ import iuh.fit.payment.repository.PaymentRepository;
 import iuh.fit.payment.service.MoMoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
+import java.time.Duration;
 import java.util.Map;
 
 @RestController
@@ -22,14 +25,49 @@ public class PaymentController {
     private final PaymentRepository paymentRepository;
     private final MoMoService momoService;
     private final RabbitTemplate rabbitTemplate;
+    private final StringRedisTemplate redisTemplate;
 
     @PostMapping
     public ResponseEntity<?> processPayment(@RequestBody PaymentRequest request) {
         System.out.println("Processing payment for Order: " + request.getOrderId() + ", Method: " + request.getMethod());
         
-        // Neu phuong thuc la MOMO, thuc hien ket noi momo sandbox
-        if ("MOMO".equals(request.getMethod())) {
-            // Luu lich su vao DB trang thai PENDING
+        // Ngăn chặn thanh toán trùng lặp (lag mạng) bằng cách tạo khóa tạm trên Redis trong 30 giây
+        String lockKey = "lock:payment:" + request.getOrderId();
+        Boolean isLocked = redisTemplate.opsForValue().setIfAbsent(lockKey, "processing", Duration.ofSeconds(30));
+        if (Boolean.FALSE.equals(isLocked)) {
+            System.err.println("Duplicate payment request detected for order ID: " + request.getOrderId());
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("status", "ERROR", "message", "Giao dịch thanh toán cho đơn hàng này đang được xử lý. Vui lòng không nhấn liên tục!"));
+        }
+
+        try {
+            // Neu phuong thuc la MOMO, thuc hien ket noi momo sandbox
+            if ("MOMO".equals(request.getMethod())) {
+                // Luu lich su vao DB trang thai PENDING
+                Payment payment = Payment.builder()
+                        .orderId(request.getOrderId())
+                        .amount(request.getAmount())
+                        .paymentMethod(request.getMethod())
+                        .username(request.getUsername())
+                        .status("PENDING")
+                        .transactionDate(LocalDateTime.now())
+                        .build();
+                paymentRepository.save(payment);
+
+                Map<String, Object> momoResponse = momoService.createPaymentUrl(request.getOrderId(), request.getAmount());
+                if (momoResponse != null && momoResponse.containsKey("payUrl")) {
+                    String payUrl = (String) momoResponse.get("payUrl");
+                    return ResponseEntity.ok().body(Map.of("status", "REDIRECT", "payUrl", payUrl));
+                } else {
+                    payment.setStatus("FAILED");
+                    paymentRepository.save(payment);
+                    redisTemplate.delete(lockKey); // Giải phóng khóa sớm vì tạo link MoMo thất bại
+                    String msg = momoResponse != null ? String.valueOf(momoResponse.get("message")) : "Không thể tạo liên kết MoMo";
+                    return ResponseEntity.status(500).body(Map.of("status", "ERROR", "message", msg));
+                }
+            }
+
+            // Luu lich su vao DB trang thai PENDING cho COD hoac SUCCESS cho cac phuong thuc khac
             Payment payment = Payment.builder()
                     .orderId(request.getOrderId())
                     .amount(request.getAmount())
@@ -38,56 +76,38 @@ public class PaymentController {
                     .status("PENDING")
                     .transactionDate(LocalDateTime.now())
                     .build();
-            paymentRepository.save(payment);
-
-            Map<String, Object> momoResponse = momoService.createPaymentUrl(request.getOrderId(), request.getAmount());
-            if (momoResponse != null && momoResponse.containsKey("payUrl")) {
-                String payUrl = (String) momoResponse.get("payUrl");
-                return ResponseEntity.ok().body(Map.of("status", "REDIRECT", "payUrl", payUrl));
-            } else {
-                payment.setStatus("FAILED");
+            payment = paymentRepository.save(payment);
+            
+            // Gia lap logic thanh toan (kiem tra han muc, tru tien tai khoan, v.v...)
+            boolean paymentSuccess = true;
+            
+            if (paymentSuccess) {
+                String targetStatus = "SUCCESS";
+                if ("CASH_ON_DELIVERY".equals(request.getMethod())) {
+                    targetStatus = "PENDING";
+                }
+                payment.setStatus(targetStatus);
                 paymentRepository.save(payment);
-                String msg = momoResponse != null ? String.valueOf(momoResponse.get("message")) : "Không thể tạo liên kết MoMo";
-                return ResponseEntity.status(500).body(Map.of("status", "ERROR", "message", msg));
+                
+                // Neu thanh toan thanh cong (khong phai COD), publish su kien sang OrderService
+                if ("SUCCESS".equals(targetStatus)) {
+                    publishPaymentStatus(request.getOrderId(), "SUCCESS");
+                } else if ("PENDING".equals(targetStatus) && "CASH_ON_DELIVERY".equals(request.getMethod())) {
+                    publishPaymentStatus(request.getOrderId(), "PENDING");
+                }
+                
+                System.out.println("Order " + request.getOrderId() + " payment processed successfully");
+                return ResponseEntity.ok().body("{\"status\": \"SUCCESS\", \"transactionId\": \"MOCK-" + System.currentTimeMillis() + "\"}");
             }
-        }
-
-        // Luu lich su vao DB trang thai PENDING cho COD hoac SUCCESS cho cac phuong thuc khac
-        Payment payment = Payment.builder()
-                .orderId(request.getOrderId())
-                .amount(request.getAmount())
-                .paymentMethod(request.getMethod())
-                .username(request.getUsername())
-                .status("PENDING")
-                .transactionDate(LocalDateTime.now())
-                .build();
-        payment = paymentRepository.save(payment);
-        
-        // Gia lap logic thanh toan (kiem tra han muc, tru tien tai khoan, v.v...)
-        boolean paymentSuccess = true;
-        
-        if (paymentSuccess) {
-            String targetStatus = "SUCCESS";
-            if ("CASH_ON_DELIVERY".equals(request.getMethod())) {
-                targetStatus = "PENDING";
-            }
-            payment.setStatus(targetStatus);
+            
+            payment.setStatus("FAILED");
             paymentRepository.save(payment);
-            
-            // Neu thanh toan thanh cong (khong phai COD), publish su kien sang OrderService
-            if ("SUCCESS".equals(targetStatus)) {
-                publishPaymentStatus(request.getOrderId(), "SUCCESS");
-            } else if ("PENDING".equals(targetStatus) && "CASH_ON_DELIVERY".equals(request.getMethod())) {
-                publishPaymentStatus(request.getOrderId(), "PENDING");
-            }
-            
-            System.out.println("Order " + request.getOrderId() + " payment processed successfully");
-            return ResponseEntity.ok().body("{\"status\": \"SUCCESS\", \"transactionId\": \"MOCK-" + System.currentTimeMillis() + "\"}");
+            redisTemplate.delete(lockKey); // Giải phóng khóa sớm vì giao dịch thanh toán thất bại
+            return ResponseEntity.badRequest().body("{\"status\": \"FAILED\"}");
+        } catch (Exception e) {
+            redisTemplate.delete(lockKey); // Giải phóng khóa nếu xảy ra ngoại lệ bất ngờ
+            throw e;
         }
-        
-        payment.setStatus("FAILED");
-        paymentRepository.save(payment);
-        return ResponseEntity.badRequest().body("{\"status\": \"FAILED\"}");
     }
 
     @GetMapping("/order/{orderId}")
