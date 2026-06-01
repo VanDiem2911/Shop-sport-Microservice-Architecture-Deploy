@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sơ đồ C4 Container - Shop-Sport Microservices</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables cho Theme */
+        :root {
+            --bg-color: #0b0f19;
+            --text-main: #f3f4f6;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f8fafc;
+            --text-main: #0f172a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        #diagramContainer {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        #diagramContainer svg {
+            width: 100% !important;
+            height: 100% !important;
+            max-width: 100vw !important;
+            max-height: 100vh !important;
+        }
+
+        .theme-toggle-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+            transition: all 0.2s;
+        }
+
+        .theme-toggle-btn:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+    </style>
+
+    <!-- Import thư viện Mermaid.js dạng UMD để chạy trực tiếp không cần Server -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.3.0/mermaid.min.js"></script>
+    <script>
+        // Hàm khởi tạo và vẽ lại sơ đồ khi đổi theme
+        window.initMermaid = function(themeName) {
+            let isDark = themeName === 'dark';
+            
+            // Render từ nguồn text thô để tránh trùng ID SVG
+            const container = document.getElementById('diagramContainer');
+            const originalText = document.getElementById('mermaidSource').textContent;
+            container.innerHTML = `<div class="mermaid">${originalText}</div>`;
+
+            mermaid.initialize({
+                startOnLoad: true,
+                securityLevel: 'strict', // Đặt strict để tránh lỗi iframe trên file:///
+                theme: isDark ? 'dark' : 'default',
+                themeVariables: {
+                    background: isDark ? '#0b0f19' : '#f8fafc',
+                    primaryColor: '#1168bd',
+                    primaryTextColor: '#ffffff',
+                    primaryBorderColor: '#0b4e8f',
+                    lineColor: isDark ? '#60a5fa' : '#1e3a8a',
+                    secondaryColor: '#08427b',
+                    tertiaryColor: '#999999'
+                }
+            });
+            
+            // Dựng hình sơ đồ
+            mermaid.init(undefined, '.mermaid');
+        };
+
+        // Chạy ngay khi tải xong DOM
+        window.addEventListener('DOMContentLoaded', () => {
+            window.initMermaid('dark');
+        });
+    </script>
+</head>
+<body>
+
+    <!-- Nguồn text sơ đồ (Đổi dấu [] lồng bên trong sang () để tránh lỗi phân tích cú pháp của Mermaid) -->
+    <script type="text/plain" id="mermaidSource">
+        graph LR
+            %% Định nghĩa các Class Styles chuẩn C4
+            classDef person fill:#08427b,stroke:#052e56,color:#ffffff,font-weight:bold;
+            classDef container fill:#1168bd,stroke:#0b4e8f,color:#ffffff;
+            classDef external fill:#999999,stroke:#666666,color:#ffffff;
+            classDef database fill:#1168bd,stroke:#0b4e8f,color:#ffffff;
+
+            %% Các Actors (Người dùng) bên trái
+            Admin["Admin<br/>(Person)<br/><br/>Quản trị viên & chăm sóc khách hàng"]:::person
+            Customer["Customer<br/>(Person)<br/><br/>Khách mua sắm sản phẩm thể thao"]:::person
+
+            %% Khối giao diện
+            subgraph ProxyLayer ["Proxy Layer"]
+                Gateway["API Gateway<br/>(Container: Spring Cloud Gateway)<br/><br/>Định tuyến, xác thực JWT, Rate Limiting"]:::container
+            end
+
+            subgraph FrontendLayer ["Frontend Layer"]
+                Frontend["Frontend Web App<br/>(Container: React SPA)<br/><br/>Giao diện ứng dụng người dùng & quản lý"]:::container
+            end
+
+            %% Khối Middleware
+            subgraph MiddlewareLayer ["Middleware Layer"]
+                RabbitMQ["RabbitMQ Broker<br/>(Container: RabbitMQ)<br/><br/>Hệ thống Message Broker trao đổi dữ liệu"]:::container
+                Redis["Redis Cache<br/>(Container: Redis)<br/><br/>Cache, Rate Limiting và Distributed Lock"]:::container
+            end
+
+            %% Khối Microservices ở giữa
+            subgraph MicroservicesLayer ["Microservices Layer"]
+                AISvc["AI Service<br/>(Container: Spring Boot)<br/><br/>Tư vấn sản phẩm thông minh bằng AI"]:::container
+                OrderSvc["Order Service<br/>(Container: Spring Boot)<br/><br/>Quản lý giỏ hàng & xử lý đơn hàng"]:::container
+                PaySvc["Payment Service<br/>(Container: Spring Boot)<br/><br/>Xử lý thanh toán & lịch sử giao dịch"]:::container
+                ChatSvc["Chat Service<br/>(Container: Spring Boot)<br/><br/>Hỗ trợ chat khách hàng qua WebSocket"]:::container
+                ProdSvc["Product Service<br/>(Container: Spring Boot)<br/><br/>Quản lý danh mục, sản phẩm & tồn kho"]:::container
+                AuthSvc["Auth Service<br/>(Container: Spring Boot)<br/><br/>Xử lý đăng ký, đăng nhập & cấp JWT"]:::container
+                NotiSvc["Notification Service<br/>(Container: Spring Boot)<br/><br/>Gửi email thông báo cho khách hàng"]:::container
+            end
+
+            %% Các hệ thống bên ngoài ở dưới/phải
+            subgraph ExternalLayer ["External Systems"]
+                Gemini["Gemini AI API<br/>(External System)<br/><br/>API trợ lý AI bên thứ ba"]:::external
+                MoMo["MoMo Gateway<br/>(External System)<br/><br/>Cổng thanh toán MoMo E-Wallet"]:::external
+                SMTP["SMTP Mail Server<br/>(External System)<br/><br/>Hệ thống gửi thư điện tử (Gmail SMTP)"]:::external
+            end
+
+            %% Khối Databases nằm ngoài cùng bên phải
+            subgraph DatabasesLayer ["Databases Layer"]
+                AuthDB[("Auth DB<br/>Container: MySQL<br/><br/>Lưu tài khoản & quyền")]:::database
+                ProdDB[("Product DB<br/>Container: MySQL<br/><br/>Lưu sản phẩm & tồn kho")]:::database
+                OrderDB[("Order DB<br/>Container: MySQL<br/><br/>Lưu đơn hàng & giỏ hàng")]:::database
+                PayDB[("Payment DB<br/>Container: MySQL<br/><br/>Lưu lịch sử giao dịch")]:::database
+                ChatDB[("Chat DB<br/>Container: MySQL<br/><br/>Lưu tin nhắn chat")]:::database
+            end
+
+            %% Các đường kết nối (mô tả luồng giao tiếp)
+            Admin -->|"Quản trị & Chat (HTTPS)"| Frontend
+            Customer -->|"Sử dụng (HTTPS)"| Frontend
+            
+            %% Khách hàng kết nối trực tiếp đến Chat socket
+            Customer -.->|"Kết nối Chat (WebSocket Port: 8086)"| ChatSvc
+            
+            Frontend -->|"Yêu cầu dữ liệu (HTTPS/JSON)"| Gateway
+
+            %% Gateway định tuyến đến các Service
+            Gateway -->|"/api/v1/ai/**"| AISvc
+            Gateway -->|"/api/v1/products/**"| ProdSvc
+            Gateway -->|"/api/v1/auth/**"| AuthSvc
+            Gateway -->|"/api/v1/orders/**"| OrderSvc
+            Gateway -->|"/api/v1/payments/**"| PaySvc
+            Gateway -->|"/api/v1/chats/**"| ChatSvc
+
+            %% Gateway tích hợp Redis Rate Limit
+            Gateway -->|"Đọc/Ghi Rate Limit"| Redis
+
+            %% Product Service tích hợp Redis Cache
+            ProdSvc -->|"Cache danh sách & chi tiết sản phẩm"| Redis
+
+            %% Payment Service tích hợp Redis Distributed Lock
+            PaySvc -->|"Distributed Lock chống trùng lặp"| Redis
+
+            %% AI Service kết nối API bên thứ 3
+            AISvc -->|"REST API Call"| Gemini
+
+            %% Payment Service tích hợp MoMo
+            PaySvc -->|"Tạo thanh toán (HTTPS POST)"| MoMo
+
+            %% Notification Service tích hợp SMTP Mail Server
+            NotiSvc -->|"Gửi email (SMTP)"| SMTP
+            SMTP -.->|"Gửi email thông báo đơn hàng"| Customer
+            
+            %% Đồng bộ và truyền thông qua RabbitMQ
+            OrderSvc -->|"1. Publish Order Status"| RabbitMQ
+            PaySvc -->|"1. Publish Payment Status"| RabbitMQ
+
+            RabbitMQ -->|"2. Consume Stock Update"| ProdSvc
+            RabbitMQ -->|"3. Consume Status Update (Order/Payment)"| NotiSvc
+            RabbitMQ -->|"4. Consume Payment Status (update order)"| OrderSvc
+
+            %% Các luồng lưu trữ Database tương ứng
+            AuthSvc --> AuthDB
+            ProdSvc --> ProdDB
+            OrderSvc --> OrderDB
+            PaySvc --> PayDB
+            ChatSvc --> ChatDB
+    </script>
+
+    <div id="diagramContainer">
+        <!-- Sơ đồ SVG được sinh ra ở đây -->
+    </div>
+
+    <!-- Script điều khiển theme sáng/tối -->
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('themeBtn');
+            const currentTheme = body.getAttribute('data-theme') || 'dark';
+            
+            if (currentTheme === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                btn.textContent = 'Chuyển sang Nền Tối (Trình chiếu)';
+                btn.style.background = '#1e293b';
+                window.initMermaid('light');
+            } else {
+                body.removeAttribute('data-theme');
+                btn.textContent = 'Chuyển sang Nền Sáng (Báo cáo)';
+                btn.style.background = '#3b82f6';
+                window.initMermaid('dark');
+            }
+        }
+    </script>
+</body>
+</html>

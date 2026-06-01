@@ -122,7 +122,16 @@ const LiveChatWidget = () => {
 
     const connect = () => {
       console.log(`Connecting chat WebSocket for username: ${username}`);
-      const wsUrl = `ws://${window.location.hostname}:8086/ws-chat?username=${username}&role=${role}`;
+      let wsUrl;
+      const isHttps = window.location.protocol === 'https:';
+      const isDevServer = window.location.port === '5173' || window.location.port === '3000'; // local dev servers
+
+      if (isDevServer) {
+        wsUrl = `ws://${window.location.hostname}:8086/ws-chat?username=${username}&role=${role}`;
+      } else {
+        const protocol = isHttps ? 'wss:' : 'ws:';
+        wsUrl = `${protocol}//${window.location.host}/ws-chat?username=${username}&role=${role}`;
+      }
       const socket = new WebSocket(wsUrl);
       socketRef.current = socket;
 

@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SportShop - Quy Trình Nghiệp Vụ & Công Nghệ Hệ Thống</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Import Mermaid.js UMD để vẽ sơ đồ Sequence -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.3.0/mermaid.min.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            mermaid.initialize({
+                startOnLoad: true,
+                securityLevel: 'strict',
+                theme: 'dark',
+                themeVariables: {
+                    background: '#0b0f19',
+                    primaryColor: '#1f2937',
+                    primaryTextColor: '#f3f4f6',
+                    primaryBorderColor: '#3b82f6',
+                    lineColor: '#60a5fa',
+                    secondaryColor: '#111827',
+                    tertiaryColor: '#1f2937',
+                    actorBkg: '#0f172a',
+                    actorBorder: '#3b82f6',
+                    actorTextColor: '#f1f5f9',
+                    signalColor: '#60a5fa',
+                    signalTextColor: '#94a3b8',
+                    labelBoxBkgColor: '#0f172a',
+                    labelBoxBorderColor: '#3b82f6',
+                    labelTextColor: '#f1f5f9',
+                    loopBkgColor: '#0f172a',
+                    loopBorderColor: '#3b82f6',
+                    noteBkgColor: '#1e293b',
+                    noteBorderColor: '#4b5563',
+                    noteTextColor: '#cbd5e1'
+                }
+            });
+        });
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #080c14;
+            --sidebar-bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.4);
+            --border-color: rgba(255, 255, 255, 0.05);
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-purple: #8b5cf6;
+            --glow-color: rgba(59, 130, 246, 0.15);
+            --shadow: rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Navigation */
+        aside {
+            width: 320px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px;
+            z-index: 100;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .logo-indicator {
+            width: 12px;
+            height: 12px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-blue);
+        }
+
+        .logo-text {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.3rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+            flex: 1;
+            padding-right: 5px;
+        }
+
+        .nav-item a {
+            display: block;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.25s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-item a:hover {
+            color: var(--text-main);
+            background-color: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-item.active a {
+            color: #ffffff;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15));
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 4px 15px var(--glow-color);
+        }
+
+        .nav-subheader {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 16px;
+        }
+
+        /* Main Content Container */
+        main {
+            margin-left: 320px;
+            flex: 1;
+            padding: 60px 80px;
+            max-width: 1200px;
+        }
+
+        section {
+            margin-bottom: 80px;
+            scroll-margin-top: 60px;
+        }
+
+        h1.section-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.section-subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        /* Technology Grid */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .tech-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .tech-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), 0 0 20px var(--glow-color);
+        }
+
+        .tech-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tech-icon {
+            font-size: 1.8rem;
+        }
+
+        .tech-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: #ffffff;
+        }
+
+        .tech-desc {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+
+        .tech-tag {
+            align-self: flex-start;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tag-core {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .tag-db {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .tag-mw {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .tag-ext {
+            background-color: rgba(139, 92, 246, 0.1);
+            color: #a78bfa;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        /* Diagram Wrapper for Sequence */
+        .diagram-container {
+            background-color: #0b0f19;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .diagram-container .mermaid {
+            width: 100%;
+            text-align: center;
+        }
+
+        .diagram-container svg {
+            width: 100% !important;
+            max-width: 900px !important;
+            height: auto !important;
+        }
+
+        /* Timeline for Workflows */
+        .timeline {
+            position: relative;
+            margin-top: 30px;
+            padding-left: 32px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 7px;
+            width: 2px;
+            height: 100%;
+            background-color: var(--border-color);
+        }
+
+        .timeline-step {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .timeline-step:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            top: 4px;
+            left: -32px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--bg-color);
+            border: 3px solid var(--accent-blue);
+            box-shadow: 0 0 8px var(--accent-blue);
+            transition: all 0.2s ease;
+        }
+
+        .timeline-step:hover .timeline-marker {
+            background-color: var(--accent-blue);
+            transform: scale(1.1);
+        }
+
+        .timeline-content {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.25s ease;
+        }
+
+        .timeline-step:hover .timeline-content {
+            border-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(30, 41, 59, 0.55);
+        }
+
+        .step-num {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            display: inline-block;
+        }
+
+        .step-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 1.15rem;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .step-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .step-desc b {
+            color: #ffffff;
+        }
+
+        .step-code-pointer {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 4px 8px;
+            border-radius: 6px;
+            color: var(--text-muted);
+            margin-top: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .step-code-pointer:hover {
+            color: var(--accent-blue);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            body {
+                flex-direction: column;
+            }
+
+            aside {
+                width: 100%;
+                height: auto;
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                padding: 20px;
+            }
+
+            .logo-container {
+                margin-bottom: 20px;
+            }
+
+            .nav-menu {
+                flex-direction: row;
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+
+            .nav-subheader {
+                display: none;
+            }
+
+            main {
+                margin-left: 0;
+                padding: 40px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside>
+        <div class="logo-container">
+            <div class="logo-indicator"></div>
+            <span class="logo-text">SportShop System</span>
+        </div>
+
+        <ul class="nav-menu">
+            <li class="nav-item active" data-target="overview"><a href="#overview">Tổng Quan</a></li>
+            <li class="nav-item" data-target="technologies"><a href="#technologies">Công Nghệ Áp Dụng</a></li>
+
+            <div class="nav-subheader">Quy Trình Nghiệp Vụ</div>
+            <li class="nav-item" data-target="wf-auth"><a href="#wf-auth">1. Đăng Nhập & JWT</a></li>
+            <li class="nav-item" data-target="wf-cart"><a href="#wf-cart">2. Đồng Bộ Giỏ Hàng</a></li>
+            <li class="nav-item" data-target="wf-order"><a href="#wf-order">3. Đặt Hàng & Tồn Kho</a></li>
+            <li class="nav-item" data-target="wf-payment"><a href="#wf-payment">4. Chống Trùng Thanh Toán</a></li>
+            <li class="nav-item" data-target="wf-ai"><a href="#wf-ai">5. Trợ Lý AI SportyAI</a></li>
+            <li class="nav-item" data-target="wf-chat"><a href="#wf-chat">6. Chat Socket Admin</a></li>
+            <li class="nav-item" data-target="wf-noti"><a href="#wf-noti">7. Email Thông Báo</a></li>
+        </ul>
+    </aside>
+
+    <main>
+        <!-- SECTION 1: OVERVIEW -->
+        <section id="overview">
+            <h1 class="section-title">Tổng Quan Kiến Trúc</h1>
+            <p class="section-subtitle">
+                SportShop được xây dựng trên mô hình kiến trúc <b>Microservices phân tán</b>, bao gồm một Client SPA ở
+                Frontend kết nối thông qua <b>API Gateway</b> duy nhất. Mỗi Service sở hữu cơ sở dữ liệu riêng, hoạt
+                động độc lập và đồng bộ thông tin lẫn nhau thông qua các cơ chế API đồng bộ hoặc Message Broker bất đồng
+                bộ.
+            </p>
+        </section>
+
+        <!-- SECTION 2: TECHNOLOGIES -->
+        <section id="technologies">
+            <h1 class="section-title">Công Nghệ Áp Dụng</h1>
+            <p class="section-subtitle">Các công cụ và framework chính được áp dụng xuyên suốt hệ thống để đảm bảo bảo
+                mật, hiệu năng và tính ổn định cao.</p>
+
+            <div class="tech-grid">
+                <!-- Tech 1 -->
+                <div class="tech-card">
+                    <div class="tech-header">
+                        <span class="tech-icon">☕</span>
+                        <span class="tech-title">Spring Boot 3.x</span>
+                    </div>
+                    <span class="tech-tag tag-core">Core Backend</span>
+                    <span class="tech-desc">Sử dụng Java 17 làm nền tảng phát triển các microservices độc lập, tích hợp
+                        các thư viện Spring Security, Spring JPA giúp triển khai nghiệp vụ nhanh chóng.</span>
+                </div>
+
+                <!-- Tech 2 -->
+                <div class="tech-card">
+                    <div class="tech-header">
+                        <span class="tech-icon">⚡</span>
+                        <span class="tech-title">Spring Cloud Gateway</span>
+                    </div>
+                    <span class="tech-tag tag-core">API Gateway</span>
+                    <span class="tech-desc">Đóng vai trò cổng kiểm soát trung tâm, định tuyến API an toàn dựa trên đường
+                        dẫn cấu hình, tích hợp bộ xác thực mã token JWT và bộ giới hạn tần suất (Rate Limiter).</span>
+                </div>
+
+                <!-- Tech 3 -->
+                <div class="tech-card">
+                    <div class="tech-header">
+                        <span class="tech-icon">⚛️</span>
+                        <span class="tech-title">React / Vite</span>
+                    </div>
+                    <span class="tech-tag tag-core">Client SPA</span>
+                    <span class="tech-desc">Ứng dụng Single Page Application xây dựng trên React, tích hợp Context API
+                        quản lý trạng thái giỏ hàng lai và Axios giao tiếp API qua Gateway.</span>
+                </div>
+
+                <!-- Tech 4 -->
+                <div class="tech-card">
+                    <div class="tech-header">
+                        <span class="tech-icon">💾</span>
+                        <span class="tech-title">MySQL 8.0</span>
+                    </div>
+                    <span class="tech-tag tag-db">Database</span>
+                    <span class="tech-desc">Áp dụng mô hình Database-per-Service. Mỗi service sở hữu một schema MySQL
+                        riêng biệt (auth_db, product_db, order_db, payment_db, chat_db) để cô lập dữ liệu.</span>
+                </div>
+
+                <!-- Tech 5 -->
+                <div class="tech-card">
+                    <div class="tech-header">
+                        <span class="tech-icon">🔴</span>
+                        <span class="tech-title">Redis Cache</span>
+                    </div>
+                    <span class="tech-tag tag-mw">Middleware</span>
+                    <span class="tech-desc">Đảm nhiệm 3 vai trò quan trọng: Caching thông tin sản phẩm tránh quá tải DB,
+                        làm kho lưu metadata Rate Limit cho Gateway, và làm cơ chế Khóa phân tán (Distributed Lock) tại
+                        Payment.</span>
+                </div>
+
+                <!-- Tech 6 -->
+                <div class="tech-card">
+                    <div class="tech-header">
+                        <span class="tech-icon">🐇</span>
+                        <span class="tech-title">RabbitMQ</span>
+                    </div>
+                    <span class="tech-tag tag-mw">Message Broker</span>
+                    <span class="tech-desc">Hệ thống gửi tin nhắn bất đồng bộ, chịu trách nhiệm truyền tải các Event
+                        trạng thái (cập nhật tồn kho, thay đổi trạng thái đơn hàng, kích hoạt gửi mail) để giảm thiểu sự
+                        phụ thuộc trực tiếp.</span>
+                </div>
+
+                <!-- Tech 7 -->
+                <div class="tech-card">
+                    <div class="tech-header">
+                        <span class="tech-icon">🤖</span>
+                        <span class="tech-title">Gemini AI & Rules</span>
+                    </div>
+                    <span class="tech-tag tag-ext">Integrations</span>
+                    <span class="tech-desc">Động cơ chatbot tư vấn kích cỡ (size) và thông tin sản phẩm. Tích hợp bộ
+                        luật Rule-based xử lý nhanh tại chỗ và gọi API ngoài của Gemini khi gặp các câu hỏi nâng
+                        cao.</span>
+                </div>
+
+                <!-- Tech 8 -->
+                <div class="tech-card">
+                    <div class="tech-header">
+                        <span class="tech-icon">📧</span>
+                        <span class="tech-title">SMTP Mail / JavaMail</span>
+                    </div>
+                    <span class="tech-tag tag-ext">Integrations</span>
+                    <span class="tech-desc">Giao thức gửi mail tự động cho khách hàng. JavaMail Sender được tích hợp
+                        trong Notification Service để gửi thông báo xác nhận thanh toán/đơn hàng thành công qua
+                        Gmail.</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: WORKFLOWS -->
+        <!-- WF 1: AUTH -->
+        <section id="wf-auth">
+            <h1 class="section-title">1. Đăng Ký, Đăng Nhập & Bảo Mật Xác Thực JWT</h1>
+            <p class="section-subtitle">Luồng bảo mật đăng nhập người dùng và cấp mã JWT để xác minh danh tính trên toàn
+                hệ thống.</p>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                    sequenceDiagram
+                    autonumber
+                    actor Guest as Khách hàng
+                    participant React as React Frontend
+                    participant Gateway as API Gateway (8080)
+                    participant Auth as AuthService (8081)
+                    participant DB as Auth DB (MySQL)
+
+                    Guest->>React: Nhập username, password & Đăng nhập
+                    React->>Gateway: POST /api/v1/auth/login
+                    Gateway->>Auth: Định tuyến yêu cầu
+                    Auth->>DB: Truy vấn User bằng Username
+                    DB-->>Auth: Trả về User (Mật khẩu băm BCrypt)
+                    Auth->>Auth: So khớp mật khẩu (BCrypt matches)
+                    alt Mật khẩu hợp lệ
+                    Auth->>Auth: Tạo JWT Token (HS256)
+                    Auth-->>React: Trả về JWT Token & Role info
+                    React->>React: Lưu JWT vào LocalStorage
+                    else Mật khẩu không hợp lệ
+                    Auth-->>React: Trả về HTTP 401 Unauthorized
+                    end
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-step">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="step-num">Bước 1</span>
+                        <h4 class="step-title">Gửi Yêu Cầu Đăng Nhập</h4>
+                        <p class="step-desc">Khách hàng nhập tên tài khoản và mật khẩu tại giao diện React. Frontend gửi
+                            yêu cầu POST đến <code>/api/v1/auth/login</code> đi qua API Gateway trung chuyển.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-marker"
+                        style="border-color: var(--accent-purple); box-shadow: 0 0 8px var(--accent-purple);"></div>
+                    <div class="timeline-content">
+                        <span class="step-num" style="color: var(--accent-purple);">Bước 2</span>
+                        <h4 class="step-title">Xác Thực Tại AuthService</h4>
+                        <p class="step-desc"><code>AuthService</code> nhận yêu cầu, truy vấn bảng <code>users</code>
+                            trong <code>auth_db</code> để kiểm tra. Mật khẩu được mã hóa dạng băm <b>BCrypt</b> và so
+                            khớp qua hàm <code>BCryptPasswordEncoder.matches()</code>.</p>
+                        <a href="file:///d:/Nam4/KTTKPM/Project_Deploy/AuthService/src/main/java/iuh/fit/auth/service/AuthService.java"
+                            class="step-code-pointer">📄 AuthService.java</a>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="step-num">Bước 3</span>
+                        <h4 class="step-title">Cấp Phát Mã JWT</h4>
+                        <p class="step-desc">Nếu thông tin hợp lệ, <code>AuthService</code> tạo một chuỗi mã hóa <b>JWT
+                                Token (HS256)</b> chứa thông tin người dùng và quyền truy cập (Role) với thời gian hết
+                            hạn là 24 giờ, trả về cho Frontend.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-marker"
+                        style="border-color: var(--accent-green); box-shadow: 0 0 8px var(--accent-green);"></div>
+                    <div class="timeline-content">
+                        <span class="step-num" style="color: var(--accent-green);">Bước 4</span>
+                        <h4 class="step-title">Định Tuyến & Phân Quyền Gateway</h4>
+                        <p class="step-desc">Frontend lưu JWT vào <code>LocalStorage</code>. Với mọi request API sau đó,
+                            Frontend đính kèm token trong Header <code>Authorization: Bearer [JWT]</code>. <b>API
+                                Gateway</b> sẽ tự động giải mã, kiểm tra chữ ký token và xác định quyền truy cập trước
+                            khi chuyển tiếp yêu cầu đến các microservices nội bộ.</p>
+                        <a href="file:///d:/Nam4/KTTKPM/Project_Deploy/GatewayService/src/main/java/iuh/fit/gateway/filter/JwtAuthenticationFilter.java"
+                            class="step-code-pointer">📄 JwtAuthenticationFilter.java</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WF 2: CART SYNC -->
+        <section id="wf-cart">
+            <h1 class="section-title">2. Đồng Bộ Giỏ Hàng Persistent (Guest to Member Sync)</h1>
+            <p class="section-subtitle">Quy trình quản lý giỏ hàng lai giữa bộ nhớ trình duyệt tạm thời và lưu trữ vĩnh
+                viễn trong MySQL khi đăng nhập.</p>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                    sequenceDiagram
+                    autonumber
+                    actor User as Khách hàng
+                    participant React as React Frontend
+                    participant Gateway as API Gateway (8080)
+                    participant Order as OrderService (8083)
+                    participant DB as Order DB (MySQL)
+
+                    Note over User, React: Trạng thái: Chưa Đăng Nhập (Guest)
+                    User->>React: Thêm sản phẩm A (size L) vào giỏ hàng
+                    React->>React: Lưu vào LocalStorage ['cart']
+
+                    Note over User, React: Tiến hành Đăng Nhập
+                    User->>React: Đăng nhập thành công
+                    React->>Gateway: POST /api/v1/orders/cart/sync (Kèm localCart)
+                    Gateway->>Order: Định tuyến yêu cầu
+                    Order->>DB: Truy vấn giỏ hàng cũ của User
+                    Order->>Order: Merge gộp các sản phẩm local vào database
+                    Order->>DB: Lưu các bản ghi đã gộp vào bảng `cart_items`
+                    Order-->>React: Trả về danh sách giỏ hàng sau khi gộp
+                    React->>React: Gán danh sách mới vào State + Xóa LocalStorage ['cart']
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-step">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="step-num">Bước 1</span>
+                        <h4 class="step-title">Thao Tác Giỏ Hàng Khách Vãng Lai</h4>
+                        <p class="step-desc">Khi người dùng chưa đăng nhập, mọi thao tác Thêm/Sửa/Xóa sản phẩm trong giỏ
+                            hàng đều được lưu trữ trực tiếp tại bộ nhớ cục bộ <b>LocalStorage</b> của trình duyệt dưới
+                            dạng mảng JSON.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-marker"
+                        style="border-color: var(--accent-purple); box-shadow: 0 0 8px var(--accent-purple);"></div>
+                    <div class="timeline-content">
+                        <span class="step-num" style="color: var(--accent-purple);">Bước 2</span>
+                        <h4 class="step-title">Gửi Sự Kiện Đồng Bộ Lúc Đăng Nhập</h4>
+                        <p class="step-desc">Ngay khi người dùng đăng nhập thành công, Frontend kích hoạt hàm đồng bộ
+                            giỏ hàng, gửi một request POST chứa toàn bộ danh sách sản phẩm từ LocalStorage lên API
+                            <code>/api/v1/orders/cart/sync?username=[username]</code> của <b>Order Service</b>.</p>
+                        <a href="file:///d:/Nam4/KTTKPM/Project_Deploy/shop-sport/src/features/Cart/CartContext.jsx"
+                            class="step-code-pointer">⚛️ CartContext.jsx</a>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="step-num">Bước 3</span>
+                        <h4 class="step-title">Xử Lý Merge Dữ Liệu Tại Order Service</h4>
+                        <p class="step-desc"><code>OrderService</code> tiếp nhận danh sách sản phẩm. Nó truy vấn dữ liệu
+                            giỏ hàng hiện tại của người dùng trong bảng <code>cart_items</code> của
+                            <code>order_db</code>. Tiến hành gộp (Merge) thông minh: cộng dồn số lượng nếu trùng sản
+                            phẩm và phân loại kích cỡ (size), hoặc chèn bản ghi mới nếu sản phẩm chưa tồn tại.</p>
+                        <a href="file:///d:/Nam4/KTTKPM/Project_Deploy/OrderService/src/main/java/iuh/fit/order/service/CartService.java"
+                            class="step-code-pointer">📄 CartService.java</a>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-marker"
+                        style="border-color: var(--accent-green); box-shadow: 0 0 8px var(--accent-green);"></div>
+                    <div class="timeline-content">
+                        <span class="step-num" style="color: var(--accent-green);">Bước 4</span>
+                        <h4 class="step-title">Lưu Trữ MySQL Vĩnh Viễn & Cập Nhật State</h4>
+                        <p class="step-desc">Sau khi gộp dữ liệu thành công, <code>OrderService</code> lưu các thay đổi
+                            mới vào MySQL. Trả kết quả giỏ hàng mới nhất về cho Client. Frontend nhận phản hồi, thay thế
+                            State giỏ hàng hiện tại bằng dữ liệu trả về và tiến hành <b>xóa sạch LocalStorage</b> để
+                            chuyển sang chế độ đồng bộ trực tiếp với cơ sở dữ liệu.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WF 3: ORDER CHECKOUT -->
+        <section id="wf-order">
+            <h1 class="section-title">3. Đặt Hàng & Đồng Bộ Tồn Kho Bất Đồng Bộ qua RabbitMQ</h1>
+            <p class="section-subtitle">Quy trình tạo đơn hàng và cập nhật số lượng tồn kho tự động giữa các
+                microservices bằng Message Broker để tránh nghẽn luồng.</p>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                    sequenceDiagram
+                    autonumber
+                    actor User as Khách hàng
+                    participant React as React Frontend
+                    participant Gateway as API Gateway (8080)
+                    participant Order as OrderService (8083)
+                    participant DB as Order DB (MySQL)
+                    participant Queue as RabbitMQ Broker (5672)
+                    participant Prod as ProductService (8082)
+                    participant Redis as Redis Cache
+
+                    User->>React: Nhập thông tin & Xác nhận thanh toán
+                    React->>Gateway: POST /api/v1/orders
+                    Gateway->>Order: Định tuyến yêu cầu
+                    Order->>DB: Lưu đơn hàng mới (Trạng thái: PENDING_PAYMENT)
+                    Order->>Queue: Publish StockUpdateEvent (Mã SP, số lượng)
+                    Order-->>React: Trả về đơn hàng vừa được tạo thành công
+
+                    Note over Queue, Prod: Xử lý bất đồng bộ
+                    Queue->>Prod: Consume StockUpdateEvent
+                    Prod->>Prod: Truy vấn MySQL & giảm số lượng tồn kho (stock)
+                    Prod->>Redis: Xóa Cache (Evict products, categories)
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-step">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="step-num">Bước 1</span>
+                        <h4 class="step-title">Khởi Tạo Đơn Hàng Mới</h4>
+                        <p class="step-desc">Khách hàng xác nhận đặt hàng tại trang Thanh toán.
+                            <code>OrderService</code> nhận thông tin giỏ hàng, tính toán tổng tiền, và ghi nhận đơn hàng
+                            mới vào bảng <code>orders</code> trong <code>order_db</code> dưới trạng thái
+                            <b>PENDING_PAYMENT</b> (Chờ thanh toán).</p>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-marker"
+                        style="border-color: var(--accent-purple); box-shadow: 0 0 8px var(--accent-purple);"></div>
+                    <div class="timeline-content">
+                        <span class="step-num" style="color: var(--accent-purple);">Bước 2</span>
+                        <h4 class="step-title">Bắn Sự Kiện Đồng Bộ Tồn Kho</h4>
+                        <p class="step-desc">Sau khi tạo đơn thành công, <code>OrderService</code> không gọi trực tiếp
+                            Product Service. Thay vào đó, nó bắn một thông tin sự kiện <code>StockUpdateEvent</code>
+                            chứa danh sách mã sản phẩm và số lượng mua vào Exchange <code>x.product.exchange</code> của
+                            <b>RabbitMQ Broker</b>.</p>
+                        <a href="file:///d:/Nam4/KTTKPM/Project_Deploy/OrderService/src/main/java/iuh/fit/order/service/OrderService.java"
+                            class="step-code-pointer">📄 OrderService.java</a>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="step-num">Bước 3</span>
+                        <h4 class="step-title">Tiếp Nhận & Giảm Tồn Kho Tại Product Service</h4>
+                        <p class="step-desc">Hệ thống RabbitMQ phân phối tin nhắn đến queue
+                            <code>q.product.stock-update</code>. <code>ProductService</code> lắng nghe queue này, phân
+                            tích tin nhắn, truy vấn bảng <code>products</code> trong <code>product_db</code> và tiến
+                            hành giảm số lượng tồn kho (<code>stock</code>) đồng thời tăng số lượng đã bán
+                            (<code>soldQuantity</code>).</p>
+                        <a href="file:///d:/Nam4/KTTKPM/Project_Deploy/ProjectService/src/main/java/iuh/fit/product/listener/ProductStockListener.java"
+                            class="step-code-pointer">📄 ProductStockListener.java</a>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-marker"
+                        style="border-color: var(--accent-green); box-shadow: 0 0 8px var(--accent-green);"></div>
+                    <div class="timeline-content">
+                        <span class="step-num" style="color: var(--accent-green);">Bước 4</span>
+                        <h4 class="step-title">Xóa Bộ Nhớ Cache Redis</h4>
+                        <p class="step-desc">Do số lượng sản phẩm và thông tin tồn kho thay đổi,
+                            <code>ProductService</code> lập tức kích hoạt xóa cache (Evict) các key Redis liên quan như
+                            <code>products</code>, <code>products_by_category</code>, <code>product_details</code> nhằm
+                            đảm bảo ở lần truy cập tiếp theo của khách hàng, dữ liệu hiển thị sẽ được nạp mới hoàn toàn
+                            từ MySQL.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WF 4: PAYMENT LOCK -->
+        <section id="wf-payment">
+            <h1 class="section-title">4. Khóa Phân Tán Redis Chống Trùng Lặp & Cổng Thanh Toán MoMo</h1>
+            <p class="section-subtitle">Cơ chế bảo vệ giao dịch thanh toán khi gặp tình trạng lag mạng, ngăn chặn người
+                dùng bấm liên tục gây ra lỗi double-payment.</p>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                    sequenceDiagram
+                    autonumber
+                    actor User as Khách hàng
+                    participant React as React Frontend
+                    participant Gateway as API Gateway (8080)
+                    participant Pay as PaymentService (8084)
+                    participant Redis as Redis Cache (6379)
+                    participant MoMo as MoMo Gateway (External)
+                    participant DB as Payment DB (MySQL)
+                    participant Queue as RabbitMQ Broker
+
+                    User->>React: Nhấn "Thanh toán qua MoMo"
+                    React->>Gateway: POST /api/v1/payments/create-payment
+                    Gateway->>Pay: Định tuyến yêu cầu
+                    Pay->>Redis: opsForValue().setIfAbsent(lockKey, "locked", 30s)
+                    alt Khóa chưa tồn tại (Thành công)
+                    Pay->>MoMo: Gọi MoMo API tạo URL thanh toán
+                    MoMo-->>Pay: Trả về link URL thanh toán
+                    Pay-->>React: Trả về URL thanh toán MoMo
+                    React->>User: Chuyển hướng sang giao diện MoMo
+                    else Khóa đã tồn tại (Thất bại)
+                    Pay-->>React: Trả về HTTP 400 Bad Request (Đơn hàng đang xử lý)
+                    end
+
+                    Note over User, Pay: Sau khi khách quét mã & thanh toán thành công
+                    MoMo->>Gateway: POST /api/v1/payments/momo-ipn (Callback kết quả)
+                    Gateway->>Pay: Định tuyến yêu cầu IPN
+                    Pay->>DB: Chèn lịch sử giao dịch thành công
+                    Pay->>Queue: Publish PaymentStatusEvent (Trạng thái: PAID)
+                    Pay->>Redis: Xóa khóa giải phóng (Delete lockKey)
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-step">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="step-num">Bước 1</span>
+                        <h4 class="step-title">Kích Hoạt Thanh Toán</h4>
+                        <p class="step-desc">Khách hàng nhấn nút "Thanh toán qua MoMo" tại trang hóa đơn. Yêu cầu tạo
+                            giao dịch thanh toán gửi đến API của <code>PaymentService</code>.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-marker"
+                        style="border-color: var(--accent-purple); box-shadow: 0 0 8px var(--accent-purple);"></div>
+                    <div class="timeline-content">
+                        <span class="step-num" style="color: var(--accent-purple);">Bước 2</span>
+                        <h4 class="step-title">Thiết Lập Khóa Phân Tán Redis</h4>
+                        <p class="step-desc">Ngay khi nhận request, <code>PaymentService</code> kiểm tra sự tồn tại của
+                            khóa <code>lock:payment:[orderId]</code> trong bộ nhớ <b>Redis</b> thông qua lệnh
+                            <code>redisTemplate.opsForValue().setIfAbsent(lockKey, "locked", 30, TimeUnit.SECONDS)</code>.
+                            Đây là cơ chế nguyên tử (Atomic operation).</p>
+                        <a href="file:///d:/Nam4/KTTKPM/Project_Deploy/PaymentService/src/main/java/iuh/fit/payment/controller/PaymentController.java"
+                            class="step-code-pointer">📄 PaymentController.java</a>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="step-num">Bước 3</span>
+                        <h4 class="step-title">Xử Lý Khóa Trùng</h4>
+                        <p class="step-desc">If khóa đã tồn tại (nghĩa là đang có một giao dịch khác cho đơn hàng này
+                            đang xử lý song song), <code>PaymentService</code> trả về ngay lập tức mã lỗi HTTP 400 Bad
+                            Request kèm thông báo lỗi tránh trùng thanh toán. Nếu chưa tồn tại, khóa sẽ được thiết lập
+                            với thời gian sống tự động (TTL) là 30 giây.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-marker"
+                        style="border-color: var(--accent-green); box-shadow: 0 0 8px var(--accent-green);"></div>
+                    <div class="timeline-content">
+                        <span class="step-num" style="color: var(--accent-green);">Bước 4</span>
+                        <h4 class="step-title">Gọi Cổng MoMo & Giải Phóng Khóa</h4>
+                        <p class="step-desc"><code>PaymentService</code> thực hiện kết nối HTTPS POST gọi sang cổng
+                            thanh toán của <b>MoMo API</b> để lấy đường link thanh toán và trả về cho Client chuyển
+                            hướng. Sau khi hoàn tất giao dịch và nhận Callback từ MoMo, hoặc trong trường hợp kết nối
+                            lỗi xảy ra lập tức, khóa trên Redis sẽ được chủ động xóa bỏ để mở lại quyền giao dịch bình
+                            thường cho đơn hàng.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WF 5: AI CHAT -->
+        <section id="wf-ai">
+            <h1 class="section-title">5. Chat Trợ Lý Ảo Thông Minh Bằng Rule-Based & Gemini AI</h1>
+            <p class="section-subtitle">Quy trình xử lý hội thoại thông minh kết hợp giữa tốc độ phản hồi của luật tại
+                chỗ và độ thông minh của LLM bên ngoài.</p>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                    sequenceDiagram
+                    autonumber
+                    actor User as Khách hàng
+                    participant React as ChatWidget (Frontend)
+                    participant Gateway as API Gateway (8080)
+                    participant AI as AIService (8085)
+                    participant Gemini as Gemini AI API (Google)
+
+                    User->>React: Nhập câu hỏi và gửi ("Tư vấn size L")
+                    React->>Gateway: POST /api/v1/ai/chat
+                    Gateway->>AI: Định tuyến yêu cầu
+                    AI->>AI: So khớp qua Rule Engine cục bộ
+                    alt Khớp từ khóa rule (size, ship, payment, hello)
+                    AI-->>React: Trả về câu trả lời định sẵn (nhanh, miễn phí)
+                    else Không khớp luật
+                    AI->>Gemini: Gọi Gemini API với câu hỏi & context của shop
+                    Gemini-->>AI: Trả về câu trả lời sinh thông minh
+                    AI-->>React: Trả về kết quả cho ChatWidget
+                    end
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-step">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="step-num">Bước 1</span>
+                        <h4 class="step-title">Khách Hàng Hỏi Trợ Lý Ảo</h4>
+                        <p class="step-desc">Khách hàng mở khung ChatWidget ở góc trái màn hình, gửi các câu hỏi tư vấn
+                            về sản phẩm, cách chọn kích cỡ (size), chính sách thanh toán hoặc vận chuyển.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-marker"
+                        style="border-color: var(--accent-purple); box-shadow: 0 0 8px var(--accent-purple);"></div>
+                    <div class="timeline-content">
+                        <span class="step-num" style="color: var(--accent-purple);">Bước 2</span>
+                        <h4 class="step-title">Kiểm Tra Luật Cục Bộ (Rule Engine)</h4>
+                        <p class="step-desc">Gateway chuyển tiếp yêu cầu đến <code>AIService</code>. Để giảm độ trễ và
+                            chi phí gọi API ngoài, service sẽ kiểm tra câu hỏi qua hàm
+                            <code>getSmartFallbackResponse()</code> để so khớp với các từ khóa phổ biến (size, ship,
+                            payment, hello) và trả lời ngay lập tức nếu khớp luật.</p>
+                        <a href="file:///d:/Nam4/KTTKPM/Project_Deploy/AIService/src/main/java/iuh/fit/ai/controller/AIController.java"
+                            class="step-code-pointer">📄 AIController.java</a>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="step-num">Bước 3</span>
+                        <h4 class="step-title">Gọi API Gemini Làm Trợ Lý Dự Phòng</h4>
+                        <p class="step-desc">Nếu câu hỏi không nằm trong danh sách các luật có sẵn,
+                            <code>AIService</code> sẽ sử dụng Client API gọi sang hệ thống **Google Gemini AI API**,
+                            truyền câu hỏi kèm theo Context quy chuẩn của cửa hàng để AI tự phân tích và sinh câu trả
+                            lời thông minh.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-marker"
+                        style="border-color: var(--accent-green); box-shadow: 0 0 8px var(--accent-green);"></div>
+                    <div class="timeline-content">
+                        <span class="step-num" style="color: var(--accent-green);">Bước 4</span>
+                        <h4 class="step-title">Hiển Thị Kết Quả Lên Widget</h4>
+                        <p class="step-desc">Phản hồi trả về Frontend dưới dạng JSON. Giao diện ChatWidget nhận dữ liệu
+                            và kết xuất hiển thị sinh động, hỗ trợ định dạng Markdown nhẹ để trải nghiệm chat mượt mà,
+                            thân thiện.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WF 6: WS CHAT -->
+        <section id="wf-chat">
+            <h1 class="section-title">6. Hỗ Trợ Khách Hàng Trực Tuyến Thời Gian Thực Qua WebSockets</h1>
+            <p class="section-subtitle">Quy trình trao đổi tin nhắn trực tiếp giữa Khách hàng và Admin chăm sóc khách
+                hàng thông qua kênh kết nối WebSocket liên tục.</p>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                    sequenceDiagram
+                    autonumber
+                    actor User as Khách hàng
+                    participant React as ChatWidget (Frontend)
+                    participant Chat as ChatService (8086)
+                    participant DB as Chat DB (MySQL)
+                    participant Admin as Admin Portal (React)
+
+                    User->>Chat: Kết nối WebSocket (ws://localhost:8086/chat)
+                    Admin->>Chat: Kết nối WebSocket
+
+                    User->>Chat: Gửi tin nhắn qua Socket (JSON)
+                    Chat->>DB: Ghi nhận vào MySQL (chat_messages)
+                    Chat->>Admin: Forward chuyển tiếp tức thời tới phiên Admin
+                    Admin->>Chat: Admin phản hồi câu trả lời
+                    Chat->>DB: Ghi nhận câu trả lời vào MySQL
+                    Chat->>User: Forward chuyển tiếp câu trả lời về màn hình Khách
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-step">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="step-num">Bước 1</span>
+                        <h4 class="step-title">Thiết Lập Kênh Kết Nối WebSocket</h4>
+                        <p class="step-desc">Khi khách hàng nhấn nút liên hệ nhân viên hỗ trợ, trình duyệt khởi chạy kết
+                            nối hai chiều liên tục sử dụng giao thức WebSocket hướng tới cổng dịch vụ của <b>Chat
+                                Service</b> tại địa chỉ <code>ws://localhost:8086/chat</code>.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-marker"
+                        style="border-color: var(--accent-purple); box-shadow: 0 0 8px var(--accent-purple);"></div>
+                    <div class="timeline-content">
+                        <span class="step-num" style="color: var(--accent-purple);">Bước 2</span>
+                        <h4 class="step-title">Nhận & Chuyển Tiếp Tin Nhắn Tức Thời</h4>
+                        <p class="step-desc">Tin nhắn được gửi qua khung chat dưới cấu trúc JSON.
+                            <code>ChatService</code> nhận tin, định dạng và định tuyến gửi trực tiếp đến phiên làm việc
+                            (Session) đang mở của nhân viên chăm sóc khách hàng (Admin) tại giao diện Admin Portal ngay
+                            lập tức.</p>
+                        <a href="file:///d:/Nam4/KTTKPM/Project_Deploy/ChatService/src/main/java/iuh/fit/chat/config/WebSocketConfig.java"
+                            class="step-code-pointer">📄 WebSocketConfig.java</a>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-marker"
+                        style="border-color: var(--accent-green); box-shadow: 0 0 8px var(--accent-green);"></div>
+                    <div class="timeline-content">
+                        <span class="step-num" style="color: var(--accent-green);">Bước 3</span>
+                        <h4 class="step-title">Lưu Lịch Sử & Phản Hồi Từ Admin</h4>
+                        <p class="step-desc">Tin nhắn được lưu đồng thời vào bảng <code>chat_messages</code> của
+                            <code>chat_db</code> để làm căn cứ lưu trữ lịch sử. Admin nhập câu trả lời, gửi ngược lại
+                            qua kết nối socket về phía thiết bị của khách hàng, đảm bảo quá trình tư vấn diễn ra tức
+                            thì, không bị trễ trang.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WF 7: NOTIFICATION -->
+        <section id="wf-noti">
+            <h1 class="section-title">7. Luồng Gửi Email Thông Báo Tự Động Qua Event-Driven & SMTP</h1>
+            <p class="section-subtitle">Quy trình tự động phát hiện các giao dịch thành công và thực hiện gửi thư thông
+                báo xác nhận cho khách hàng qua email.</p>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                    sequenceDiagram
+                    autonumber
+                    participant Queue as RabbitMQ Broker (5672)
+                    participant Noti as NotificationService (8087)
+                    participant Auth as AuthService (8081)
+                    participant Order as OrderService (8083)
+                    participant SMTP as SMTP Mail Server (Gmail)
+                    actor User as Khách hàng
+
+                    Note over Queue, Noti: Nhận tin nhắn bất đồng bộ
+                    Queue->>Noti: Deliver PaymentStatusEvent (PAID)
+                    Noti->>Auth: HTTP GET /api/v1/auth/user (Lấy thông tin khách)
+                    Auth-->>Noti: Trả về email người dùng
+                    Noti->>Order: HTTP GET /api/v1/orders/{orderId} (Lấy giỏ hàng mua)
+                    Order-->>Noti: Trả về thông tin danh sách sản phẩm đơn hàng
+                    Noti->>Noti: Compile HTML Template động
+                    Noti->>SMTP: Gửi email qua JavaMailSender (cổng 587)
+                    SMTP-->>User: Gửi email hóa đơn xác nhận đơn hàng thành công
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-step">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="step-num">Bước 1</span>
+                        <h4 class="step-title">Phát Hành Sự Kiện Trạng Thế</h4>
+                        <p class="step-desc">Khi đơn hàng được thanh toán thành công, <code>PaymentService</code> phát
+                            hành sự kiện cập nhật trạng thái thanh toán lên RabbitMQ Exchange
+                            <code>x.payment.exchange</code>.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-marker"
+                        style="border-color: var(--accent-purple); box-shadow: 0 0 8px var(--accent-purple);"></div>
+                    <div class="timeline-content">
+                        <span class="step-num" style="color: var(--accent-purple);">Bước 2</span>
+                        <h4 class="step-title">Tiếp Nhận Sự Kiện Tại Notification Service</h4>
+                        <p class="step-desc"><code>NotificationService</code> lắng nghe sự kiện trên thông qua queue
+                            liên kết <code>q.payment.notification</code>. Ngay khi nhận được tin nhắn sự kiện, service
+                            sẽ giải nén dữ liệu để lấy mã đơn hàng (orderId) và mã giao dịch liên quan.</p>
+                        <a href="file:///d:/Nam4/KTTKPM/Project_Deploy/NotificationService/src/main/java/iuh/fit/notification/listener/PaymentStatusListener.java"
+                            class="step-code-pointer">📄 PaymentStatusListener.java</a>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="step-num">Bước 3</span>
+                        <h4 class="step-title">Thu Thập Dữ Liệu Phục Vụ Nội Dung Thư</h4>
+                        <p class="step-desc">Do kiến trúc cô lập dữ liệu DB, <code>NotificationService</code> sẽ thực
+                            hiện các cuộc gọi REST API nội bộ ngắn sang <code>OrderService</code> để lấy thông tin chi
+                            tiết đơn hàng (tên sản phẩm, số lượng, size) và sang <code>AuthService</code> để lấy email
+                            của người mua.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-marker"
+                        style="border-color: var(--accent-green); box-shadow: 0 0 8px var(--accent-green);"></div>
+                    <div class="timeline-content">
+                        <span class="step-num" style="color: var(--accent-green);">Bước 4</span>
+                        <h4 class="step-title">Soạn Nội Dung & Gửi Email Qua SMTP</h4>
+                        <p class="step-desc">Service tiến hành biên dịch nội dung thư dựa trên mẫu email động (HTML
+                            template). Dữ liệu sau đó được đẩy qua lớp thư viện <code>JavaMailSender</code>, kết nối
+                            trực tiếp đến cổng SMTP của Gmail (cổng 587) để thực hiện bắn email thông báo hóa đơn thành
+                            công trực tiếp đến hộp thư cá nhân của Khách hàng.</p>
+                        <a href="file:///d:/Nam4/KTTKPM/Project_Deploy/NotificationService/src/main/java/iuh/fit/notification/service/EmailService.java"
+                            class="step-code-pointer">📄 EmailService.java</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Highlighting active section in sidebar
+        const sections = document.querySelectorAll('section');
+        const navItems = document.querySelectorAll('.nav-item');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 120)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('data-target') === current) {
+                    item.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

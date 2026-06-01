@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Báo Cáo Giải Trình Câu Hỏi Bảo Vệ Đồ Án Kiến Trúc Phần Mềm</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables cho Theme */
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --card-border: rgba(0, 0, 0, 0.08);
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --accent-color: #2563eb;
+            --accent-glow: rgba(37, 99, 235, 0.15);
+            --accent-secondary: #059669;
+            --accent-warn: #d97706;
+            --code-bg: #f1f5f9;
+            --font-main: 'Inter', sans-serif;
+            --font-title: 'Outfit', sans-serif;
+        }
+
+        /* Reset & Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Floating Navigation/Header Bar */
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .header-title-container h1 {
+            font-family: var(--font-title);
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+
+        .header-title-container p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* Main Content Structure */
+        .category-header {
+            font-family: var(--font-title);
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 45px 0 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 5px solid var(--accent-color);
+            padding-left: 15px;
+            color: var(--accent-color);
+        }
+
+        .qa-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .qa-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-color);
+        }
+
+        .qa-number {
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--accent-color);
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+
+        .qa-question {
+            font-family: var(--font-title);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-main);
+        }
+
+        .qa-answer {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .qa-answer p {
+            margin-bottom: 12px;
+        }
+
+        .qa-answer ul, .qa-answer ol {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .qa-answer li {
+            margin-bottom: 6px;
+        }
+
+        .qa-answer strong {
+            color: var(--text-main);
+        }
+
+        /* Code highlight inside QA */
+        pre {
+            background: var(--code-bg);
+            border: 1px solid var(--card-border);
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85rem;
+            color: #f43f5e;
+            background: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        pre code {
+            color: var(--text-main);
+            background: transparent;
+            padding: 0;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--card-border);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Bar -->
+    <header class="header-bar">
+        <div class="header-title-container">
+            <h1>Báo Cáo Giải Trình Kiến Trúc Phần Mềm</h1>
+            <p>Hệ Thống Cửa Hàng Thể Thao (Microservices & Event-Driven) | IUH 2026</p>
+        </div>
+    </header>
+
+    <!-- CATEGORY 1: HIỆU NĂNG & TẢI CAO -->
+    <section>
+        <div class="category-header">
+            PHẦN I: TÍNH NĂNG CỐT LÕI & HIỆU NĂNG HỆ THỐNG KHI TẢI CAO (1M USERS)
+        </div>
+
+        <!-- Q1 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 1</div>
+            <div class="qa-question">Tính năng nào quan trọng nhất trong bài?</div>
+            <div class="qa-answer">
+                <p>Trong hệ thống thương mại điện tử đồ thể thao (SportShop) của chúng ta, hai tính năng quan trọng nhất chính là <strong>Đặt hàng (Order)</strong> và <strong>Thanh toán (Payment)</strong>:</p>
+                <ul>
+                    <li><strong>Dịch vụ Đặt hàng (Order Service):</strong> Đây là điểm khởi đầu ghi nhận doanh thu thực tế. Nó chịu trách nhiệm thiết lập trạng thái đơn hàng ban đầu, liên kết các mặt hàng trong giỏ hàng, và kích hoạt quy trình cập nhật tồn kho.</li>
+                    <li><strong>Dịch vụ Thanh toán (Payment Service):</strong> Nơi dòng tiền giao dịch của khách hàng được xử lý và đảm bảo an toàn. Dịch vụ này tích hợp trực tiếp với cổng thanh toán điện tử MoMo. Bất kỳ sự cố nào ở đây đều ảnh hưởng trực tiếp đến tài chính và uy tín thương hiệu của hệ thống.</li>
+                </ul>
+                <p>Bên cạnh đó, dịch vụ <strong>Tư vấn thông minh (AI Service)</strong> sử dụng Gemini AI và <strong>Chat trực tuyến (Chat Service)</strong> qua WebSocket đóng vai trò là tính năng tăng khả năng chốt đơn hàng độc đáo của dự án.</p>
+            </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 2</div>
+            <div class="qa-question">Khi 1 triệu người dùng đồng thời thì ứng dụng sẽ phản ứng như thế nào? Chỗ nào có nguy cơ bị tắc nghẽn?</div>
+            <div class="qa-answer">
+                <p>Khi có <strong>1 triệu người dùng đồng thời (1M Concurrent Users)</strong> truy cập và thao tác, nếu hệ thống vẫn chạy trên cấu hình máy chủ đơn lẻ (Single Host Docker Compose như hiện tại), hệ thống sẽ <strong>sập hoàn toàn (Crash)</strong> hoặc gặp hiện tượng nghẽn luồng xử lý diện rộng (Gateway Timeout).</p>
+                <p><strong>Các điểm có nguy cơ bị tắc nghẽn (Bottlenecks) cao nhất:</strong></p>
+                <ol>
+                    <li><strong>Cơ sở dữ liệu MySQL (Nghẽn đĩa và CPU):</strong> 1 triệu người đặt hàng và cập nhật thanh toán sẽ gây cạn kiệt Connection Pool của MySQL, dẫn đến hàng loạt truy vấn bị từ chối. Thêm vào đó, việc ghi dữ liệu đồng thời vào ổ đĩa sẽ tạo ra xung đột khóa dòng/bảng (Row/Table locks) liên tục làm tăng đáng kể độ trễ (latency).</li>
+                    <li><strong>API Gateway:</strong> Do là chốt chặn duy nhất đón nhận mọi luồng request đầu vào, Gateway đơn lẻ sẽ nhanh chóng chạm mức 100% CPU để giải mã SSL/TLS và thực hiện định tuyến cho 1 triệu người dùng.</li>
+                    <li><strong>Kết nối đồng bộ Blocking:</strong> Nếu có bất kỳ cuộc gọi đồng bộ nào qua HTTP (ví dụ: Order gọi trực tiếp sang Product qua RestTemplate để check kho và đứng đợi phản hồi), các luồng (thread pool) của Order Service sẽ bị block hoàn toàn, kéo đổ toàn bộ hệ thống (Cascading Failure).</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 3</div>
+            <div class="qa-question">API Gateway sẽ làm nhiệm vụ gì?</div>
+            <div class="qa-answer">
+                <p>Trong kiến trúc này, <strong>GatewayService</strong> đóng vai trò là "người gác cổng" (Reverse Proxy) tập trung với các nhiệm vụ cực kỳ quan trọng:</p>
+                <ul>
+                    <li><strong>Định tuyến thông minh (Routing):</strong> Phân tích URL và điều hướng request đến đúng microservice thích hợp. Khách hàng chỉ cần giao tiếp qua cổng duy nhất 8080 của Gateway mà không cần biết cấu trúc mạng nội bộ.</li>
+                    <li><strong>Kiểm soát lưu lượng (Rate Limiting):</strong> Kết hợp với Redis để đếm số request theo IP người dùng thông qua <code>RequestRateLimiter</code>. Nó sẽ ngăn chặn các cuộc tấn công DDoS, bảo vệ các dịch vụ phía sau không bị quá tải.</li>
+                    <li><strong>Cấu hình CORS tập trung:</strong> Giải quyết triệt để lỗi phân giải tên miền chéo giữa Frontend React và hệ thống backend. Loại bỏ các header trùng lặp thông qua bộ lọc <code>DedupeResponseHeader</code>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 4</div>
+            <div class="qa-question">Cách nào tăng cường khả năng đọc và ghi cho hệ thống?</div>
+            <div class="qa-answer">
+                <p>Để tối ưu hóa hiệu năng, chúng ta phân tách giải pháp cho hai luồng Đọc và Ghi riêng biệt:</p>
+                <p><strong>Tối ưu hóa khả năng ĐỌC (Read):</strong></p>
+                <ul>
+                    <li><strong>Redis Cache (Cache-aside):</strong> Áp dụng tại <code>ProductService</code>. Với dữ liệu danh sách sản phẩm, chi tiết sản phẩm, hệ thống lưu cache lên RAM của Redis. Request đọc chỉ mất dưới 3ms thay vì truy vấn MySQL (50-100ms).</li>
+                    <li><strong>Master-Slave Replication:</strong> Thiết lập một máy chủ MySQL Master để nhận lệnh Ghi, và nhân bản ra nhiều máy chủ MySQL Slave chỉ phục vụ lệnh Đọc.</li>
+                    <li><strong>CDN (Content Delivery Network):</strong> Đẩy toàn bộ hình ảnh sản phẩm và tài nguyên tĩnh của Frontend lên các máy chủ CDN vùng biên giúp giảm 80% băng thông của server chính.</li>
+                </ul>
+                <p><strong>Tối ưu hóa khả năng GHI (Write):</strong></p>
+                <ul>
+                    <li><strong>Xếp hàng bất đồng bộ (RabbitMQ):</strong> Đưa các tác vụ ghi nặng (như trừ kho, gửi email) vào hàng đợi RabbitMQ để xử lý bất đồng bộ, tránh chặn luồng chính của client.</li>
+                    <li><strong>Database Sharding:</strong> Chia tách bảng dữ liệu lớn (như Orders) ra nhiều database vật lý độc lập dựa trên mã băm của ID người dùng (User ID hashing).</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 5</div>
+            <div class="qa-question">Hệ thống như này đã chạy nhanh nhất chưa? Hay có thể áp dụng hệ thống khác để chạy được tốt bài toán 1 triệu người dùng?</div>
+            <div class="qa-answer">
+                <p><strong>Hệ thống hiện tại chưa chạy nhanh nhất</strong> vì mới chỉ được setup chạy trên một server vật lý duy nhất qua Docker Compose, dùng chung một máy chủ MySQL duy nhất (chỉ chia database logic).</p>
+                <p><strong>Để chạy mượt mà bài toán 1 triệu người dùng, ta cần áp dụng:</strong></p>
+                <ol>
+                    <li><strong>Kubernetes (K8s) Cluster:</strong> Mở rộng ngang (Horizontal Scaling) tự động nhân bản các microservice nghiệp vụ lên hàng chục container dựa trên tải thực tế.</li>
+                    <li><strong>Redis Cluster phân tán:</strong> Cấu hình cụm Redis gồm nhiều node phân mảnh (Sharding) để tăng dung lượng lưu cache trên RAM và phân tải request đọc.</li>
+                    <li><strong>Apache Kafka:</strong> Thay thế RabbitMQ bằng Kafka nếu lượng thông điệp log, sự kiện đơn hàng tăng lên hàng chục triệu tin nhắn mỗi giây, nhờ khả năng ghi file tuần tự (Commit Log) và scale ngang vượt trội của Kafka.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 6</div>
+            <div class="qa-question">POST (Ghi) với GET/READ (Đọc), cái nào cần ngay lập tức? Tại sao xử lý bất đồng bộ ở POST tốt hơn?</div>
+            <div class="qa-answer">
+                <p><strong>GET/READ (Đọc) bắt buộc phải đáp ứng ngay lập tức (Synchronous):</strong> Khi khách hàng duyệt web, họ cần xem danh sách giày, thông tin giá cả ngay tức thì. Nếu trang web load chậm quá 2 giây, tỷ lệ người dùng bỏ trang sẽ tăng vọt.</p>
+                <p><strong>POST (Ghi) xử lý bất đồng bộ (Asynchronous) sẽ tốt hơn nhiều:</strong> Khi tạo đơn hàng (POST /orders), hệ thống chỉ ghi nhận trạng thái ban đầu là <code>PENDING</code> và trả ngay phản hồi "Đơn hàng đang được xử lý" về cho giao diện (khoảng 30ms). Phía sau hậu trường, một tin nhắn được đẩy vào RabbitMQ để <code>ProductService</code> thực hiện kiểm tra và trừ kho ngầm. Khách hàng không phải đứng chờ hệ thống thực hiện khoá DB và lưu trữ hàng loạt bảng phức tạp, giúp tăng khả năng chịu tải của máy chủ lên gấp nhiều lần.</p>
+            </div>
+        </div>
+
+        <!-- Q7 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 7</div>
+            <div class="qa-question">Hướng giải quyết bài toán thực tế của thầy cho (Giật cô hồn / Flash Sale) để đạt điểm cao?</div>
+            <div class="qa-answer">
+                <p>Bài toán Flash Sale có đặc điểm: Số lượng hàng rất ít (ví dụ: 10 đôi giày thể thao giá cực rẻ) nhưng lượng người tranh mua cực kỳ lớn (100.000+ người click đồng thời trong 1 giây). Vấn đề lớn nhất là <strong>Tránh bán quá số lượng tồn kho (Over-selling)</strong> và tránh sập database.</p>
+                <p><strong>Giải pháp tối ưu nhất cho bài toán này:</strong></p>
+                <ol>
+                    <li><strong>Kiểm soát tồn kho nguyên tử tại RAM Redis (Lua Script):</strong> Khi Flash Sale bắt đầu, số lượng tồn kho (ví dụ: 10) được nạp trước vào Redis. Khi request ập tới, Product Service chạy một kịch bản Lua Script nguyên tử để trừ tồn kho trên Redis. Do chạy trên RAM của Redis, tốc độ kiểm tra cực nhanh (~1ms) và tránh hoàn toàn tranh chấp DB.</li>
+                    <li>Nếu kho trên Redis giảm xuống mức 0, toàn bộ 99.990 người đến sau sẽ lập tức nhận kết quả "Hết hàng" mà không tạo ra bất kỳ câu lệnh SQL ghi nào xuống MySQL.</li>
+                    <li>Chỉ có 10 người giật thành công được đưa vào hàng đợi RabbitMQ để <code>OrderService</code> xử lý lưu đơn hàng tuần tự vào MySQL dưới nền.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Q8 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 8</div>
+            <div class="qa-question">Giải pháp khi người dùng tăng lên đột biến & Công cụ kiểm thử hệ thống?</div>
+            <div class="qa-answer">
+                <p><strong>Giải pháp xử lý tải đột biến (Traffic Spike):</strong></p>
+                <ul>
+                    <li><strong>Autoscaling hạ tầng:</strong> Tự động tăng số lượng instance cho các service quan trọng dựa trên các chỉ số CPU/RAM.</li>
+                    <li><strong>Circuit Breaker (Ngắt mạch):</strong> Sử dụng Resilience4j tại API Gateway. Nếu <code>AIService</code> hoặc <code>ChatService</code> bị chậm hoặc sập, Circuit Breaker sẽ ngắt kết nối đến đó ngay để Gateway không bị nghẽn luồng chờ đợi.</li>
+                </ul>
+                <p><strong>Công cụ kiểm thử tải (Load Testing):</strong></p>
+                <ul>
+                    <li><strong>K6 (Grafana):</strong> Công cụ kiểm thử tải hiện đại, gọn nhẹ, sử dụng Javascript để định nghĩa kịch bản. Thích hợp giả lập kịch bản người dùng tăng đột biến (Spike Testing) lên API Gateway.</li>
+                    <li><strong>Apache JMeter:</strong> Công cụ UI truyền thống để gửi tải liên tục và đo lường các thông số hiệu năng chuyên sâu.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- CATEGORY 2: THIẾT KẾ & KIẾN TRÚC -->
+    <section>
+        <div class="category-header">
+            PHẦN II: THIẾT KẾ KIẾN TRÚC & GIAO TIẾP LIÊN DỊCH VỤ
+        </div>
+
+        <!-- Q9 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 9</div>
+            <div class="qa-question">Các dịch vụ giao tiếp với nhau thế nào? Ví dụ Event-Driven dùng ở đâu? Service Payment dùng ra sao?</div>
+            <div class="qa-answer">
+                <p>Hệ thống kết hợp cả giao tiếp đồng bộ và bất đồng bộ (Event-Driven):</p>
+                <ul>
+                    <li><strong>Giao tiếp bất đồng bộ qua RabbitMQ (Event-Driven):</strong>
+                        <ul>
+                            <li>Khi đặt hàng thành công: <code>OrderService</code> phát sự kiện <code>StockUpdateEvent</code> qua RabbitMQ. <code>ProductService</code> lắng nghe để tự động giảm tồn kho và tăng số lượng đã bán.</li>
+                            <li>Khi MoMo xác nhận thanh toán: <code>PaymentService</code> phát sự kiện <code>PaymentStatusEvent</code>. <code>OrderService</code> lắng nghe để tự động chuyển trạng thái đơn hàng thành <code>PAID</code>.</li>
+                            <li>Gửi mail thông báo: Cả đơn hàng và thanh toán đều bắn sự kiện sang Queue. <code>NotificationService</code> nhận tin nhắn để gửi email qua SMTP Gmail bất đồng bộ mà không block khách hàng.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Hoạt động của Payment Service:</strong> Tích hợp <strong>MoMo API Sandbox</strong>. Khi có yêu cầu, service gọi API đồng bộ của MoMo để lấy link thanh toán. Sau khi người dùng thanh toán trên ví MoMo, máy chủ MoMo gọi lại IPN callback của hệ thống (endpoint <code>/api/v1/payments/momo-ipn</code>) bất đồng bộ để cập nhật trạng thái thanh toán và bắn sự kiện qua RabbitMQ.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Q10 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 10</div>
+            <div class="qa-question">Tại sao lại chọn kiến trúc Microservices cho bài toán này mà không dùng Monolith?</div>
+            <div class="qa-answer">
+                <p>Chúng ta chọn kiến trúc Microservices vì các yếu tố vượt trội sau:</p>
+                <ol>
+                    <li><strong>Mở rộng độc lập (Independent Scaling):</strong> Dịch vụ xem sản phẩm (Product) có số lượng request cao gấp 100 lần dịch vụ Thanh toán (Payment). Chúng ta có thể mở rộng chạy nhiều instance cho Product Service mà không cần nhân bản các module khác để tiết kiệm tài nguyên.</li>
+                    <li><strong>Bảo toàn dịch vụ khi lỗi (Fault Isolation):</strong> Nếu module Chat hoặc AI chatbot bị lỗi tràn bộ nhớ và crash, khách hàng vẫn xem sản phẩm và mua sắm bình thường. Trong Monolith, một module sập sẽ kéo sập cả hệ thống.</li>
+                    <li><strong>Mỗi dịch vụ sở hữu cơ sở dữ liệu riêng:</strong> Tránh tình trạng tranh chấp tài nguyên database làm nghẽn toàn cục hệ thống.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Q11 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 11</div>
+            <div class="qa-question">Lượng người dùng cao sao không chọn kiến trúc Event-Driven hoàn toàn? Event-Driven có scale độc lập được không?</div>
+            <div class="qa-answer">
+                <p>Hệ thống của chúng ta **không loại trừ** Event-Driven, mà nó chính là **sự kết hợp giữa Microservices và giao tiếp Event-Driven qua RabbitMQ**. Một hệ thống thương mại điện tử không thể dùng Event-Driven 100% (ví dụ: đăng nhập tài khoản, xem chi tiết sản phẩm bắt buộc phải dùng cơ chế đồng bộ HTTP/REST để trả kết quả ngay cho người dùng).</p>
+                <p><strong>Khả năng scale độc lập của Event-Driven:</strong> Có, các Consumer lắng nghe tin nhắn trong hàng đợi RabbitMQ (như Product và Notification Service) hoàn toàn có thể scale độc lập. Khi hàng đợi bị tích tụ tin nhắn, ta chỉ cần bật thêm nhiều bản sao Consumer chạy song song để giải quyết tải mà không cần đụng tới các service gửi tin nhắn.</p>
+            </div>
+        </div>
+
+        <!-- Q12 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 12</div>
+            <div class="qa-question">Kể ra 3 đặc tính quan trọng nhất của hệ thống? Có thực hiện thao tác gì cho các đặc tính đó không?</div>
+            <div class="qa-answer">
+                <ol>
+                    <li><strong>Tính sẵn sàng cao (High Availability):</strong> Đảm bảo hệ thống hoạt động liên tục. Đã cấu hình Gateway để định tuyến linh hoạt và cô lập lỗi giữa các microservice độc lập.</li>
+                    <li><strong>Khả năng co giãn tốt (Scalability):</strong> Cho phép mở rộng khi tải cao. Hệ thống đã triển khai Redis Cache để giải phóng 90% tải đọc cho MySQL Database, và RabbitMQ để xử lý bất đồng bộ các tác vụ ghi nặng.</li>
+                    <li><strong>Nhất quán dữ liệu & Bảo mật (Data Consistency & Security):</strong> Đã tích hợp Rate Limiter ở Gateway chống bot spam, và sử dụng cơ chế Distributed Lock trên Redis để chặn giao dịch thanh toán trùng lặp.</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- CATEGORY 3: CHỊU LỖI, DỰ PHÒNG & THANH TOÁN -->
+    <section>
+        <div class="category-header">
+            PHẦN III: AN TOÀN HỆ THỐNG, DỰ PHÒNG & LUỒNG THANH TOÁN
+        </div>
+
+        <!-- Q13 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 13</div>
+            <div class="qa-question">Nếu một service bị sập thì sao? Giải pháp khắc phục thế nào?</div>
+            <div class="qa-answer">
+                <p>Nếu một service phụ bị sập (như AI Service), hệ thống vẫn chạy bình thường. Nếu một service cốt lõi (như Product Service) bị sập, Gateway sẽ trả về lỗi <code>503 Service Unavailable</code>.</p>
+                <p><strong>Giải pháp khắc phục:</strong></p>
+                <ul>
+                    <li>Sử dụng cơ chế <strong>Self-healing</strong> của Kubernetes: K8s tự động phát hiện container lỗi và khởi động lại container thay thế.</li>
+                    <li>Sử dụng cơ chế <strong>Circuit Breaker</strong> để ngắt mạch tạm thời đối với dịch vụ đang gặp sự cố, tránh nghẽn luồng hàng đợi xử lý tại Gateway.</li>
+                    <li>Sử dụng <strong>Dead Letter Queue (DLQ)</strong> trong RabbitMQ để cô lập các tin nhắn bị lỗi, tránh nghẽn hàng đợi chính.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Q14 -->
+        <div class="qa-card">
+            <div class="qa-question">Payment Service làm sao để không bị thanh toán 2 lần?</div>
+            <div class="qa-answer">
+                <p>Chúng ta đã lập trình giải pháp sử dụng <strong>Idempotency Key thông qua Redis Distributed Lock</strong> trong PaymentController.java:</p>
+                <p><strong>Cơ chế:</strong> Khi nhận yêu cầu thanh toán cho <code>orderId</code>, hệ thống ghi khóa tạm <code>lock:payment:{orderId}</code> trên Redis với lệnh <code>SETNX</code> trong 30 giây. Lần click tiếp theo của người dùng (trong vòng 30s) sẽ bị chặn ngay lập tức và nhận mã lỗi <code>409 Conflict</code>, ngăn hoàn toàn rủi ro thanh toán trùng lặp do mạng lag.</p>
+            </div>
+        </div>
+
+        <!-- Q15 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 15</div>
+            <div class="qa-question">Nếu có thêm thời gian và ngân sách thì sẽ cải thiện cái gì để tốt hơn?</div>
+            <div class="qa-answer">
+                <ol>
+                    <li><strong>Môi trường Kubernetes (EKS):</strong> Để tự động hóa việc scale ngang và quản lý container ở mức độ chịu lỗi cao.</li>
+                    <li><strong>Prometheus & Grafana + ELK Stack:</strong> Để giám sát tài nguyên, trực quan hóa log tập trung và cảnh báo tức thời khi hệ thống có lỗi phát sinh.</li>
+                    <li><strong>Database Sharding & Replication:</strong> Tách biệt hoàn toàn database Master-Slave và phân vùng dữ liệu để chịu được hàng chục triệu người dùng.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Q18 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 18</div>
+            <div class="qa-question">Làm sao để hệ thống luôn sống 24/24?</div>
+            <div class="qa-answer">
+                <p>Để đạt được chỉ số sẵn sàng 24/7 (Zero Downtime):</p>
+                <ul>
+                    <li><strong>Rolling Update:</strong> Triển khai cập nhật cuốn chiếu. Hệ thống bật container mới lên, kiểm tra hoạt động bình thường rồi mới tắt container cũ.</li>
+                    <li><strong>Triển khai đa vùng (Multi-Zone/Multi-Region):</strong> Deploy hệ thống ở nhiều Data Center vật lý khác nhau. Nếu một vùng bị thiên tai hay sập nguồn, vùng còn lại vẫn gánh tải.</li>
+                    <li><strong>Auto-scaling:</strong> Cấu hình tự động tăng giảm số lượng container dựa trên tải thực tế của CPU và mạng.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Q23 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 23</div>
+            <div class="qa-question">Áp dụng Rate Limiter vào chỗ API gateway chống truy cập nhiều như thế nào?</div>
+            <div class="qa-answer">
+                <p>Chúng ta đã cấu hình bộ lọc <code>RequestRateLimiter</code> tích hợp của Spring Cloud Gateway liên kết với Redis. Nó triển khai thuật toán <strong>Token Bucket (Thùng chứa thẻ bài)</strong>:</p>
+                <ul>
+                    <li><code>replenishRate: 50</code>: Nạp thêm 50 token vào thùng mỗi giây cho mỗi địa chỉ IP (định danh qua <code>ipKeyResolver</code>).</li>
+                    <li><code>burstCapacity: 100</code>: Thùng chứa tối đa 100 token.</li>
+                </ul>
+                <p>Nếu một IP người dùng gửi quá 100 request/giây, số token sẽ cạn kiệt. Gateway sẽ từ chối truy cập ngay tại cổng và trả về mã lỗi <code>429 Too Many Requests</code>, ngăn chặn tấn công DDoS và bảo vệ các microservice phía sau.</p>
+            </div>
+        </div>
+
+        <!-- Q24 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 24</div>
+            <div class="qa-question">Điểm yếu của kiến trúc Microservices hiện tại là gì? Giải pháp khắc phục?</div>
+            <div class="qa-answer">
+                <ul>
+                    <li><strong>Độ phức tạp trong giao dịch phân tán (Distributed Transactions):</strong> Việc đảm bảo tính nhất quán dữ liệu giữa các DB độc lập (ví dụ: trừ kho và thanh toán) rất phức tạp.
+                        <br>👉 <em>Giải pháp:</em> Áp dụng <strong>Saga Pattern</strong> để kích hoạt các sự kiện bù đắp nhằm hoàn tiền hoặc hoàn kho nếu một bước trong luồng giao dịch bị lỗi.
+                    </li>
+                    <li><strong>Khó khăn khi kiểm vết lỗi:</strong> Request đi qua nhiều service khác nhau.
+                        <br>👉 <em>Giải pháp:</em> Tích hợp <strong>Distributed Tracing (như Spring Cloud Sleuth & Zipkin)</strong> để gán mã Trace ID theo dõi đường đi của request qua tất cả các service.
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Q32 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 32</div>
+            <div class="qa-question">Kiến trúc của nhóm có thể xảy ra rủi ro gì?</div>
+            <div class="qa-answer">
+                <ol>
+                    <li><strong>Rủi ro Single Point of Failure (SPOF):</strong> Gateway Service hoặc Redis Cache hiện đang chạy 1 instance đơn lẻ. Nếu 1 trong 2 service này bị sập, toàn bộ hệ thống sẽ bị tê liệt.</li>
+                    <li><strong>Rủi ro mất dữ liệu hàng đợi:</strong> Nếu máy chủ chạy RabbitMQ bị sập bất ngờ và các tin nhắn trong queue chưa được ghi xuống đĩa cứng (non-persistent).</li>
+                    <li><strong>Trễ đồng bộ dữ liệu (Eventual Consistency Latency):</strong> Đôi khi hàng đợi RabbitMQ bị nghẽn nhẹ khiến trạng thái đơn hàng cập nhật chậm hơn khoảng 1-2 giây trên màn hình của khách.</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- CATEGORY 4: DEPLOY, LIFE CYCLE & TESTING -->
+    <section>
+        <div class="category-header">
+            PHẦN IV: QUY TRÌNH DEPLOY, CẢI TIẾN & THỬ NGHIỆM
+        </div>
+
+        <!-- Q16 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 16</div>
+            <div class="qa-question">Khi phát triển tính năng mới có cần deploy lại toàn bộ hệ thống hay không?</div>
+            <div class="qa-answer">
+                <p><strong>Hoàn toàn không cần deploy lại cả hệ thống.</strong> Đây là lợi điểm cốt lõi của kiến trúc Microservices.</p>
+                <p>Mỗi dịch vụ được đóng gói trong một container riêng và có database độc lập. Ví dụ, khi phát triển thêm tính năng gợi ý sản phẩm thông minh, ta chỉ cần build lại hình ảnh Docker của riêng <code>ai-service</code> và redeploy container đó. Tất cả các dịch vụ khác như <code>OrderService</code>, <code>PaymentService</code> vẫn chạy bình thường 100% không bị gián đoạn.</p>
+            </div>
+        </div>
+
+        <!-- Q17 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 17</div>
+            <div class="qa-question">Áp dụng thêm kiến trúc nào vào đâu để tăng hiệu năng (Performance) hệ thống lên?</div>
+            <div class="qa-answer">
+                <ul>
+                    <li><strong>CQRS (Command Query Responsibility Segregation):</strong> Áp dụng vào <code>ProductService</code>. Tách biệt hoàn toàn luồng ghi dữ liệu vào MySQL và luồng đọc dữ liệu từ Elasticsearch hoặc Redis Cache để tránh tranh chấp I/O.</li>
+                    <li><strong>Event Sourcing:</strong> Lưu trữ trạng thái đơn hàng dưới dạng chuỗi các sự kiện thay vì cập nhật đè trạng thái trong DB giúp luồng ghi diễn ra nhanh chóng.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Q19 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 19</div>
+            <div class="qa-question">Tìm kiếm sản phẩm có quan trọng không? Giải pháp tối ưu?</div>
+            <div class="qa-answer">
+                <p>Tìm kiếm sản phẩm là tính năng <strong>cực kỳ quan trọng</strong> vì nó ảnh hưởng lớn đến quyết định mua hàng. Nếu tìm kiếm chậm hoặc không tìm ra sản phẩm phù hợp, khách hàng sẽ bỏ sang trang web đối thủ.</p>
+                <p><strong>Giải pháp tối ưu cho 1 triệu người dùng:</strong> Không sử dụng câu lệnh SQL <code>LIKE</code> thô sơ. Cần tích hợp <strong>Elasticsearch</strong>. Elasticsearch sử dụng chỉ mục ngược (Inverted Index), hỗ trợ tìm kiếm không dấu, tìm kiếm gần đúng (Fuzzy Search) và gợi ý từ khóa (Autocomplete) trong vòng vài mili-giây với kho dữ liệu khổng lồ.</p>
+            </div>
+        </div>
+
+        <!-- Q26 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 26</div>
+            <div class="qa-question">Dùng cái gì để gửi request vào chương trình để kiểm tra mã lỗi 400?</div>
+            <div class="qa-answer">
+                <p>Chúng ta có thể dùng các công cụ kiểm thử API như <strong>Postman</strong>, <strong>Insomnia</strong> hoặc lệnh <strong>cURL</strong> trong console. Cố tình gửi một request POST với JSON body bị thiếu các trường bắt buộc (ví dụ: thiếu password hoặc email) tới API Gateway, sau đó kiểm tra HTTP Status code trả về ở phần response phải là <code>400 Bad Request</code>.</p>
+            </div>
+        </div>
+
+        <!-- Q28 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 28</div>
+            <div class="qa-question">Kiến trúc hiện tại là Microservices có thể chuyển hoàn toàn sang Event-Driven được hay không?</div>
+            <div class="qa-answer">
+                <p><strong>Không cần thiết và cũng không nên chuyển hoàn toàn.</strong> Một hệ thống thương mại điện tử thực tế luôn cần sự kết hợp của cả 2 giao thức giao tiếp:</p>
+                <ul>
+                    <li><strong>Đồng bộ (HTTP/REST):</strong> Cho các tác vụ cần kết quả trả về ngay (Đăng nhập, xem sản phẩm, lấy link MoMo).</li>
+                    <li><strong>Bất đồng bộ (Event-Driven):</strong> Cho các tác vụ chạy ngầm (Trừ tồn kho khi đặt hàng, gửi mail thông báo, đồng bộ trạng thái thanh toán từ MoMo).</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Q29 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 29</div>
+            <div class="qa-question">Nếu có 5 service, tại sao không tích hợp trực tiếp thanh toán vào mà lại tách riêng thành Payment Service?</div>
+            <div class="qa-answer">
+                <p>Việc tách riêng <strong>Payment Service</strong> mang lại các lợi ích lớn:</p>
+                <ol>
+                    <li><strong>Bảo mật tối đa (Security Isolation):</strong> Nghiệp vụ thanh toán yêu cầu bảo mật thông tin tài khoản ngân hàng và ví điện tử rất cao. Tách biệt giúp gom các API Key, Secret Key của MoMo về một nơi bảo mật, tránh lộ lọt qua các dịch vụ khác.</li>
+                    <li><strong>Dễ bảo trì:</strong> Khi cần tích hợp thêm cổng thanh toán VNPay, ZaloPay, ta chỉ việc viết thêm code tại Payment Service mà không cần đụng đến mã nguồn của các service khác.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Q30 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 30</div>
+            <div class="qa-question">Ứng dụng ước lượng phục vụ bao nhiêu người dùng? Dựa vào yếu tố nào trong chương trình để ước lượng?</div>
+            <div class="qa-answer">
+                <p>Hệ thống hiện tại được thiết kế để phục vụ khoảng <strong>3.000 - 5.000 người dùng hoạt động đồng thời (Active Users)</strong>.</p>
+                <p><strong>Các yếu tố ước lượng:</strong></p>
+                <ul>
+                    <li>Cấu hình giới hạn request (Rate Limiter) tại API Gateway trong docker-compose.yml cho các dịch vụ (ví dụ: 150-300 request/giây cho Product).</li>
+                    <li>Giới hạn Connection Pool của cơ sở dữ liệu MySQL (mặc định tối đa khoảng 100-200 kết nối đồng thời từ các service).</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Q31 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 31</div>
+            <div class="qa-question">Tại sao cấu hình 200 request/phút (Ngưỡng giới hạn)?</div>
+            <div class="qa-answer">
+                <p>Ngưỡng 200 request/phút (khoảng ~3 request/giây cho mỗi địa chỉ IP) được đưa ra dựa trên hành vi sử dụng của một con người bình thường (người dùng thật chỉ tạo khoảng 10-30 request/phút khi lướt web). Việc đặt ngưỡng 200 request/phút giúp ngăn chặn hiệu quả các bot tự động cào dữ liệu sản phẩm, bot spam API đăng nhập (Brute force) mà không làm ảnh hưởng đến trải nghiệm của khách hàng thật.</p>
+            </div>
+        </div>
+
+        <!-- Q34 -->
+        <div class="qa-card">
+            <div class="qa-number">Câu hỏi 34</div>
+            <div class="qa-question">Tại sao không dùng kiến trúc Monolith trong khi Monolith vẫn có thể mở rộng Database được?</div>
+            <div class="qa-answer">
+                <p>Dù Monolith có thể nhân bản database Master-Slave để chia tải đọc/ghi, nó vẫn có những điểm yếu nghiêm trọng so với Microservices:</p>
+                <ol>
+                    <li><strong>Nghẽn tài nguyên do dịch vụ không cân bằng:</strong> Hệ thống có tính năng <strong>Chat trực tuyến qua WebSocket (Chat Service)</strong> và <strong>Tư vấn AI qua Gemini API (AI Service)</strong> là hai dịch vụ chiếm kết nối lâu dài và tốn rất nhiều tài nguyên RAM/CPU. Trong Monolith, hai module này sẽ chiếm dụng hết luồng CPU/RAM của server, dẫn đến khách hàng không đặt hàng được dù database thanh toán vẫn rảnh rỗi.</li>
+                    <li><strong>Thời gian downtime khi cập nhật:</strong> Mỗi lần sửa một lỗi nhỏ ở tính năng tư vấn, ta phải compile và restart toàn bộ hệ thống Monolith khổng lồ, gây gián đoạn mua sắm của khách.</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 SportShop. Báo Cáo Giải Trình Câu Hỏi Bảo Vệ Đồ Án Kiến Trúc Phần Mềm.</p>
+    </footer>
+</body>
+</html>
