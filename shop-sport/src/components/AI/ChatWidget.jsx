@@ -22,13 +22,15 @@ const ChatWidget = () => {
     const handleSend = async () => {
         if (!input.trim()) return;
 
+        const productMatch = window.location.pathname.match(/\/product\/(\d+)/);
+        const productId = productMatch ? productMatch[1] : null;
         const userMessage = { text: input, isBot: false };
         setMessages(prev => [...prev, userMessage]);
         setInput("");
         setLoading(true);
 
         try {
-            const response = await axiosClient.post('/ai/chat', { message: input });
+            const response = await axiosClient.post('/ai/chat', { message: input, productId });
             const botMessage = { text: response.data.response, isBot: true };
             setMessages(prev => [...prev, botMessage]);
         } catch (error) {

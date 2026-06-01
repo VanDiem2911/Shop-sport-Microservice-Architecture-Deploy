@@ -166,7 +166,10 @@ services:
     ports:
       - "8085:8085"
     environment:
-      - GEMINI_API_KEY=${GEMINI_API_KEY:-AIzaSyAsoGTo5LB4AX8cS4e8BIGJ88dh9x_8B3I}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-AQ.Ab8RN6Koi_dRMlTJsL7eRQlbFMx1pemBRJjGOdvkyBgo6ckYVg}
+      - PRODUCT_SERVICE_URL=http://product-service:8082/api/v1/products
+    depends_on:
+      - product-service
     networks:
       - sportshop-network
 
