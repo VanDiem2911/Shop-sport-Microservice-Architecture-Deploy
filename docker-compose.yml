@@ -260,9 +260,8 @@ services:
       context: ./shop-sport
       dockerfile: Dockerfile
       args:
-        # VITE_API_URL chỉ đến Gateway Service (cổng 8080)
-        # Khi deploy lên VPS, thay thế http://localhost:8080 bằng IP/tên miền của VPS
-        - VITE_API_URL=${VITE_API_URL:-http://localhost:8080/api/v1}
+        # VITE_API_URL chỉ đến Gateway Service qua Proxy Nginx (sử dụng relative path để tránh Mixed Content khi chạy HTTPS)
+        - VITE_API_URL=${VITE_API_URL:-/api/v1}
         - VITE_GOOGLE_CLIENT_ID=${VITE_GOOGLE_CLIENT_ID:-847709824515-a1tpt0rf1tdefba38ombptfvf0o4b1sf.apps.googleusercontent.com}
     container_name: sportshop-frontend
     ports:
