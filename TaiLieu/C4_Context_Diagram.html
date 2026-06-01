@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Context Diagram (Sơ đồ Ngữ cảnh) - Shop-Sport</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Mermaid.js -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #020617 100%);
+            --card-bg: rgba(30, 41, 59, 0.4);
+            --border-glow: rgba(56, 189, 248, 0.2);
+            --primary-glow: #38bdf8;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Premium Glassmorphic Header */
+        header {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1.2rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo-area {
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #38bdf8, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.1rem;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            padding: 0.6rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: var(--primary-glow);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Diagram Canvas Area - Fullscreen Centered */
+        main {
+            flex: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            overflow: auto;
+            cursor: grab;
+        }
+
+        main:active {
+            cursor: grabbing;
+        }
+
+        .diagram-container {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 3rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            transform-origin: center center;
+            transition: transform 0.1s ease-out;
+            max-width: 95%;
+            max-height: 95%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Customizing SVG lines and fonts inside Mermaid */
+        .mermaid {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Legend box at the bottom */
+        footer {
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(8px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 0.8rem 2.5rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: center;
+            z-index: 10;
+        }
+
+        /* Print optimization */
+        @media print {
+            body {
+                background: #fff;
+                color: #000;
+            }
+            header, footer, .controls {
+                display: none !important;
+            }
+            main {
+                overflow: visible;
+                padding: 0;
+            }
+            .diagram-container {
+                background: none;
+                border: none;
+                box-shadow: none;
+                transform: scale(1) !important;
+                max-width: 100%;
+                max-height: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <h1>SYSTEM CONTEXT DIAGRAM (LEVEL 1)</h1>
+            <div class="subtitle">Hệ thống Microservices cửa hàng thể thao (Shop-Sport)</div>
+        </div>
+        <div class="controls">
+            <button class="btn" onclick="zoom(1.1)">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5z"/><path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H2zM1 2a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V2z"/></svg>
+                Phóng to
+            </button>
+            <button class="btn" onclick="zoom(0.9)">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M5.5 10a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H6a.5.5 0 0 1-.5-.5z"/><path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H2zM1 2a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V2z"/></svg>
+                Thu nhỏ
+            </button>
+            <button class="btn" onclick="resetZoom()">Reset</button>
+            <button class="btn" onclick="window.print()">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/><path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v3a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-3h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/></svg>
+                In / Xuất PDF
+            </button>
+        </div>
+    </header>
+
+    <main id="pan-container">
+        <div class="diagram-container" id="zoom-target">
+            <pre class="mermaid">
+graph TB
+    %% Styling Classes
+    classDef mainSystem fill:#1e293b,stroke:#38bdf8,stroke-width:3px,color:#fff,font-weight:bold,rx:10px,ry:10px;
+    classDef actor fill:#0f172a,stroke:#e2e8f0,stroke-width:2px,color:#fff,rx:10px,ry:10px;
+    classDef external fill:#1e1b4b,stroke:#818cf8,stroke-width:2px,color:#fff,rx:10px,ry:10px;
+
+    %% Nodes
+    subgraph Users [Người dùng hệ thống]
+        Customer["👤 KHÁCH HÀNG<br/>(Mua sắm, tư vấn AI, Chat, Thanh toán)"]:::actor
+        Admin["👤 QUẢN TRỊ VIÊN<br/>(Quản lý cửa hàng, chat hỗ trợ)"]:::actor
+    end
+
+    System["💻 HỆ THỐNG SHOP-SPORT<br/>(Kiến trúc Microservices)"]:::mainSystem
+
+    subgraph Externals [Hệ thống liên kết bên thứ ba]
+        GoogleOAuth["🔑 Google Identity Service<br/>(Xác thực tài khoản Google)"]:::external
+        GeminiAPI["🧠 Google Gemini API<br/>(NLP tư vấn sản phẩm)"]:::external
+        MoMo["💸 Cổng thanh toán MoMo<br/>(Tạo payUrl & IPN giao dịch)"]:::external
+        Gmail["📧 SMTP Server (Gmail)<br/>(Gửi mail hóa đơn điện tử)"]:::external
+    end
+
+    %% Link styles (Mermaid styling)
+    linkStyle default stroke:#64748b,stroke-width:1.5px,interpolate:basis;
+
+    %% Interactions
+    Customer -->|Truy cập Web, xem hàng, đặt mua, chat| System
+    Admin -->|Quản lý sản phẩm, đơn hàng, trả lời chat| System
+
+    System -->|1. Yêu cầu xác thực OAuth 2.0| GoogleOAuth
+    GoogleOAuth -->|2. Trả về Token & Profile| System
+
+    System -->|3. Gửi câu hỏi tư vấn khách hàng| GeminiAPI
+    GeminiAPI -->|4. Phản hồi câu trả lời thông minh| System
+
+    System -->|5. Yêu cầu tạo link thanh toán| MoMo
+    MoMo -->|6. Gửi kết quả giao dịch (IPN)| System
+    MoMo -.->|Hiển thị QR & Callback| Customer
+
+    System -->|7. Gửi mail xác nhận kèm hóa đơn| Gmail
+    Gmail -.->|Gửi thư điện tử| Customer
+            </pre>
+        </div>
+    </main>
+
+    <footer>
+        Dự án Kiến trúc phần mềm: Xây dựng hệ thống bán sản phẩm thể thao (Shop-Sport) - Nhóm 29
+    </footer>
+
+    <script>
+        // Khởi tạo Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            securityLevel: 'loose',
+            themeVariables: {
+                background: '#1e293b',
+                primaryColor: '#0f172a',
+                lineColor: '#64748b',
+                fontSize: '13px',
+                fontFamily: 'Plus Jakarta Sans'
+            }
+        });
+
+        // Hỗ trợ Zoom và kéo thả (Pan & Zoom)
+        let currentScale = 1.0;
+        const target = document.getElementById('zoom-target');
+        const container = document.getElementById('pan-container');
+
+        function zoom(factor) {
+            currentScale *= factor;
+            // Giới hạn scale từ 0.5x đến 3.0x
+            currentScale = Math.min(Math.max(0.5, currentScale), 3.0);
+            target.style.transform = `scale(${currentScale})`;
+        }
+
+        function resetZoom() {
+            currentScale = 1.0;
+            target.style.transform = `scale(${currentScale})`;
+            container.scrollLeft = (container.scrollWidth - container.clientWidth) / 2;
+            container.scrollTop = (container.scrollHeight - container.clientHeight) / 2;
+        }
+
+        // Kéo thả sơ đồ (Pan)
+        let isDown = false;
+        let startX;
+        let startY;
+        let scrollLeft;
+        let scrollTop;
+
+        container.addEventListener('mousedown', (e) => {
+            isDown = true;
+            container.style.cursor = 'grabbing';
+            startX = e.pageX - container.offsetLeft;
+            startY = e.pageY - container.offsetTop;
+            scrollLeft = container.scrollLeft;
+            scrollTop = container.scrollTop;
+        });
+
+        container.addEventListener('mouseleave', () => {
+            isDown = false;
+            container.style.cursor = 'grab';
+        });
+
+        container.addEventListener('mouseup', () => {
+            isDown = false;
+            container.style.cursor = 'grab';
+        });
+
+        container.addEventListener('mousemove', (e) => {
+            if(!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - container.offsetLeft;
+            const y = e.pageY - container.offsetTop;
+            const walkX = (x - startX) * 1.5; // tốc độ di chuyển x
+            const walkY = (y - startY) * 1.5; // tốc độ di chuyển y
+            container.scrollLeft = scrollLeft - walkX;
+            container.scrollTop = scrollTop - walkY;
+        });
+
+        // Thiết lập vị trí mặc định khi tải trang
+        window.addEventListener('load', () => {
+            setTimeout(resetZoom, 500);
+        });
+    </script>
+</body>
+</html>
