@@ -118,11 +118,11 @@ const CheckoutPage = () => {
     };
 
     return (
-        <div className="bg-gray-50 min-h-screen py-16">
+        <div className="bg-transparent min-h-screen py-16">
             <div className="container mx-auto px-6 max-w-5xl">
                 <h2 className="text-4xl font-black italic uppercase tracking-tighter mb-10 text-center">Xác nhận thanh toán</h2>
                 <div className="flex flex-col lg:flex-row gap-12">
-                    <div className="w-full lg:w-2/3 bg-white p-8 rounded-[2.5rem] shadow-xl">
+                    <div className="w-full lg:w-2/3 bg-zinc-900/80 backdrop-blur-xl border border-zinc-700/50 p-8 rounded-[2.5rem] shadow-xl">
                         <h3 className="text-xl font-bold uppercase mb-6 flex items-center">
                             <span className="w-3 h-3 bg-blue-600 rounded-full mr-3"></span>
                             Thông tin giao hàng

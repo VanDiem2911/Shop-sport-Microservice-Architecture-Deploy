@@ -107,11 +107,11 @@ const ProductManager = () => {
                 </Link>
             </div>
 
-            <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+            <div className="bg-zinc-900/80 backdrop-blur-xl border border-zinc-700/50 rounded-3xl shadow-xl overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="bg-gray-50 text-gray-400 font-bold text-xs uppercase tracking-widest border-b">
+                            <tr className="bg-zinc-800/60 text-zinc-400 font-bold text-xs uppercase tracking-widest border-b border-zinc-700">
                                 <th className="px-6 py-4">ID</th>
                                 <th className="px-6 py-4">Hình ảnh</th>
                                 <th className="px-6 py-4">Tên sản phẩm</th>
@@ -123,7 +123,7 @@ const ProductManager = () => {
                         </thead>
                         <tbody className="divide-y divide-gray-50">
                             {products.map((product) => (
-                                <tr key={product.id} className="hover:bg-blue-50/50 transition">
+                                <tr key={product.id} className="hover:bg-zinc-800/40 transition border-b border-zinc-800">
                                     <td className="px-6 py-4 font-bold text-gray-500">#{product.id}</td>
                                     <td className="px-6 py-4">
                                         <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100">
@@ -200,7 +200,7 @@ const ProductManager = () => {
             {/* Modal cập nhật tồn kho */}
             {isStockModalOpen && selectedProduct && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
-                    <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl border border-gray-100 mx-4 animate-scaleUp">
+                    <div className="bg-zinc-900 border border-zinc-700 rounded-3xl p-8 max-w-md w-full shadow-2xl mx-4 animate-scaleUp">
                         <div className="flex justify-between items-center mb-6">
                             <h3 className="text-2xl font-black uppercase tracking-tighter text-gray-900">
                                 Nhập hàng <span className="text-blue-600">tồn kho</span>
@@ -213,7 +213,7 @@ const ProductManager = () => {
                             </button>
                         </div>
 
-                        <div className="flex items-center space-x-4 mb-6 p-4 bg-gray-50 rounded-2xl">
+                        <div className="flex items-center space-x-4 mb-6 p-4 bg-zinc-800/60 rounded-2xl border border-zinc-700">
                             <img 
                                 src={selectedProduct.imageUrl || "https://images.unsplash.com/photo-1556906781-9a412961c28c?q=80&w=200"} 
                                 alt={selectedProduct.name} 

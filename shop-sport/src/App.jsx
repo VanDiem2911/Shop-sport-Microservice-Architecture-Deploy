@@ -24,6 +24,7 @@ import AdminRoute from './features/Admin/AdminRoute';
 import ProductManager from './features/Admin/ProductManager';
 import OrderManager from './features/Admin/OrderManager';
 import ProductForm from './features/Admin/ProductForm';
+import RevenueStats from './features/Admin/RevenueStats';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -82,6 +83,11 @@ function App() {
               <Route path="/admin/products/edit/:id" element={
                 <AdminRoute>
                   <ProductForm />
+                </AdminRoute>
+              } />
+              <Route path="/admin/revenue" element={
+                <AdminRoute>
+                  <RevenueStats />
                 </AdminRoute>
               } />
             </Routes>

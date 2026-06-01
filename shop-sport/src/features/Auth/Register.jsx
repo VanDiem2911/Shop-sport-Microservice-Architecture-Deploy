@@ -53,8 +53,8 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-[90vh] flex items-center justify-center px-4 bg-gray-50 py-12">
-      <div className="max-w-xl w-full bg-white p-10 rounded-[2.5rem] shadow-2xl">
+    <div className="min-h-[90vh] flex items-center justify-center px-4 bg-transparent py-12">
+      <div className="max-w-xl w-full bg-zinc-900/80 backdrop-blur-xl border border-zinc-700/50 p-10 rounded-[2.5rem] shadow-2xl shadow-purple-900/20">
         
         {/* Tiêu đề */}
         <div className="text-center mb-10">
@@ -90,14 +90,14 @@ const Register = () => {
               type="password" 
               placeholder="Mật khẩu" 
               onChange={handleChange}
-              className="w-full p-4 bg-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 border-none font-medium"
+              className="w-full p-4 bg-zinc-800 text-white rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 border border-zinc-700 font-medium placeholder:text-zinc-500"
             />
             <input 
               name="confirmPassword"
               type="password" 
               placeholder="Xác nhận mật khẩu" 
               onChange={handleChange}
-              className="w-full p-4 bg-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 border-none font-medium"
+              className="w-full p-4 bg-zinc-800 text-white rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 border border-zinc-700 font-medium placeholder:text-zinc-500"
             />
           </div>
 
@@ -119,8 +119,8 @@ const Register = () => {
         </form>
 
         {/* Chuyển hướng sang Login */}
-        <div className="mt-10 pt-8 border-t border-gray-100 text-center text-sm">
-          <span className="text-gray-400 font-medium">Bạn đã có tài khoản rồi? </span>
+        <div className="mt-10 pt-8 border-t border-zinc-700 text-center text-sm">
+          <span className="text-zinc-400 font-medium">Bạn đã có tài khoản rồi? </span>
           <Link to="/login" className="text-blue-600 font-black underline hover:text-blue-700 transition">
             Đăng nhập ngay
           </Link>

@@ -72,17 +72,17 @@ const Payment = () => {
     };
 
     return (
-        <div className="bg-gray-50 min-h-screen py-16 relative">
+        <div className="bg-transparent min-h-screen py-16 relative">
             
             <div className="container mx-auto px-6 max-w-4xl">
                 <h2 className="text-4xl font-black italic uppercase tracking-tighter mb-10 text-center text-blue-600">Thanh Toán Đơn Hàng</h2>
                 
-                <div className="bg-white p-8 rounded-[2.5rem] shadow-xl mb-8">
+                <div className="bg-zinc-900/80 backdrop-blur-xl border border-zinc-700/50 p-8 rounded-[2.5rem] shadow-xl mb-8">
                     <h3 className="text-xl font-bold uppercase mb-6 border-b pb-4">Mã đơn hàng: #{orderId}</h3>
                     
                     <div className="space-y-4 mb-8">
                         {items && items.map((item, idx) => (
-                            <div key={idx} className="flex justify-between items-center bg-gray-50 p-4 rounded-xl border border-gray-100">
+                            <div key={idx} className="flex justify-between items-center bg-zinc-800/60 p-4 rounded-xl border border-zinc-700">
                                     <div className="flex items-center space-x-4">
                                         <span className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center font-black text-blue-600 text-sm">{item.quantity}x</span>
                                         <div>

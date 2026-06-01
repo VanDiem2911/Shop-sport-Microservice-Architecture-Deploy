@@ -63,26 +63,26 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-[80vh] flex items-center justify-center bg-gray-50">
-            <div className="max-w-md w-full bg-white p-10 rounded-[2.5rem] shadow-xl">
+        <div className="min-h-[80vh] flex items-center justify-center bg-transparent">
+            <div className="max-w-md w-full bg-zinc-900/80 backdrop-blur-xl border border-zinc-700/50 p-10 rounded-[2.5rem] shadow-2xl shadow-purple-900/20">
                 <div className="text-center mb-10">
                     <h2 className="text-4xl font-black italic mb-2 uppercase tracking-tighter">HELLO!</h2>
                     <p className="text-gray-400 font-medium">Sẵn sàng để ra sân chưa?</p>
                 </div>
                 <form className="space-y-4" onSubmit={handleLogin}>
                     <input name="username" type="text" placeholder="Tên đăng nhập" onChange={handleChange}
-                        className="w-full p-4 bg-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 border-none font-medium" />
+                        className="w-full p-4 bg-zinc-800 text-white rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 border border-zinc-700 font-medium placeholder:text-zinc-500" />
                     <input name="password" type="password" placeholder="Mật khẩu" onChange={handleChange}
-                        className="w-full p-4 bg-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 border-none font-medium" />
+                        className="w-full p-4 bg-zinc-800 text-white rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 border border-zinc-700 font-medium placeholder:text-zinc-500" />
                     <button type="submit" className="w-full bg-blue-600 text-white py-4 rounded-2xl font-black shadow-lg hover:bg-blue-700 transition duration-300 transform active:scale-95">
                         ĐĂNG NHẬP
                     </button>
                 </form>
 
                 <div className="relative flex py-6 items-center">
-                    <div className="flex-grow border-t border-gray-200"></div>
-                    <span className="flex-shrink mx-4 text-gray-400 text-xs font-black uppercase tracking-wider">Hoặc</span>
-                    <div className="flex-grow border-t border-gray-200"></div>
+                    <div className="flex-grow border-t border-zinc-700"></div>
+                    <span className="flex-shrink mx-4 text-zinc-500 text-xs font-black uppercase tracking-wider">Hoặc</span>
+                    <div className="flex-grow border-t border-zinc-700"></div>
                 </div>
 
                 <div className="flex justify-center">
@@ -93,8 +93,8 @@ const Login = () => {
                 </div>
 
                 <div className="mt-8 text-center text-sm">
-                    <span className="text-gray-400 font-medium">Chưa là thành viên? </span>
-                    <Link to="/register" className="text-blue-600 font-black underline">Tham gia ngay</Link>
+                    <span className="text-zinc-400 font-medium">Chưa là thành viên? </span>
+                    <Link to="/register" className="text-blue-400 font-black underline">Tham gia ngay</Link>
                 </div>
             </div>
         </div>

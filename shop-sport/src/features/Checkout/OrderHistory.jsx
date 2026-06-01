@@ -12,6 +12,11 @@ const OrderHistory = () => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
+    // Filter ngày / tháng / năm
+    const [filterDay,   setFilterDay]   = useState('');
+    const [filterMonth, setFilterMonth] = useState('');
+    const [filterYear,  setFilterYear]  = useState('');
+
     // Review Modal States
     const [showReviewModal, setShowReviewModal] = useState(false);
     const [selectedItemForReview, setSelectedItemForReview] = useState(null);
@@ -57,13 +62,30 @@ const OrderHistory = () => {
         fetchOrders();
     }, []);
 
+    // Lọc kết hợp: tab trạng thái + ngày / tháng / năm
     useEffect(() => {
-        if (activeTab === 'ALL') {
-            setFilteredOrders(orders);
-        } else {
-            setFilteredOrders(orders.filter(order => order.status === activeTab));
-        }
-    }, [activeTab, orders]);
+        let result = activeTab === 'ALL' ? [...orders] : orders.filter(o => o.status === activeTab);
+        result = result.filter(order => {
+            if (!order.createdAt) return true;
+            const d = new Date(order.createdAt);
+            if (filterYear  && d.getFullYear()  !== parseInt(filterYear))  return false;
+            if (filterMonth && d.getMonth() + 1 !== parseInt(filterMonth)) return false;
+            if (filterDay   && d.getDate()      !== parseInt(filterDay))   return false;
+            return true;
+        });
+        setFilteredOrders(result);
+    }, [activeTab, orders, filterYear, filterMonth, filterDay]);
+
+    // Các năm có trong data
+    const availableYears = [...new Set(
+        orders.filter(o => o.createdAt).map(o => new Date(o.createdAt).getFullYear())
+    )].sort((a, b) => b - a);
+
+    const clearDateFilters = () => {
+        setFilterDay('');
+        setFilterMonth('');
+        setFilterYear('');
+    };
 
     const handlePayNow = (order) => {
         navigate('/payment', { 
@@ -124,11 +146,11 @@ const OrderHistory = () => {
     }
 
     return (
-        <div className="bg-gray-50 min-h-screen pb-20">
+        <div className="bg-transparent min-h-screen pb-20">
             {/* Review Modal */}
             {showReviewModal && selectedItemForReview && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div className="bg-white rounded-[2.5rem] w-full max-w-lg overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300">
+                    <div className="bg-zinc-900 border border-zinc-700 rounded-[2.5rem] w-full max-w-lg overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300">
                         <div className="bg-blue-600 px-8 py-6 text-white flex justify-between items-center">
                             <h3 className="text-xl font-black italic tracking-tighter uppercase">Đánh giá sản phẩm</h3>
                             <button onClick={() => setShowReviewModal(false)} className="hover:rotate-90 transition duration-300">
@@ -185,29 +207,89 @@ const OrderHistory = () => {
             )}
 
             {/* Tab Navigation */}
-            <div className="bg-white sticky top-0 z-10 shadow-sm">
+            <div className="bg-zinc-900/90 backdrop-blur-md border-b border-zinc-800 sticky top-0 z-10 shadow-sm">
                 <div className="container mx-auto max-w-5xl">
+                    {/* Tab trạng thái */}
                     <div className="flex overflow-x-auto scrollbar-hide">
                         {tabs.map(tab => (
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
                                 className={`flex-1 min-w-[120px] py-4 text-sm font-bold transition-all border-b-2 ${
-                                    activeTab === tab.id 
-                                    ? 'text-blue-600 border-blue-600' 
-                                    : 'text-gray-500 border-transparent hover:text-blue-500'
+                                    activeTab === tab.id
+                                    ? 'text-blue-400 border-blue-500'
+                                    : 'text-zinc-500 border-transparent hover:text-blue-400'
                                 }`}
                             >
                                 {tab.label}
                             </button>
                         ))}
                     </div>
+
+                    {/* Filter ngày / tháng / năm */}
+                    <div className="flex flex-wrap gap-3 items-center px-2 py-3 border-t border-zinc-800/60">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-zinc-600">Lọc ngày:</span>
+
+                        {/* Năm */}
+                        <select
+                            value={filterYear}
+                            onChange={e => { setFilterYear(e.target.value); setFilterMonth(''); setFilterDay(''); }}
+                            className="bg-zinc-800 border border-zinc-700 text-zinc-300 rounded-lg px-2.5 py-1.5 text-xs font-bold outline-none focus:border-blue-500 transition cursor-pointer"
+                        >
+                            <option value="">Tất cả năm</option>
+                            {availableYears.map(y => (
+                                <option key={y} value={y}>{y}</option>
+                            ))}
+                        </select>
+
+                        {/* Tháng */}
+                        <select
+                            value={filterMonth}
+                            onChange={e => { setFilterMonth(e.target.value); setFilterDay(''); }}
+                            className="bg-zinc-800 border border-zinc-700 text-zinc-300 rounded-lg px-2.5 py-1.5 text-xs font-bold outline-none focus:border-blue-500 transition cursor-pointer"
+                        >
+                            <option value="">Tất cả tháng</option>
+                            {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
+                                <option key={m} value={m}>Tháng {m}</option>
+                            ))}
+                        </select>
+
+                        {/* Ngày */}
+                        <select
+                            value={filterDay}
+                            onChange={e => setFilterDay(e.target.value)}
+                            className="bg-zinc-800 border border-zinc-700 text-zinc-300 rounded-lg px-2.5 py-1.5 text-xs font-bold outline-none focus:border-blue-500 transition cursor-pointer"
+                        >
+                            <option value="">Tất cả ngày</option>
+                            {Array.from({ length: 31 }, (_, i) => i + 1).map(d => (
+                                <option key={d} value={d}>Ngày {d}</option>
+                            ))}
+                        </select>
+
+                        {/* Nút xóa filter */}
+                        {(filterYear || filterMonth || filterDay) && (
+                            <button
+                                onClick={clearDateFilters}
+                                className="flex items-center gap-1 px-3 py-1.5 bg-zinc-700/60 hover:bg-red-500/20 border border-zinc-600 hover:border-red-500/50 text-zinc-400 hover:text-red-400 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all"
+                            >
+                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                                Xóa lọc
+                            </button>
+                        )}
+
+                        {/* Số đơn hiển thị */}
+                        <span className="ml-auto text-xs text-zinc-500 font-medium">
+                            Hiển thị <span className="text-white font-bold">{filteredOrders.length}</span> đơn hàng
+                        </span>
+                    </div>
                 </div>
             </div>
 
             <div className="container mx-auto px-6 max-w-5xl mt-8">
                 {filteredOrders.length === 0 ? (
-                    <div className="bg-white rounded-3xl p-20 text-center shadow-sm flex flex-col items-center">
+                    <div className="bg-zinc-900/80 backdrop-blur-xl border border-zinc-700/50 rounded-3xl p-20 text-center shadow-sm flex flex-col items-center">
                         <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mb-6">
                             <svg className="w-12 h-12 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -219,7 +301,7 @@ const OrderHistory = () => {
                 ) : (
                     <div className="space-y-6">
                         {filteredOrders.map(order => (
-                            <div key={order.id} className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col gap-6 hover:shadow-md transition duration-300">
+                            <div key={order.id} className="bg-zinc-900/80 backdrop-blur-xl border border-zinc-700/50 p-8 rounded-3xl shadow-sm hover:shadow-purple-900/20 transition duration-300 flex flex-col gap-6">
                                 <div className="flex justify-between items-center w-full border-b pb-4">
                                     <div className="flex items-center gap-3">
                                         <div className="bg-blue-600 text-white text-[10px] font-black px-2 py-0.5 rounded">SHOP-SPORT</div>

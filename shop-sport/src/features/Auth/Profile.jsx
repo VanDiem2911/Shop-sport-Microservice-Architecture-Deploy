@@ -83,8 +83,8 @@ const Profile = () => {
   const roleLabel = userInfo.role === 'ROLE_ADMIN' ? 'Quản trị viên' : 'Thành viên';
 
   return (
-    <div className="min-h-[85vh] bg-gradient-to-br from-gray-50 via-white to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto bg-white rounded-[3rem] shadow-2xl border border-gray-100/50 overflow-hidden transition-all duration-500 hover:shadow-indigo-100/50">
+    <div className="min-h-[85vh] bg-transparent py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto bg-zinc-900/80 backdrop-blur-xl border border-zinc-700/50 rounded-[3rem] shadow-2xl shadow-purple-900/20 overflow-hidden transition-all duration-500">
         
         {/* Banner header với gradient đẹp mắt */}
         <div className="relative h-48 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 flex items-end">

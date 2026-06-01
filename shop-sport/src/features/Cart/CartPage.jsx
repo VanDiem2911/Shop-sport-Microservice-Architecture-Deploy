@@ -8,7 +8,7 @@ const CartPage = () => {
     const { cartItems, toggleSelectAll, clearSelectedItems } = useCart();
 
     return (
-        <div className="bg-white min-h-screen">
+        <div className="bg-transparent min-h-screen">
             <div className="container mx-auto px-6 py-16">
                 {/* Tiêu đề trang */}
                 <div className="mb-12">
@@ -22,7 +22,7 @@ const CartPage = () => {
 
                 {cartItems.length === 0 ? (
                     /* Giao diện khi giỏ hàng trống */
-                    <div className="text-center py-20 bg-gray-50 rounded-[3rem] border-2 border-dashed border-gray-200">
+                    <div className="text-center py-20 bg-zinc-900/60 rounded-[3rem] border-2 border-dashed border-zinc-700">
                         <div className="mb-6 flex justify-center">
                             <svg className="w-20 h-20 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -40,7 +40,7 @@ const CartPage = () => {
                         {/* 1. Danh sách các CartItem (Bên trái) */}
                         <div className="w-full lg:w-2/3 space-y-6">
                             {/* Thanh Chọn Tất Cả */}
-                            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100 mb-2">
+                            <div className="flex items-center justify-between p-4 bg-zinc-900/60 rounded-2xl border border-zinc-700 mb-2">
                                 <label className="flex items-center space-x-3 cursor-pointer select-none">
                                     <input
                                         type="checkbox"
@@ -70,7 +70,7 @@ const CartPage = () => {
                             <CartSummary />
                             
                             {/* Thông tin bổ sung dưới Summary */}
-                            <div className="mt-8 p-6 bg-blue-50 rounded-3xl border border-blue-100">
+                            <div className="mt-8 p-6 bg-blue-900/30 rounded-3xl border border-blue-700/40">
                                 <div className="flex items-center space-x-3 text-blue-600 mb-2">
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
