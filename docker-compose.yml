@@ -166,7 +166,7 @@ services:
     ports:
       - "8085:8085"
     environment:
-      - GEMINI_API_KEY=${GEMINI_API_KEY:-AQ.Ab8RN6Koi_dRMlTJsL7eRQlbFMx1pemBRJjGOdvkyBgo6ckYVg}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-AQ.Ab8RN6J3NNo_Rb4-7cukp59lIsUFaVA2ddunhiFniWureUf4LA}
       - PRODUCT_SERVICE_URL=http://product-service:8082/api/v1/products
     depends_on:
       - product-service

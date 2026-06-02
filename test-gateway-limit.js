@@ -31,8 +31,8 @@ if (colonIndex !== -1) {
 }
 
 // Cấu hình tham số request tương ứng với endpoint được chọn
-let path = '/api/v1/products';
-let method = 'GET';
+let path = '/api/v1/payments';
+let method = 'POST';
 let postData = '';
 let totalRequests = 1000; // Tăng lên 1000 request để đánh sập giỏ token 300 của Products
 
